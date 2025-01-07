@@ -1,0 +1,73 @@
+# Library directories
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+# IDE and project files
+.vs/
+.gradle/
+ExportedObj/
+.consulo/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+*.zip
+
+# System files
+sysinfo.txt
+
+# Build and package files
+*.apk
+*.aab
+*.unitypackage
+*.app
+crashlytics-build.properties
+
+# Addressable assets and StreamingAssets
+[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+[Aa]ssets/[Ss]treamingAssets/aa.meta
+[Aa]ssets/[Ss]treamingAssets/aa/*
+[Aa]ssets/StreamingAssets/**/*.bank
+[Aa]ssets/StreamingAssets/**/*.bank.meta
+
+# FMOD specific files
+![Aa]ssets/Plugins/FMOD/**/lib/*
+![Aa]ssets/Gizmos/FMOD/*
+![Aa]ssets/Editor Default Resources/FMOD/*
+[Aa]ssets/Plugins/FMOD/Cache/*
+fmod_editor.log
+[Aa]ssets/FMODStudioCache.asset
+[Aa]ssets/FMODStudioCache.asset.meta
+[Aa]ssets/StreamingAssets/*.bank
+fmod.log
+
+# Cache and temporary files
+*.cache
+*.akd
+*.prof
+*.wsetting
+*.validationcache
+*.wem
+
+# IL2CPP Output for SwitchPlayerBuildProgram
+[Ll]ibrary/Bee/artifacts/SwitchPlayerBuildProgram/il2cppOutput/*
