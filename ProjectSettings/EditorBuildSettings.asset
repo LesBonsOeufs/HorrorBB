@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: Assets/_SheepFold/Scenes/MainScenes/Starter.unity
+    guid: 8627651a4e9a7c54aaa276aea1485d27
+  - enabled: 0
+    path: Assets/_SheepFold/Scenes/MainScenes/TitleCard.unity
+    guid: 93830f1e218a9f946b8d5a4df0df664d
+  - enabled: 0
+    path: Assets/_SheepFold/Scenes/MainScenes/LD V5.unity
+    guid: e48038f67dcb3374d96bb0edf606ffcb
+  - enabled: 0
+    path: Assets/_SheepFold/Scenes/MainScenes/Sandbox 3C Metrics.unity
+    guid: ce2111efff4a07a4cb8a73ba5b1488b2
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: e5c3248a3341d6e4ea6e787f8b209743,
+      type: 2}
