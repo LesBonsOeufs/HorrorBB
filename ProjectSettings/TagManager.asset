@@ -10,19 +10,19 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - FlockContext
+  - 
   - Water
   - UI
-  - NavmeshElement
-  - FlockDisturbance
-  - Interactable
-  - Flock_NavmeshElement
-  - Players_NavmeshElement
-  - Dog
-  - Shepherd
-  - Cutout
-  - IgnoreGameplay
-  - PostProcess
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
