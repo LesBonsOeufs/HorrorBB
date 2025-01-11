@@ -11,6 +11,7 @@ using System.Collections.Generic;
 ///
 /// Just activate / deactivate this component as usual to pause / resume flicker
 /// </summary>
+[ExecuteAlways]
 public class LightFlicker : MonoBehaviour
 {
     [Tooltip("External light to flicker; you can leave this null if you attach script to a light")]
@@ -25,7 +26,7 @@ public class LightFlicker : MonoBehaviour
 
     // Continuous average calculation via FIFO queue
     // Saves us iterating every time we update, we just change by the delta
-    Queue<float> smoothQueue;
+    Queue<float> smoothQueue = new Queue<float>();
     float lastSum = 0;
 
 
