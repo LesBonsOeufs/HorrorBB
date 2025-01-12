@@ -25,7 +25,7 @@ QualitySettings:
     antiAliasing: 0
     softParticles: 0
     softVegetation: 0
-    realtimeReflectionProbes: 0
+    realtimeReflectionProbes: 1
     billboardsFaceCameraPosition: 0
     useLegacyDetailDistribution: 1
     vSyncCount: 1
@@ -44,7 +44,7 @@ QualitySettings:
     asyncUploadBufferSize: 16
     asyncUploadPersistentBuffer: 1
     resolutionScalingFixedDPIFactor: 1
-    customRenderPipeline: {fileID: 11400000, guid: e661bc587dfa06a40a679c0083e2e13a,
+    customRenderPipeline: {fileID: 11400000, guid: 8ec815970aecafd45ac44fea8675de0f,
       type: 2}
     terrainQualityOverrides: 0
     terrainPixelError: 1
