@@ -9,11 +9,11 @@ namespace Root
     public class SplineAnimate_Control : MonoBehaviour
     {
         [SerializeField] private SplineContainer splineContainer;
-        [SerializeField] private float animDuration = 2f;
-        [SerializeField] private float targetDistance = 0f;
+        [SerializeField] private float animDuration = 3f;
         [SerializeField] private float[] registeredTargets = new float[] { };
 
         private int currentTargetIndex = 0;
+        private float targetDistance = 0f;
         private float currentDistance;
         private Tween anim;
         
@@ -50,19 +50,19 @@ namespace Root
         {
             targetDistance = registeredTargets[currentTargetIndex];
             anim.Kill();
+
+            if (!Application.isPlaying)
+            {
+                currentDistance = targetDistance;
+                Apply();
+                return;
+            }
+
             anim = DOVirtual.Float(currentDistance, targetDistance, animDuration, updatedDistance =>
             {
                 currentDistance = updatedDistance;
                 Apply();
             });
-        }
-
-        [Button]
-        private void ForceApply()
-        {
-            anim.Kill();
-            currentDistance = targetDistance;
-            Apply();
         }
 
         private void Apply()

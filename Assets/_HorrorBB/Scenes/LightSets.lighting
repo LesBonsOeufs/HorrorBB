@@ -6,12 +6,12 @@ LightingSettings:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LightSets_Realtime
+  m_Name: LightSets
   serializedVersion: 6
   m_GIWorkflowMode: 0
-  m_EnableBakedLightmaps: 0
+  m_EnableBakedLightmaps: 1
   m_EnableRealtimeLightmaps: 1
-  m_RealtimeEnvironmentLighting: 1
+  m_RealtimeEnvironmentLighting: 0
   m_BounceScale: 1
   m_AlbedoBoost: 1
   m_IndirectOutputScale: 1
