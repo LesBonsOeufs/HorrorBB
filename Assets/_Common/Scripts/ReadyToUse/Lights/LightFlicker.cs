@@ -1,6 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 // Written by Steve Streeting 2017
 // License: CC0 Public Domain http://creativecommons.org/publicdomain/zero/1.0/
 
@@ -43,6 +47,14 @@ public class LightFlicker : MonoBehaviour
 
     void Start()
     {
+#if UNITY_EDITOR
+        //-= followed by += makes sure that the callback is not called more than once by the event.
+        Lightmapping.bakeStarted -= Lightmapping_BakeStarted;
+        Lightmapping.bakeStarted += Lightmapping_BakeStarted;
+        Lightmapping.bakeCompleted -= Lightmapping_BakeCompleted;
+        Lightmapping.bakeCompleted += Lightmapping_BakeCompleted;
+#endif
+
         smoothQueue = new Queue<float>(smoothing);
         // External or internal light?
         if (light == null)
@@ -50,6 +62,18 @@ public class LightFlicker : MonoBehaviour
             light = GetComponent<Light>();
         }
     }
+
+#if UNITY_EDITOR
+    private void Lightmapping_BakeStarted()
+    {
+        enabled = false;
+    }
+
+    private void Lightmapping_BakeCompleted()
+    {
+        enabled = true;
+    }
+#endif
 
     void Update()
     {
@@ -71,4 +95,9 @@ public class LightFlicker : MonoBehaviour
         light.intensity = lastSum / (float)smoothQueue.Count;
     }
 
+    private void OnDestroy()
+    {
+        Lightmapping.bakeStarted -= Lightmapping_BakeStarted;
+        Lightmapping.bakeCompleted -= Lightmapping_BakeCompleted;
+    }
 }
