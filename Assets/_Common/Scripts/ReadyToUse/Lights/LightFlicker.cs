@@ -33,7 +33,6 @@ public class LightFlicker : MonoBehaviour
     Queue<float> smoothQueue = new Queue<float>();
     float lastSum = 0;
 
-
     /// <summary>
     /// Reset the randomness and start again. You usually don't need to call
     /// this, deactivating/reactivating is usually fine but if you want a strict
@@ -47,14 +46,6 @@ public class LightFlicker : MonoBehaviour
 
     void Start()
     {
-#if UNITY_EDITOR
-        //-= followed by += makes sure that the callback is not called more than once by the event.
-        Lightmapping.bakeStarted -= Lightmapping_BakeStarted;
-        Lightmapping.bakeStarted += Lightmapping_BakeStarted;
-        Lightmapping.bakeCompleted -= Lightmapping_BakeCompleted;
-        Lightmapping.bakeCompleted += Lightmapping_BakeCompleted;
-#endif
-
         smoothQueue = new Queue<float>(smoothing);
         // External or internal light?
         if (light == null)
@@ -64,6 +55,17 @@ public class LightFlicker : MonoBehaviour
     }
 
 #if UNITY_EDITOR
+
+    private void Awake()
+    {
+        //-= followed by += makes sure that the callback is not called more than once by the event.
+        Lightmapping.bakeStarted -= Lightmapping_BakeStarted;
+        Lightmapping.bakeStarted += Lightmapping_BakeStarted;
+        Lightmapping.bakeCompleted -= Lightmapping_BakeCompleted;
+        Lightmapping.bakeCompleted += Lightmapping_BakeCompleted;
+        Reset();
+    }
+
     private void Lightmapping_BakeStarted()
     {
         enabled = false;
@@ -72,6 +74,12 @@ public class LightFlicker : MonoBehaviour
     private void Lightmapping_BakeCompleted()
     {
         enabled = true;
+    }
+
+    private void OnDestroy()
+    {
+        Lightmapping.bakeStarted -= Lightmapping_BakeStarted;
+        Lightmapping.bakeCompleted -= Lightmapping_BakeCompleted;
     }
 #endif
 
@@ -93,11 +101,5 @@ public class LightFlicker : MonoBehaviour
 
         // Calculate new smoothed average
         light.intensity = lastSum / (float)smoothQueue.Count;
-    }
-
-    private void OnDestroy()
-    {
-        Lightmapping.bakeStarted -= Lightmapping_BakeStarted;
-        Lightmapping.bakeCompleted -= Lightmapping_BakeCompleted;
     }
 }
