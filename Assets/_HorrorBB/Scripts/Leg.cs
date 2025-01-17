@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class Leg : MonoBehaviour
@@ -44,28 +45,30 @@ public class Leg : MonoBehaviour
 
     private void Update()
     {
-        RaycastHit hit;
+        //Choose the closest valid hit
+        RaycastHit? lHit =
+            new RaycastHit?[] { Raycast(bodyTransform.forward), Raycast(bodyTransform.up * -1) }
+            .OrderBy(hit => hit == null ? Mathf.Infinity : hit.Value.distance).First();
 
-        // Calculate the tip target position
-        if (Physics.Raycast(rayOrigin.position, bodyTransform.up.normalized * -1, out hit, maxRayDist))
+        if (lHit != null)
         {
-            RaycastTipPos = hit.point;
-            RaycastTipNormal = hit.normal;
+            RaycastTipPos = lHit.Value.point;
+            RaycastTipNormal = lHit.Value.normal;
         }
-        // else
-        // {
-        //     TipPos = RaycastTipPos = rayOrigin.position + bodyTransform.up.normalized * -1 * maxRayDist;
-        //     UpdateIKTargetTransform();
-        //     return;
-        // }
 
         TipDistance = (RaycastTipPos - TipPos).magnitude;
 
         // If the distance gets too far, animate and move the tip to new position
-        if (!Animating && (TipDistance > tipMoveDist && Movable))
-        {
+        if (!Animating && TipDistance > tipMoveDist && Movable)
             StartCoroutine(AnimateLeg());
-        }
+    }
+
+    private RaycastHit? Raycast(Vector3 direction)
+    {
+        if (Physics.Raycast(rayOrigin.position, direction, out RaycastHit lHit, maxRayDist))
+            return lHit;
+
+        return null;
     }
 
     private IEnumerator AnimateLeg()
@@ -106,7 +109,7 @@ public class Leg : MonoBehaviour
     {
         // Update leg ik target transform depend on tip information
         ikTarget.transform.position = TipPos + bodyTransform.up.normalized * ikYOffset;
-        ikTarget.transform.rotation = Quaternion.LookRotation(TipPos - ikTarget.transform.position);
+        ikTarget.transform.rotation = Quaternion.LookRotation(bodyTransform.forward);
     }
 
     private void OnDrawGizmos()

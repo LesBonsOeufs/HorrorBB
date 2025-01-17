@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3289054233964488026}
   - component: {fileID: 1658862506238556685}
-  - component: {fileID: 6408969159930124902}
   - component: {fileID: 3604955831369504997}
   m_Layer: 0
   m_Name: LeftArmIK
@@ -113,33 +112,9 @@ MonoBehaviour:
   tipAnimationFrameTime: 0.016666668
   initTipPosZOffset: -0.3
   ikYOffset: 0
-  tipMoveDist: 0.26
+  tipMoveDist: 0.28
   maxRayDist: 7
   tipPassOver: 0.275
---- !u!114 &6408969159930124902
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 324895688537622718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeda7bfbf984f2a4da5ab4b8967b115d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Weight: 0
-  m_Data:
-    m_Root: {fileID: 4440294339578548332}
-    m_Mid: {fileID: 4440294339578548328}
-    m_Tip: {fileID: 4440294339578548330}
-    m_Target: {fileID: 5471709460895820134}
-    m_Hint: {fileID: 8532333957807822052}
-    m_TargetPositionWeight: 1
-    m_TargetRotationWeight: 1
-    m_HintWeight: 1
-    m_MaintainTargetPositionOffset: 0
-    m_MaintainTargetRotationOffset: 0
 --- !u!114 &3604955831369504997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,19 +234,19 @@ MonoBehaviour:
   m_Data:
     m_ConstrainedObject: {fileID: 4440294339578548306}
     m_SourceObjects:
-      m_Length: 4
+      m_Length: 2
       m_Item0:
-        transform: {fileID: 3351535558411069619}
+        transform: {fileID: 4440294339578548328}
         weight: 1
       m_Item1:
-        transform: {fileID: 5471709460895820134}
+        transform: {fileID: 4440294339578548302}
         weight: 1
       m_Item2:
-        transform: {fileID: 351678639576597098}
-        weight: 1
+        transform: {fileID: 0}
+        weight: 0
       m_Item3:
-        transform: {fileID: 2371126398254712145}
-        weight: 1
+        transform: {fileID: 0}
+        weight: 0
       m_Item4:
         transform: {fileID: 0}
         weight: 0
@@ -284,7 +259,7 @@ MonoBehaviour:
       m_Item7:
         transform: {fileID: 0}
         weight: 0
-    m_Offset: {x: 90, y: 0, z: 0}
+    m_Offset: {x: 0, y: 0, z: 0}
     m_ConstrainedAxes:
       x: 1
       y: 1
@@ -504,8 +479,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8532333957807822052}
+  m_Children: []
   m_Father: {fileID: 3289054233964488026}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2401577294492596199
@@ -518,7 +492,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7540265329252070642}
   - component: {fileID: 5078797652176311531}
-  - component: {fileID: 8068293755668915387}
   - component: {fileID: 7715818619915737954}
   m_Layer: 0
   m_Name: RightArmIK
@@ -621,33 +594,9 @@ MonoBehaviour:
   tipAnimationFrameTime: 0.016666668
   initTipPosZOffset: 0
   ikYOffset: 0
-  tipMoveDist: 0.26
+  tipMoveDist: 0.28
   maxRayDist: 7
   tipPassOver: 0.275
---- !u!114 &8068293755668915387
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2401577294492596199}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeda7bfbf984f2a4da5ab4b8967b115d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Weight: 0
-  m_Data:
-    m_Root: {fileID: 4440294339578548290}
-    m_Mid: {fileID: 4440294339578548302}
-    m_Tip: {fileID: 4440294339578548312}
-    m_Target: {fileID: 3351535558411069619}
-    m_Hint: {fileID: 4328836357259737941}
-    m_TargetPositionWeight: 1
-    m_TargetRotationWeight: 1
-    m_HintWeight: 1
-    m_MaintainTargetPositionOffset: 0
-    m_MaintainTargetRotationOffset: 0
 --- !u!114 &7715818619915737954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -671,37 +620,6 @@ MonoBehaviour:
     m_Tolerance: 0.0001
     m_MaintainTargetPositionOffset: 0
     m_MaintainTargetRotationOffset: 0
---- !u!1 &2480693196960555213
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4328836357259737941}
-  m_Layer: 0
-  m_Name: Hint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4328836357259737941
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2480693196960555213}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3351535558411069619}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2984109404937405965
 GameObject:
   m_ObjectHideFlags: 0
@@ -1029,7 +947,7 @@ Transform:
   m_GameObject: {fileID: 5596555670401502813}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.000000011920918, z: 0.2}
+  m_LocalPosition: {x: 0.19999999, y: 0, z: 0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1046,7 +964,6 @@ GameObject:
   - component: {fileID: 4343895266056272974}
   - component: {fileID: 8769473249425202404}
   - component: {fileID: 6320317952599614619}
-  - component: {fileID: 4184239954007545862}
   m_Layer: 0
   m_Name: LeftLegIK
   m_TagString: Untagged
@@ -1148,7 +1065,7 @@ MonoBehaviour:
   tipAnimationFrameTime: 0.016666668
   initTipPosZOffset: 0
   ikYOffset: 0
-  tipMoveDist: 0.26
+  tipMoveDist: 0.28
   maxRayDist: 7
   tipPassOver: 0.275
 --- !u!114 &6320317952599614619
@@ -1173,29 +1090,6 @@ MonoBehaviour:
     m_TargetPositionWeight: 1
     m_TargetRotationWeight: 1
     m_HintWeight: 1
-    m_MaintainTargetPositionOffset: 0
-    m_MaintainTargetRotationOffset: 0
---- !u!114 &4184239954007545862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5697805138272724634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 796b75e345bd64d47a31edd757bd2670, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Weight: 0
-  m_Data:
-    m_Root: {fileID: 4440294339578548350}
-    m_Tip: {fileID: 4440294339578548348}
-    m_Target: {fileID: 2371126398254712145}
-    m_ChainRotationWeight: 1
-    m_TipRotationWeight: 1
-    m_MaxIterations: 15
-    m_Tolerance: 0.0001
     m_MaintainTargetPositionOffset: 0
     m_MaintainTargetRotationOffset: 0
 --- !u!1 &6207071042207930792
@@ -1366,7 +1260,6 @@ GameObject:
   - component: {fileID: 7058560177898267965}
   - component: {fileID: 6456868725615337727}
   - component: {fileID: 7571294168225778109}
-  - component: {fileID: 4926511494358554872}
   m_Layer: 0
   m_Name: RightLegIK
   m_TagString: Untagged
@@ -1468,7 +1361,7 @@ MonoBehaviour:
   tipAnimationFrameTime: 0.016666668
   initTipPosZOffset: -0.3
   ikYOffset: 0
-  tipMoveDist: 0.26
+  tipMoveDist: 0.28
   maxRayDist: 7
   tipPassOver: 0.275
 --- !u!114 &7571294168225778109
@@ -1493,29 +1386,6 @@ MonoBehaviour:
     m_TargetPositionWeight: 1
     m_TargetRotationWeight: 1
     m_HintWeight: 1
-    m_MaintainTargetPositionOffset: 0
-    m_MaintainTargetRotationOffset: 0
---- !u!114 &4926511494358554872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6932330065819494881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 796b75e345bd64d47a31edd757bd2670, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Weight: 0
-  m_Data:
-    m_Root: {fileID: 4440294339578548304}
-    m_Tip: {fileID: 4440294339578548310}
-    m_Target: {fileID: 351678639576597098}
-    m_ChainRotationWeight: 1
-    m_TipRotationWeight: 1
-    m_MaxIterations: 15
-    m_Tolerance: 0.0001
     m_MaintainTargetPositionOffset: 0
     m_MaintainTargetRotationOffset: 0
 --- !u!1 &7176818631466790763
@@ -1622,7 +1492,7 @@ Transform:
   m_GameObject: {fileID: 7837998928625391970}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.000000011920918, z: 0.2}
+  m_LocalPosition: {x: -0.2, y: 0, z: 0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1656,8 +1526,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4328836357259737941}
+  m_Children: []
   m_Father: {fileID: 7540265329252070642}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8245137352733301645
@@ -1739,37 +1608,6 @@ MonoBehaviour:
       y: 1
       z: 0
     m_MaintainOffset: 0
---- !u!1 &8711257326031542581
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8532333957807822052}
-  m_Layer: 0
-  m_Name: Hint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8532333957807822052
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8711257326031542581}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5471709460895820134}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2033316534023242768
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1783,6 +1621,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 8a8cddb55032a4c4a86c80a726a2a60e, type: 2}
+    - target: {fileID: 2425420053872999316, guid: bfb088f5e041d3447bcbdd94813f3a41,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2425420053877130580, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: 'm_Materials.Array.data[2]'
