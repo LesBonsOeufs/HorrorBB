@@ -72,7 +72,8 @@ public class Leg : MonoBehaviour
         if (!Animating && TipDistance > tipMoveDist && Movable)
             StartCoroutine(AnimateLeg());
 
-        lastRayForwardOriginPos = rayForwardOrigin.position;
+        if (lastRayForwardOriginPos != rayForwardOrigin.position)
+            lastRayForwardOriginPos = rayForwardOrigin.position;
     }
 
     private RaycastHit? Raycast(Ray ray)

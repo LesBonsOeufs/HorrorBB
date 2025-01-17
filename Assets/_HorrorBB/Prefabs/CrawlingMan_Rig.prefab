@@ -1726,7 +1726,7 @@ PrefabInstance:
     - target: {fileID: 2425420053880244296, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_Name
-      value: manspider_rig
+      value: CrawlingMan_Rig
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880244296, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
