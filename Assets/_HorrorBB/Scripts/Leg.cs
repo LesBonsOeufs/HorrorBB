@@ -6,7 +6,8 @@ using UnityEngine;
 public class Leg : MonoBehaviour
 {
     [SerializeField] private Transform bodyTransform;
-    [SerializeField] private Transform rayOrigin;
+    [SerializeField] private Transform rayForwardOrigin;
+    [SerializeField] private Transform rayDownOrigin;
     public GameObject ikTarget;
 
     [SerializeField] private AnimationCurve speedCurve;
@@ -20,6 +21,7 @@ public class Leg : MonoBehaviour
     [Foldout("Advanced"), SerializeField] private float ikYOffset = 1.0f;
     [Foldout("Advanced"), SerializeField] private float tipMoveDist = 0.55f;
     [Foldout("Advanced"), SerializeField] private float maxRayDist = 7.0f;
+    //Currently should stay at 0, for preventing passing tip through wall
     [Foldout("Advanced"), SerializeField] private float tipPassOver = 0.55f / 2.0f;
 
     public Vector3 TipPos { get; private set; }
@@ -31,6 +33,13 @@ public class Leg : MonoBehaviour
     public bool Movable { get; set; } = false;
     public float TipDistance { get; private set; }
 
+    public Ray ForwardRay => new(rayForwardOrigin.position, 
+        Vector3.ProjectOnPlane(rayForwardOrigin.position - lastRayForwardOriginPos, bodyTransform.up).normalized);
+    public Ray DownRay => new(rayDownOrigin.position, bodyTransform.up * -1);
+
+    //Used for forwardRay's direction
+    private Vector3 lastRayForwardOriginPos;
+
     private void Awake()
     {
         ikTarget.transform.parent = null;
@@ -39,6 +48,7 @@ public class Leg : MonoBehaviour
 
     private void Start()
     {
+        lastRayForwardOriginPos = rayForwardOrigin.position;
         TipPos += bodyTransform.forward * initTipPosZOffset;
         UpdateIKTargetTransform();
     }
@@ -47,7 +57,7 @@ public class Leg : MonoBehaviour
     {
         //Choose the closest valid hit
         RaycastHit? lHit =
-            new RaycastHit?[] { Raycast(bodyTransform.forward), Raycast(bodyTransform.up * -1) }
+            new RaycastHit?[] { Raycast(ForwardRay), Raycast(DownRay) }
             .OrderBy(hit => hit == null ? Mathf.Infinity : hit.Value.distance).First();
 
         if (lHit != null)
@@ -56,16 +66,18 @@ public class Leg : MonoBehaviour
             RaycastTipNormal = lHit.Value.normal;
         }
 
-        TipDistance = (RaycastTipPos - TipPos).magnitude;
+        TipDistance = Vector3.ProjectOnPlane(RaycastTipPos - TipPos, bodyTransform.up).magnitude;
 
         // If the distance gets too far, animate and move the tip to new position
         if (!Animating && TipDistance > tipMoveDist && Movable)
             StartCoroutine(AnimateLeg());
+
+        lastRayForwardOriginPos = rayForwardOrigin.position;
     }
 
-    private RaycastHit? Raycast(Vector3 direction)
+    private RaycastHit? Raycast(Ray ray)
     {
-        if (Physics.Raycast(rayOrigin.position, direction, out RaycastHit lHit, maxRayDist))
+        if (Physics.Raycast(ray, out RaycastHit lHit, maxRayDist))
             return lHit;
 
         return null;
@@ -117,11 +129,14 @@ public class Leg : MonoBehaviour
         Gizmos.color = Color.magenta;
         Gizmos.DrawSphere(RaycastTipPos, 0.1f);
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(TipPos, 0.1f);
-
         Gizmos.color = Color.red;
         Gizmos.DrawLine(TipPos, RaycastTipPos);
+
+        Gizmos.color = Color.white;
+        Gizmos.DrawRay(ForwardRay);
+
+        Gizmos.color = Color.black;
+        Gizmos.DrawRay(DownRay);
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(ikTarget.transform.position, 0.1f);
