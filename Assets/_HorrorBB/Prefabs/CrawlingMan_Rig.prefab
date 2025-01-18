@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 324895688537622718}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.3, y: -0.5, z: 0.7}
+  m_LocalPosition: {x: -0.3, y: 0, z: 0.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -109,13 +109,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  tipMaxHeight: 0.2
-  tipAnimationTime: 0.35
+  tipAnimationDuration: 0.1
   tipAnimationFrameTime: 0.016666668
+  tipMaxHeight: 0.2
   initTipPosZOffset: -0.3
   ikYOffset: 0
   tipMoveDist: 0.28
-  maxRayDist: 7
+  maxRayDist: 2
   tipPassOver: 0
 --- !u!114 &3604955831369504997
 MonoBehaviour:
@@ -294,7 +294,7 @@ Transform:
   m_GameObject: {fileID: 751019680048764657}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -509,7 +509,7 @@ Transform:
   m_GameObject: {fileID: 2401577294492596199}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.3, y: -0.5, z: 0.7}
+  m_LocalPosition: {x: 0.3, y: 0, z: 0.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -591,13 +591,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  tipMaxHeight: 0.2
-  tipAnimationTime: 0.35
+  tipAnimationDuration: 0.1
   tipAnimationFrameTime: 0.016666668
+  tipMaxHeight: 0.2
   initTipPosZOffset: 0
   ikYOffset: 0
   tipMoveDist: 0.28
-  maxRayDist: 7
+  maxRayDist: 2
   tipPassOver: 0
 --- !u!114 &7715818619915737954
 MonoBehaviour:
@@ -1166,7 +1166,7 @@ Transform:
   m_GameObject: {fileID: 5697805138272724634}
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000029802322, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.3, y: -0.49999976, z: -0.5}
+  m_LocalPosition: {x: -0.3, y: 0, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1248,13 +1248,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  tipMaxHeight: 0.2
-  tipAnimationTime: 0.35
+  tipAnimationDuration: 0.1
   tipAnimationFrameTime: 0.016666668
+  tipMaxHeight: 0.2
   initTipPosZOffset: 0
   ikYOffset: 0
   tipMoveDist: 0.28
-  maxRayDist: 7
+  maxRayDist: 2
   tipPassOver: 0
 --- !u!114 &6320317952599614619
 MonoBehaviour:
@@ -1464,7 +1464,7 @@ Transform:
   m_GameObject: {fileID: 6932330065819494881}
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000029802322, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3, y: -0.5, z: -0.5}
+  m_LocalPosition: {x: 0.3, y: 0, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1546,13 +1546,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  tipMaxHeight: 0.2
-  tipAnimationTime: 0.35
+  tipAnimationDuration: 0.1
   tipAnimationFrameTime: 0.016666668
+  tipMaxHeight: 0.2
   initTipPosZOffset: -0.3
   ikYOffset: 0
   tipMoveDist: 0.28
-  maxRayDist: 7
+  maxRayDist: 2
   tipPassOver: 0
 --- !u!114 &7571294168225778109
 MonoBehaviour:
@@ -1681,7 +1681,7 @@ PrefabInstance:
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
@@ -2096,8 +2096,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f98350e34a9313842b8264af8ca3fa4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1.5
+  speed: 1
   rotationSpeed: 6
   castLength: 1.5
-  castAngle: 100
+  castAngle: 125
   initialElevation: 0
+  legs:
+  - {fileID: 5078797652176311531}
+  - {fileID: 1658862506238556685}
+  - {fileID: 6456868725615337727}
+  - {fileID: 8769473249425202404}

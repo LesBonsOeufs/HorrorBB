@@ -13,14 +13,14 @@ public class Leg : MonoBehaviour
     [SerializeField] private AnimationCurve speedCurve;
     [SerializeField] private AnimationCurve heightCurve;
 
-    [Foldout("Advanced"), SerializeField] private float tipMaxHeight = 0.2f;
-    [Foldout("Advanced"), SerializeField] private float tipAnimationTime = 0.15f;
+    [Foldout("Advanced")] public float tipAnimationDuration = 0.15f;
     [Foldout("Advanced"), SerializeField] private float tipAnimationFrameTime = 1 / 60.0f;
 
+    [Foldout("Advanced"), SerializeField] private float tipMaxHeight = 0.2f;
     [Foldout("Advanced"), SerializeField] private float initTipPosZOffset = 0f;
     [Foldout("Advanced"), SerializeField] private float ikYOffset = 1.0f;
     [Foldout("Advanced"), SerializeField] private float tipMoveDist = 0.55f;
-    [Foldout("Advanced"), SerializeField] private float maxRayDist = 7.0f;
+    [Foldout("Advanced"), SerializeField] private float maxRayDist = 2.0f;
     //Currently should stay at 0, for preventing passing tip through wall
     [Foldout("Advanced"), SerializeField] private float tipPassOver = 0.55f / 2.0f;
 
@@ -57,7 +57,7 @@ public class Leg : MonoBehaviour
     {
         //Choose the closest valid hit
         RaycastHit? lHit =
-            new RaycastHit?[] { Raycast(ForwardRay), Raycast(DownRay) }
+            new RaycastHit?[] { /*Raycast(ForwardRay),*/ Raycast(DownRay) }
             .OrderBy(hit => hit == null ? Mathf.Infinity : hit.Value.distance).First();
 
         if (lHit != null)
@@ -89,30 +89,24 @@ public class Leg : MonoBehaviour
     {
         Animating = true;
 
-        float timer = 0.0f;
-        float animTime;
-
+        float lTimer = 0.0f;
+        float lAnimTime;
         Vector3 lInitTipPos = TipPos;
-        Vector3 lTipDirection = RaycastTipPos - TipPos;
-        lTipDirection += lTipDirection.normalized * tipPassOver;
 
-        Vector3 lRight = Vector3.Cross(bodyTransform.up, lTipDirection.normalized).normalized;
-        TipUpDir = Vector3.Cross(lTipDirection.normalized, lRight);
-
-        while (timer < tipAnimationTime + tipAnimationFrameTime)
+        while (lTimer < tipAnimationDuration + tipAnimationFrameTime)
         {
-            animTime = speedCurve.Evaluate(timer / tipAnimationTime);
+            lAnimTime = speedCurve.Evaluate(lTimer / tipAnimationDuration);
 
-            // If the target keeps moving, apply acceleration to correct the end point
-            float lTipAcceleration = Mathf.Max((RaycastTipPos - lInitTipPos).magnitude / lTipDirection.magnitude, 1.0f);
+            Vector3 lTipToTarget = RaycastTipPos - lInitTipPos;
+            Vector3 lTipDirection = lTipToTarget.normalized;
+            lTipToTarget += lTipDirection * tipPassOver;
+            TipUpDir = Vector3.Cross(lTipDirection, Vector3.Cross(bodyTransform.up, lTipDirection).normalized);
 
-            TipPos = lInitTipPos + lTipDirection * lTipAcceleration * animTime; // Forward direction of tip vector
-            TipPos += TipUpDir * heightCurve.Evaluate(animTime) * tipMaxHeight; // Upward direction of tip vector
+            TipPos = lInitTipPos + lTipToTarget * lAnimTime;
+            TipPos += TipUpDir * heightCurve.Evaluate(lAnimTime) * tipMaxHeight;
 
             UpdateIKTargetTransform();
-
-            timer += tipAnimationFrameTime;
-
+            lTimer += tipAnimationFrameTime;
             yield return new WaitForSeconds(tipAnimationFrameTime);
         }
 
@@ -123,7 +117,7 @@ public class Leg : MonoBehaviour
     {
         // Update leg ik target transform depend on tip information
         ikTarget.transform.position = TipPos + bodyTransform.up.normalized * ikYOffset;
-        ikTarget.transform.rotation = Quaternion.LookRotation(bodyTransform.forward);
+        ikTarget.transform.rotation = Quaternion.LookRotation(bodyTransform.forward, bodyTransform.up);
     }
 
     private void OnDrawGizmos()

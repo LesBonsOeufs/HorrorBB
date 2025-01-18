@@ -1,8 +1,6 @@
 using NaughtyAttributes;
-using UnityEditor.PackageManager;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
-using UnityEngine.Rendering;
 
 namespace Root
 {
@@ -16,8 +14,13 @@ namespace Root
         [SerializeField] private float castAngle = 120f;
         [SerializeField, ReadOnly] private float initialElevation;
 
+        [InfoBox("Fill for dynamic leg anim duration (each initial anim duration will be divided with speed)"), SerializeField] private Leg[] legs = default;
+        private float[] initLegAnimDurations;
+
         private void Start()
         {
+            initLegAnimDurations = legs.Select(leg => leg.tipAnimationDuration).ToArray(); 
+
             if (Physics.Raycast(new Ray(transform.position, transform.up * -1), out RaycastHit lHit, 1f))
                 initialElevation = lHit.distance;
             else
@@ -26,6 +29,8 @@ namespace Root
 
         private void Update()
         {
+            UpdateDynamicLegAnimDurations();
+
             RaycastHit lFrontHit;
             RaycastHit lBackHit;
             Vector3 lXZDirectionalInput = Vector3.forward;
@@ -50,10 +55,15 @@ namespace Root
             Vector3 lElevation = lAverageNormal * initialElevation;
             Vector3 lVelocity = FromTo * lXZDirectionalInput * speed * Time.deltaTime;
             transform.position = lPlanePoint + lElevation + lVelocity;
-            Debug.DrawLine(transform.position, lPlanePoint);
 
             Quaternion lTargetRotation = Quaternion.LookRotation(lVelocity, transform.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, lTargetRotation, rotationSpeed * Time.deltaTime);
+        }
+
+        private void UpdateDynamicLegAnimDurations()
+        {
+            for (int i = legs.Length - 1; i >= 0; i--)
+                legs[i].tipAnimationDuration = initLegAnimDurations[i] / speed;
         }
     }
 }
