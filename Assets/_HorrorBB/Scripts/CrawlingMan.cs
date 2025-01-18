@@ -33,7 +33,6 @@ namespace Root
 
             RaycastHit lFrontHit;
             RaycastHit lBackHit;
-            Vector3 lXZDirectionalInput = Vector3.forward;
 
             ///This method allows smooth point average, but can easily lose contact
             Physics.SphereCast(new Ray(transform.position,
@@ -50,13 +49,14 @@ namespace Root
             Vector3 lAverageNormal = ((lFrontHit.normal * (1f - lFrontDistanceRatio)) + 
                 (lBackHit.normal * (1f - lBackDistanceRatio))).normalized;
 
-            Quaternion FromTo = Quaternion.AngleAxis(Vector3.SignedAngle(Vector3.up, lAverageNormal, transform.right), transform.right);
             Vector3 lPlanePoint = new Plane(lAverageNormal, lAveragePoint).ClosestPointOnPlane(transform.position);
             Vector3 lElevation = lAverageNormal * initialElevation;
-            Vector3 lVelocity = FromTo * lXZDirectionalInput * speed * Time.deltaTime;
+            Vector3 lVelocity = Vector3.ProjectOnPlane(transform.forward, lAverageNormal) * speed * Time.deltaTime;
             transform.position = lPlanePoint + lElevation + lVelocity;
 
-            Quaternion lTargetRotation = Quaternion.LookRotation(lVelocity, transform.up);
+            Debug.DrawRay(transform.position, lVelocity / Time.deltaTime);
+
+            Quaternion lTargetRotation = Quaternion.LookRotation(lVelocity, lAverageNormal);
             transform.rotation = Quaternion.Slerp(transform.rotation, lTargetRotation, rotationSpeed * Time.deltaTime);
         }
 
