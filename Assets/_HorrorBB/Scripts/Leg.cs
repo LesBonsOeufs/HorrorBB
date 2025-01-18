@@ -66,7 +66,8 @@ public class Leg : MonoBehaviour
             RaycastTipNormal = lHit.Value.normal;
         }
 
-        TipDistance = Vector3.ProjectOnPlane(RaycastTipPos - TipPos, bodyTransform.up).magnitude;
+        //TipDistance = Vector3.ProjectOnPlane(RaycastTipPos - TipPos, bodyTransform.up).magnitude;
+        TipDistance = (RaycastTipPos - TipPos).magnitude;
 
         // If the distance gets too far, animate and move the tip to new position
         if (!Animating && TipDistance > tipMoveDist && Movable)
@@ -91,21 +92,21 @@ public class Leg : MonoBehaviour
         float timer = 0.0f;
         float animTime;
 
-        Vector3 startingTipPos = TipPos;
-        Vector3 tipDirVec = RaycastTipPos - TipPos;
-        tipDirVec += tipDirVec.normalized * tipPassOver;
+        Vector3 lInitTipPos = TipPos;
+        Vector3 lTipDirection = RaycastTipPos - TipPos;
+        lTipDirection += lTipDirection.normalized * tipPassOver;
 
-        Vector3 right = Vector3.Cross(bodyTransform.up, tipDirVec.normalized).normalized;
-        TipUpDir = Vector3.Cross(tipDirVec.normalized, right);
+        Vector3 lRight = Vector3.Cross(bodyTransform.up, lTipDirection.normalized).normalized;
+        TipUpDir = Vector3.Cross(lTipDirection.normalized, lRight);
 
         while (timer < tipAnimationTime + tipAnimationFrameTime)
         {
             animTime = speedCurve.Evaluate(timer / tipAnimationTime);
 
-            // If the target is keep moving, apply acceleration to correct the end point
-            float tipAcceleration = Mathf.Max((RaycastTipPos - startingTipPos).magnitude / tipDirVec.magnitude, 1.0f);
+            // If the target keeps moving, apply acceleration to correct the end point
+            float lTipAcceleration = Mathf.Max((RaycastTipPos - lInitTipPos).magnitude / lTipDirection.magnitude, 1.0f);
 
-            TipPos = startingTipPos + tipDirVec * tipAcceleration * animTime; // Forward direction of tip vector
+            TipPos = lInitTipPos + lTipDirection * lTipAcceleration * animTime; // Forward direction of tip vector
             TipPos += TipUpDir * heightCurve.Evaluate(animTime) * tipMaxHeight; // Upward direction of tip vector
 
             UpdateIKTargetTransform();

@@ -26,42 +26,34 @@ namespace Root
 
         private void Update()
         {
-            RaycastHit lForwardHit;
-            RaycastHit lBackwardHit;
-            Vector3 lLocalDirection = Vector3.forward;
+            RaycastHit lFrontHit;
+            RaycastHit lBackHit;
+            Vector3 lXZDirectionalInput = Vector3.forward;
 
             ///This method allows smooth point average, but can easily lose contact
             Physics.SphereCast(new Ray(transform.position,
-                Quaternion.AngleAxis(-castAngle * 0.5f, transform.right) * transform.up * -1), SPHERE_RADIUS, out lBackwardHit, castLength);
+                Quaternion.AngleAxis(-castAngle * 0.5f, transform.right) * transform.up * -1), SPHERE_RADIUS, out lBackHit, castLength);
             Physics.SphereCast(new Ray(transform.position,
-                Quaternion.AngleAxis(castAngle * 0.5f, transform.right) * transform.up * -1), SPHERE_RADIUS, out lForwardHit, castLength);
+                Quaternion.AngleAxis(castAngle * 0.5f, transform.right) * transform.up * -1), SPHERE_RADIUS, out lFrontHit, castLength);
 
-            Vector3 lForwardToBack = lBackwardHit.point - lForwardHit.point;
-            float lForwardDistanceRatio = lForwardHit.distance / castLength;
-            float lBackwardDistanceRatio = lBackwardHit.distance / castLength;
+            Vector3 lFrontToBack = lBackHit.point - lFrontHit.point;
+            float lFrontDistanceRatio = lFrontHit.distance / castLength;
+            float lBackDistanceRatio = lBackHit.distance / castLength;
 
-            Vector3 lAveragePoint = lForwardHit.point + lForwardToBack.normalized *
-                lForwardToBack.magnitude * (0.5f - 0.5f * (1f - lForwardDistanceRatio) + 0.5f * (1f - lBackwardDistanceRatio));
-            Vector3 lAverageNormal = ((lForwardHit.normal * (1f - lForwardDistanceRatio)) + 
-                (lBackwardHit.normal * (1f - lBackwardDistanceRatio))).normalized;
+            Vector3 lAveragePoint = lFrontHit.point + lFrontToBack.normalized *
+                lFrontToBack.magnitude * (0.5f - 0.5f * (1f - lFrontDistanceRatio) + 0.5f * (1f - lBackDistanceRatio));
+            Vector3 lAverageNormal = ((lFrontHit.normal * (1f - lFrontDistanceRatio)) + 
+                (lBackHit.normal * (1f - lBackDistanceRatio))).normalized;
 
             Quaternion FromTo = Quaternion.AngleAxis(Vector3.SignedAngle(Vector3.up, lAverageNormal, transform.right), transform.right);
-            transform.position = new Plane(lAverageNormal, lAveragePoint).ClosestPointOnPlane(transform.position) + lAverageNormal * initialElevation;
-            transform.position += FromTo * lLocalDirection * speed * Time.deltaTime;
-            Debug.DrawLine(transform.position, lAveragePoint, Color.red);
+            Vector3 lPlanePoint = new Plane(lAverageNormal, lAveragePoint).ClosestPointOnPlane(transform.position);
+            Vector3 lElevation = lAverageNormal * initialElevation;
+            Vector3 lVelocity = FromTo * lXZDirectionalInput * speed * Time.deltaTime;
+            transform.position = lPlanePoint + lElevation + lVelocity;
+            Debug.DrawLine(transform.position, lPlanePoint);
 
-            Quaternion lTargetRotation = transform.rotation * Quaternion.FromToRotation(transform.up, lAverageNormal);
+            Quaternion lTargetRotation = Quaternion.LookRotation(lVelocity, transform.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, lTargetRotation, rotationSpeed * Time.deltaTime);
         }
-
-        ///PREVIOUS ISSUE (with forward & down spherecast): when changing surface, normal stops lerping and goes to new surface as soon as the down spherecast hits it.
-        ///Slerping rotation is a quick fix.
-        ///Was fixed by making the casts forward-down & backward-down, instead of forward & down
-
-        //Vector3 lForwardMovementAxis = Quaternion.AngleAxis(90f, transform.up) * (transform.position - lastPosition).normalized;
-        ///Using this instead allows moving without necessary going forward (automatic rotation towards direction therefore becomes not mandatory).
-        ///However there are currently issues.
-        //bool lBothHit = Physics.SphereCast(new Ray(transform.position, Quaternion.AngleAxis(-castAngle * 0.5f, lForwardMovementAxis) * transform.up * -1), SPHERE_RADIUS, out lBackwardHit, 1f) &
-        //                Physics.SphereCast(new Ray(transform.position, Quaternion.AngleAxis(castAngle * 0.5f, lForwardMovementAxis) * transform.up * -1), SPHERE_RADIUS, out lForwardHit, 1f);
     }
 }
