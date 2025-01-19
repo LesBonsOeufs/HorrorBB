@@ -1683,37 +1683,37 @@ PrefabInstance:
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1
+      value: -1.0120234
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.4
+      value: 0.39999998
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.396
+      value: -9.394359
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9914449
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.13052596
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
@@ -1723,7 +1723,7 @@ PrefabInstance:
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
@@ -2105,7 +2105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   rotationSpeed: 6
-  sphereCastRadius: 0.2
+  sphereCastRadius: 0.3
   castLength: 1
   castAngle: 45
   castOpening: 45
