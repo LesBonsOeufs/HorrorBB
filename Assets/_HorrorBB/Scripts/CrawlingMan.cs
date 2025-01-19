@@ -58,7 +58,6 @@ namespace Root
 
             Vector3 lAveragePoint = lFrontHit.point + lFrontToBack.normalized * lFrontToBack.magnitude * lDistanceBasedMultiplier;
             Vector3 lAverageNormal = ((lFrontHit.normal * lFrontProximityRatio) + (lBackHit.normal * lBackProximityRatio)).normalized;
-
             Vector3 lPlanePoint = new Plane(lAverageNormal, lAveragePoint).ClosestPointOnPlane(transform.position);
             Vector3 lElevation = lAverageNormal * initialElevation;
             Vector3 lVelocity = Vector3.ProjectOnPlane(transform.forward, lAverageNormal) * speed * Time.deltaTime;
@@ -66,16 +65,22 @@ namespace Root
 
             Debug.DrawRay(transform.position, lVelocity / Time.deltaTime);
 
-            Quaternion lTargetRotation = Quaternion.LookRotation(lVelocity, lAverageNormal);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lTargetRotation, rotationSpeed * Time.deltaTime);
+            if (lVelocity != Vector3.zero)
+            {
+                Quaternion lTargetRotation = Quaternion.LookRotation(lVelocity, lAverageNormal);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lTargetRotation, rotationSpeed * Time.deltaTime);
+            }
         }
 
         private void UpdateDynamicLegAnimDurations()
         {
-            for (int i = legController.Legs.Length - 1; i >= 0; i--)
-                legController.Legs[i].tipAnimationDuration = initLegAnimDurations[i] / speed;
+            if (speed == 0f)
+                return;
 
-            legController.maxTipWait = initControllerMaxTipWait / speed;
+            for (int i = legController.Legs.Length - 1; i >= 0; i--)
+                legController.Legs[i].tipAnimationDuration = initLegAnimDurations[i] / Mathf.Abs(speed);
+
+            legController.maxTipWait = initControllerMaxTipWait / Mathf.Abs(speed);
         }
     }
 }

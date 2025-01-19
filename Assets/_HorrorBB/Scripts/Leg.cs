@@ -23,6 +23,8 @@ public class Leg : MonoBehaviour
     [Foldout("Advanced"), SerializeField] private float tipMoveDist = 0.55f;
     [Foldout("Advanced"), SerializeField] private float maxRayDownDist = 2.0f;
     [Foldout("Advanced"), SerializeField] private float maxRayForwardDist = 2.0f;
+    [Foldout("Advanced"), SerializeField] private float perchedRayOriginDistFromDown = 0.5f;
+    [Foldout("Advanced"), SerializeField] private float maxPerchedRayDist = 0.7f;
     //Currently should stay at 0, for preventing passing tip through wall
     [Foldout("Advanced"), SerializeField] private float tipPassOver = 0.55f / 2.0f;
 
@@ -35,13 +37,18 @@ public class Leg : MonoBehaviour
     public bool Movable { get; set; } = false;
     public float TipDistance { get; private set; }
 
+    //Does not reset if no movement
+    public Vector3 SafePositionDelta => transform.position - lastLastPos;
+
     public Ray ForwardRay => new(rayForwardOrigin.position, 
-        Vector3.ProjectOnPlane(rayForwardOrigin.position - lastlastRayForwardOriginPos, bodyTransform.up).normalized);
+        Vector3.ProjectOnPlane(SafePositionDelta, bodyTransform.up).normalized);
     public Ray DownRay => new(rayDownOrigin.position, bodyTransform.up * -1);
+    public Ray PerchedRay => new(DownRay.origin + DownRay.direction * perchedRayOriginDistFromDown, 
+        Vector3.Project(bodyTransform.position - transform.position, transform.forward));
 
     //Used for forwardRay's direction
-    private Vector3 lastRayForwardOriginPos;
-    private Vector3 lastlastRayForwardOriginPos;
+    private Vector3 lastPos;
+    private Vector3 lastLastPos;
 
     private void Awake()
     {
@@ -51,8 +58,8 @@ public class Leg : MonoBehaviour
 
     private void Start()
     {
-        lastlastRayForwardOriginPos = rayForwardOrigin.position;
-        lastRayForwardOriginPos = rayForwardOrigin.position;
+        lastLastPos = transform.position;
+        lastPos = transform.position;
         TipPos += bodyTransform.forward * initTipPosZOffset;
         UpdateIKTargetTransform();
     }
@@ -78,6 +85,12 @@ public class Leg : MonoBehaviour
         //Choose the closest valid hit
         RaycastHit? lHit = lHits.OrderBy(hit => hit == null ? Mathf.Infinity : hit.Value.distance).First();
 
+        if (lHit == null)
+        {
+            //"Perched" raycasts (as a perched bird on a tree branch) for checking if surface was between previous raycasts
+            lHit = Raycast(PerchedRay, maxPerchedRayDist);
+        }
+
         if (lHit != null)
         {
             RaycastTipPos = lHit.Value.point;
@@ -91,10 +104,10 @@ public class Leg : MonoBehaviour
         if (!Animating && TipDistance > tipMoveDist && Movable)
             StartCoroutine(AnimateLeg());
 
-        if (lastRayForwardOriginPos != rayForwardOrigin.position)
+        if (lastPos != transform.position)
         {
-            lastlastRayForwardOriginPos = lastRayForwardOriginPos;
-            lastRayForwardOriginPos = rayForwardOrigin.position;
+            lastLastPos = lastPos;
+            lastPos = transform.position;
         }
     }
 
@@ -149,13 +162,29 @@ public class Leg : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawLine(TipPos, RaycastTipPos);
 
-        Gizmos.color = Color.black;
-        Gizmos.DrawRay(ForwardRay);
-
-        Gizmos.color = Color.black;
-        Gizmos.DrawRay(DownRay);
-
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(ikTarget.transform.position, 0.1f);
+
+        if (useForwardRay)
+        {
+            //Forward ray
+            ColorUtility.TryParseHtmlString("#FF4545", out Color lForwardColor);
+            Gizmos.color = lForwardColor;
+            Gizmos.DrawSphere(rayForwardOrigin.position, 0.05f);
+            Gizmos.DrawRay(ForwardRay);
+        }
+
+        //Down ray
+        ColorUtility.TryParseHtmlString("#2D0000", out Color lDownColor);
+        Gizmos.color = lDownColor;
+        Gizmos.DrawSphere(rayDownOrigin.position, 0.05f);
+        Gizmos.DrawRay(DownRay);
+
+        //Perched ray
+        Ray lPerchedRay = PerchedRay;
+        ColorUtility.TryParseHtmlString("#FF93D226", out Color lPerchedColor);
+        Gizmos.color = lPerchedColor;
+        Gizmos.DrawSphere(lPerchedRay.origin, 0.05f);
+        Gizmos.DrawRay(lPerchedRay);
     }
 }
