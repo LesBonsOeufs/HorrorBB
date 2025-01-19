@@ -12,6 +12,7 @@ public class Leg : MonoBehaviour
 
     [SerializeField] private AnimationCurve speedCurve;
     [SerializeField] private AnimationCurve heightCurve;
+    [SerializeField] private bool useForwardRay = true;
 
     [Foldout("Advanced")] public float tipAnimationDuration = 0.15f;
     [Foldout("Advanced"), SerializeField] private float tipAnimationFrameTime = 1 / 60.0f;
@@ -20,7 +21,8 @@ public class Leg : MonoBehaviour
     [Foldout("Advanced"), SerializeField] private float initTipPosZOffset = 0f;
     [Foldout("Advanced"), SerializeField] private float ikYOffset = 1.0f;
     [Foldout("Advanced"), SerializeField] private float tipMoveDist = 0.55f;
-    [Foldout("Advanced"), SerializeField] private float maxRayDist = 2.0f;
+    [Foldout("Advanced"), SerializeField] private float maxRayDownDist = 2.0f;
+    [Foldout("Advanced"), SerializeField] private float maxRayForwardDist = 2.0f;
     //Currently should stay at 0, for preventing passing tip through wall
     [Foldout("Advanced"), SerializeField] private float tipPassOver = 0.55f / 2.0f;
 
@@ -34,11 +36,12 @@ public class Leg : MonoBehaviour
     public float TipDistance { get; private set; }
 
     public Ray ForwardRay => new(rayForwardOrigin.position, 
-        Vector3.ProjectOnPlane(rayForwardOrigin.position - lastRayForwardOriginPos, bodyTransform.up).normalized);
+        Vector3.ProjectOnPlane(rayForwardOrigin.position - lastlastRayForwardOriginPos, bodyTransform.up).normalized);
     public Ray DownRay => new(rayDownOrigin.position, bodyTransform.up * -1);
 
     //Used for forwardRay's direction
     private Vector3 lastRayForwardOriginPos;
+    private Vector3 lastlastRayForwardOriginPos;
 
     private void Awake()
     {
@@ -48,6 +51,7 @@ public class Leg : MonoBehaviour
 
     private void Start()
     {
+        lastlastRayForwardOriginPos = rayForwardOrigin.position;
         lastRayForwardOriginPos = rayForwardOrigin.position;
         TipPos += bodyTransform.forward * initTipPosZOffset;
         UpdateIKTargetTransform();
@@ -55,10 +59,24 @@ public class Leg : MonoBehaviour
 
     private void Update()
     {
+        RaycastHit?[] lHits = new RaycastHit?[] { Raycast(DownRay, maxRayDownDist) };
+
+        if (useForwardRay)
+        {
+            Ray lForwardRay = ForwardRay;
+            RaycastHit? lForwardHit = Raycast(lForwardRay, maxRayForwardDist);
+
+            if (lForwardHit != null)
+            {
+                //float lAddedForwardRayDistance = Vector3.Project(lForwardRay.origin - rayDownOrigin.position, lForwardRay.direction).magnitude;
+                RaycastHit lForwardHitCopy = lForwardHit.Value;
+                //lForwardHitCopy.distance += lAddedForwardRayDistance;
+                lHits = lHits.Append(lForwardHitCopy).ToArray();
+            }
+        }
+
         //Choose the closest valid hit
-        RaycastHit? lHit =
-            new RaycastHit?[] { /*Raycast(ForwardRay),*/ Raycast(DownRay) }
-            .OrderBy(hit => hit == null ? Mathf.Infinity : hit.Value.distance).First();
+        RaycastHit? lHit = lHits.OrderBy(hit => hit == null ? Mathf.Infinity : hit.Value.distance).First();
 
         if (lHit != null)
         {
@@ -74,12 +92,15 @@ public class Leg : MonoBehaviour
             StartCoroutine(AnimateLeg());
 
         if (lastRayForwardOriginPos != rayForwardOrigin.position)
+        {
+            lastlastRayForwardOriginPos = lastRayForwardOriginPos;
             lastRayForwardOriginPos = rayForwardOrigin.position;
+        }
     }
 
-    private RaycastHit? Raycast(Ray ray)
+    private RaycastHit? Raycast(Ray ray, float maxDistance)
     {
-        if (Physics.Raycast(ray, out RaycastHit lHit, maxRayDist))
+        if (Physics.Raycast(ray, out RaycastHit lHit, maxDistance))
             return lHit;
 
         return null;
@@ -128,7 +149,7 @@ public class Leg : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawLine(TipPos, RaycastTipPos);
 
-        Gizmos.color = Color.white;
+        Gizmos.color = Color.black;
         Gizmos.DrawRay(ForwardRay);
 
         Gizmos.color = Color.black;

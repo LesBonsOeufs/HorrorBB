@@ -109,13 +109,15 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  useForwardRay: 0
   tipAnimationDuration: 0.1
   tipAnimationFrameTime: 0.016666668
   tipMaxHeight: 0.2
   initTipPosZOffset: -0.3
   ikYOffset: 0
   tipMoveDist: 0.28
-  maxRayDist: 2
+  maxRayDownDist: 0.9
+  maxRayForwardDist: 0.7
   tipPassOver: 0
 --- !u!114 &3604955831369504997
 MonoBehaviour:
@@ -395,13 +397,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b99912e4f18ced44bd6f740df255b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bodyTransform: {fileID: 4440294339578548346}
-  legs:
+  maxTipWait: 0.35
+  _legs:
   - {fileID: 6456868725615337727}
   - {fileID: 8769473249425202404}
   - {fileID: 1658862506238556685}
   - {fileID: 5078797652176311531}
-  maxTipWait: 0.7
 --- !u!1 &994132893457590606
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,13 +592,15 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  useForwardRay: 0
   tipAnimationDuration: 0.1
   tipAnimationFrameTime: 0.016666668
   tipMaxHeight: 0.2
   initTipPosZOffset: 0
   ikYOffset: 0
   tipMoveDist: 0.28
-  maxRayDist: 2
+  maxRayDownDist: 0.9
+  maxRayForwardDist: 0.7
   tipPassOver: 0
 --- !u!114 &7715818619915737954
 MonoBehaviour:
@@ -1248,13 +1251,15 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  useForwardRay: 0
   tipAnimationDuration: 0.1
   tipAnimationFrameTime: 0.016666668
   tipMaxHeight: 0.2
   initTipPosZOffset: 0
   ikYOffset: 0
   tipMoveDist: 0.28
-  maxRayDist: 2
+  maxRayDownDist: 0.9
+  maxRayForwardDist: 0.7
   tipPassOver: 0
 --- !u!114 &6320317952599614619
 MonoBehaviour:
@@ -1546,13 +1551,15 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  useForwardRay: 0
   tipAnimationDuration: 0.1
   tipAnimationFrameTime: 0.016666668
   tipMaxHeight: 0.2
   initTipPosZOffset: -0.3
   ikYOffset: 0
   tipMoveDist: 0.28
-  maxRayDist: 2
+  maxRayDownDist: 0.9
+  maxRayForwardDist: 0.7
   tipPassOver: 0
 --- !u!114 &7571294168225778109
 MonoBehaviour:
@@ -2098,11 +2105,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   rotationSpeed: 6
-  castLength: 1.5
-  castAngle: 125
+  sphereCastRadius: 0.2
+  castLength: 1
+  castAngle: 45
+  castOpening: 45
   initialElevation: 0
-  legs:
-  - {fileID: 5078797652176311531}
-  - {fileID: 1658862506238556685}
-  - {fileID: 6456868725615337727}
-  - {fileID: 8769473249425202404}
+  legController: {fileID: 4678902910170901059}
