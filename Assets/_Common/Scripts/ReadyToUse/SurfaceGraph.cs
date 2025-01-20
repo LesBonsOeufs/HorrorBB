@@ -4,29 +4,28 @@ using UnityEngine;
 
 namespace Root
 {
+    //Generates world representation:
+    //All points must be on a surface, and evenly spread from each other
+    //All neighboring points must not have a collider between them, and be closer to each other than around pointsSpacing * 1.5
     public class SurfaceGraph : MonoBehaviour
     {
         [SerializeField] private float size = 15f;
         [SerializeField] private float pointsSpacing = 0.5f;
-        [SerializeField] private PointOctree<uint> pointOctree;
+        [SerializeField] private PointOctree<GraphPoint> pointOctree;
 
         [Button]
         private void Refresh()
         {
-            //Generate world representation:
-            //All points must be on a surface (inside the house if possible), and evenly spread from each other
-            //All neighboring points must not have a collider between them, and be closer to each other than around pointsSpacing * 1.5
-
             Collider[] lColliders = FindObjectsByType<Collider>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             GeneratePointOctreeFromColliders(lColliders);
+            SetNeighbors();
         }
 
         #region Points Generation
 
         private void GeneratePointOctreeFromColliders(Collider[] colliders)
         {
-            pointOctree = new PointOctree<uint>(size, transform.position, 1f);
-            uint lPointID = 0;
+            pointOctree = new PointOctree<GraphPoint>(size, transform.position, 1f);
 
             foreach (Collider lCollider in colliders)
             {
@@ -36,7 +35,7 @@ namespace Root
                 List<Vector3> lSurfacePoints = GenerateSurfacePoints(lCollider);
 
                 foreach (Vector3 lPoint in lSurfacePoints)
-                    pointOctree.Add(lPointID++, lPoint);
+                    pointOctree.Add(new GraphPoint(lPoint), lPoint);
             }
         }
 
@@ -170,6 +169,18 @@ namespace Root
 
         #endregion
 
+        private void SetNeighbors()
+        {
+            List<GraphPoint> lNearbyPoints = new();
+            ICollection<GraphPoint> lGraph = pointOctree.GetAll();
+
+            foreach (GraphPoint lPoint in lGraph)
+            {
+                pointOctree.GetNearbyNonAlloc(lPoint.position, pointsSpacing * 1.5f, lNearbyPoints);
+                lPoint.neighbors = new List<GraphPoint>(lNearbyPoints);
+            }
+        }
+
         private void OnDrawGizmosSelected()
         {
             if (pointOctree == null)
@@ -177,6 +188,18 @@ namespace Root
 
             pointOctree.DrawAllBounds(); // Draw node boundaries
             pointOctree.DrawAllObjects(); // Mark object positions
+        }
+    }
+
+    public class GraphPoint
+    {
+        public Vector3 position;
+        public List<GraphPoint> neighbors;
+
+        public GraphPoint(Vector3 position)
+        {
+            this.position = position;
+            neighbors = new List<GraphPoint>();
         }
     }
 }
