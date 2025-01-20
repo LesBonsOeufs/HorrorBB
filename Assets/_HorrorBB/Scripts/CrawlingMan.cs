@@ -1,22 +1,26 @@
 using NaughtyAttributes;
 using System.Linq;
+using Unity.VectorGraphics;
 using UnityEngine;
 
 namespace Root
 {
     public class CrawlingMan : MonoBehaviour
     {
-
-        [SerializeField] private float speed = .5f;
-        [SerializeField] private float rotationSpeed = 2f;
-        [SerializeField] private float sphereCastRadius = 0.2f;
-        [SerializeField] private float castLength = 1f;
-        [SerializeField, Range(0f, 90f)] private float castAngle = 45f;
-        [SerializeField, Range(0f, 90f)] private float castOpening = 90f;
-        [SerializeField, ReadOnly] private float initialElevation;
-
-        [InfoBox("Fill for dynamic leg anim duration & maxTipWait (each initial duration will be divided with speed)"), SerializeField] 
+        [InfoBox("Must not be child of this"), SerializeField] private Transform moveTarget;
+        [InfoBox("From RigLook"), SerializeField] private Transform lookTarget;
+        [InfoBox("Fill for dynamic leg anim duration & maxTipWait (each initial duration will be divided with speed)"), SerializeField]
         private LegController legController;
+
+        [Foldout("Movement"), SerializeField] private float speed = .5f;
+        [Foldout("Movement"), SerializeField] private float rotationSpeed = 2f;
+
+        [Foldout("Raycasting"), SerializeField] private float sphereCastRadius = 0.2f;
+        [Foldout("Raycasting"), SerializeField] private float castLength = 1f;
+        [Foldout("Raycasting"), SerializeField, Range(0f, 90f)] private float castAngle = 45f;
+        [Foldout("Raycasting"), SerializeField, Range(0f, 90f)] private float castOpening = 90f;
+
+        [SerializeField, ReadOnly] private float initialElevation;
 
         private float initControllerMaxTipWait;
         private float[] initLegAnimDurations;
@@ -35,7 +39,19 @@ namespace Root
         private void Update()
         {
             UpdateDynamicLegAnimDurations();
+            PathFinding();
+            lookTarget.position = moveTarget.position;
+            Crawl(moveTarget.position - transform.position);
+        }
 
+        private void PathFinding()
+        {
+            
+        }
+
+        /// <param name="direction">Does not need to be normalized</param>
+        private void Crawl(Vector3 direction)
+        {
             RaycastHit lFrontHit;
             RaycastHit lBackHit;
 
@@ -60,10 +76,8 @@ namespace Root
             Vector3 lAverageNormal = ((lFrontHit.normal * lFrontProximityRatio) + (lBackHit.normal * lBackProximityRatio)).normalized;
             Vector3 lPlanePoint = new Plane(lAverageNormal, lAveragePoint).ClosestPointOnPlane(transform.position);
             Vector3 lElevation = lAverageNormal * initialElevation;
-            Vector3 lVelocity = Vector3.ProjectOnPlane(transform.forward, lAverageNormal) * speed * Time.deltaTime;
+            Vector3 lVelocity = Vector3.ProjectOnPlane(direction, lAverageNormal).normalized * speed * Time.deltaTime;
             transform.position = lPlanePoint + lElevation + lVelocity;
-
-            Debug.DrawRay(transform.position, lVelocity / Time.deltaTime);
 
             if (lVelocity != Vector3.zero)
             {

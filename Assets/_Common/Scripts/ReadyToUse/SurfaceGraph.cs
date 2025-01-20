@@ -1,0 +1,182 @@
+using NaughtyAttributes;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Root
+{
+    public class SurfaceGraph : MonoBehaviour
+    {
+        [SerializeField] private float size = 15f;
+        [SerializeField] private float pointsSpacing = 0.5f;
+        [SerializeField] private PointOctree<uint> pointOctree;
+
+        [Button]
+        private void Refresh()
+        {
+            //Generate world representation:
+            //All points must be on a surface (inside the house if possible), and evenly spread from each other
+            //All neighboring points must not have a collider between them, and be closer to each other than around pointsSpacing * 1.5
+
+            Collider[] lColliders = FindObjectsByType<Collider>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            GeneratePointOctreeFromColliders(lColliders);
+        }
+
+        #region Points Generation
+
+        private void GeneratePointOctreeFromColliders(Collider[] colliders)
+        {
+            pointOctree = new PointOctree<uint>(size, transform.position, 1f);
+            uint lPointID = 0;
+
+            foreach (Collider lCollider in colliders)
+            {
+                if (!lCollider.enabled)
+                    continue;
+
+                List<Vector3> lSurfacePoints = GenerateSurfacePoints(lCollider);
+
+                foreach (Vector3 lPoint in lSurfacePoints)
+                    pointOctree.Add(lPointID++, lPoint);
+            }
+        }
+
+        List<Vector3> GenerateSurfacePoints(Collider collider)
+        {
+            if (collider is MeshCollider lMeshCollider)
+                return GenerateMeshColliderPoints(lMeshCollider);
+            else if (collider is BoxCollider lBoxCollider)
+                return GenerateBoxColliderPoints(lBoxCollider);
+            else
+                return null;
+        }
+
+        List<Vector3> GenerateBoxColliderPoints(BoxCollider collider)
+        {
+            List<Vector3> points = new List<Vector3>();
+            Vector3 size = collider.size;
+            Vector3 center = collider.center;
+
+            // Calculate the world space corners of the box collider
+            Vector3[] corners = new Vector3[8];
+            corners[0] = new Vector3(-size.x, -size.y, -size.z) / 2f;
+            corners[1] = new Vector3(size.x, -size.y, -size.z) / 2f;
+            corners[2] = new Vector3(-size.x, size.y, -size.z) / 2f;
+            corners[3] = new Vector3(size.x, size.y, -size.z) / 2f;
+            corners[4] = new Vector3(-size.x, -size.y, size.z) / 2f;
+            corners[5] = new Vector3(size.x, -size.y, size.z) / 2f;
+            corners[6] = new Vector3(-size.x, size.y, size.z) / 2f;
+            corners[7] = new Vector3(size.x, size.y, size.z) / 2f;
+
+            for (int i = 0; i < 8; i++)
+            {
+                corners[i] = collider.transform.TransformPoint(center + corners[i]);
+            }
+
+            // Generate points on each face
+            GeneratePointsOnFace(points, corners[0], corners[1], corners[2], corners[3]); // Front
+            GeneratePointsOnFace(points, corners[4], corners[5], corners[6], corners[7]); // Back
+            GeneratePointsOnFace(points, corners[0], corners[1], corners[4], corners[5]); // Bottom
+            GeneratePointsOnFace(points, corners[2], corners[3], corners[6], corners[7]); // Top
+            GeneratePointsOnFace(points, corners[0], corners[2], corners[4], corners[6]); // Left
+            GeneratePointsOnFace(points, corners[1], corners[3], corners[5], corners[7]); // Right
+
+            return points;
+        }
+
+        void GeneratePointsOnFace(List<Vector3> points, Vector3 c1, Vector3 c2, Vector3 c3, Vector3 c4)
+        {
+            Vector3 edge1 = c2 - c1;
+            Vector3 edge2 = c3 - c1;
+
+            int stepsX = Mathf.CeilToInt(edge1.magnitude / pointsSpacing);
+            int stepsY = Mathf.CeilToInt(edge2.magnitude / pointsSpacing);
+
+            for (int x = 0; x <= stepsX; x++)
+            {
+                for (int y = 0; y <= stepsY; y++)
+                {
+                    float u = x / (float)stepsX;
+                    float v = y / (float)stepsY;
+                    Vector3 point = c1 + u * edge1 + v * edge2;
+                    points.Add(point);
+                }
+            }
+        }
+
+        List<Vector3> GenerateMeshColliderPoints(MeshCollider meshCollider)
+        {
+            List<Vector3> points = new List<Vector3>();
+            Mesh mesh = meshCollider.sharedMesh;
+            Vector3[] vertices = mesh.vertices;
+            int[] triangles = mesh.triangles;
+
+            // Create a 3D grid to store occupied cells
+            HashSet<Vector3Int> occupiedCells = new HashSet<Vector3Int>();
+
+            for (int i = 0; i < triangles.Length; i += 3)
+            {
+                Vector3 v1 = meshCollider.transform.TransformPoint(vertices[triangles[i]]);
+                Vector3 v2 = meshCollider.transform.TransformPoint(vertices[triangles[i + 1]]);
+                Vector3 v3 = meshCollider.transform.TransformPoint(vertices[triangles[i + 2]]);
+
+                GeneratePointsOnTriangle(v1, v2, v3, points, occupiedCells);
+            }
+
+            return points;
+        }
+
+        void GeneratePointsOnTriangle(Vector3 v1, Vector3 v2, Vector3 v3, List<Vector3> points, HashSet<Vector3Int> occupiedCells)
+        {
+            Vector3 normal = Vector3.Cross(v2 - v1, v3 - v1).normalized;
+
+            Vector3 min = Vector3.Min(Vector3.Min(v1, v2), v3);
+            Vector3 max = Vector3.Max(Vector3.Max(v1, v2), v3);
+
+            for (float x = min.x; x <= max.x; x += pointsSpacing)
+            {
+                for (float y = min.y; y <= max.y; y += pointsSpacing)
+                {
+                    for (float z = min.z; z <= max.z; z += pointsSpacing)
+                    {
+                        Vector3 point = new Vector3(x, y, z);
+                        Vector3Int cell = Vector3Int.FloorToInt(point / pointsSpacing);
+
+                        if (!occupiedCells.Contains(cell) && IsPointInTriangle(point, v1, v2, v3, normal))
+                        {
+                            points.Add(point);
+                            occupiedCells.Add(cell);
+                        }
+                    }
+                }
+            }
+        }
+
+        bool IsPointInTriangle(Vector3 point, Vector3 v1, Vector3 v2, Vector3 v3, Vector3 normal)
+        {
+            float d = Vector3.Dot(normal, v1);
+            if (Mathf.Abs(Vector3.Dot(normal, point) - d) > 0.01f)
+                return false;
+
+            Vector3 edge1 = v2 - v1;
+            Vector3 edge2 = v3 - v2;
+            Vector3 edge3 = v1 - v3;
+
+            Vector3 c1 = Vector3.Cross(edge1, point - v1);
+            Vector3 c2 = Vector3.Cross(edge2, point - v2);
+            Vector3 c3 = Vector3.Cross(edge3, point - v3);
+
+            return Vector3.Dot(c1, normal) >= 0 && Vector3.Dot(c2, normal) >= 0 && Vector3.Dot(c3, normal) >= 0;
+        }
+
+        #endregion
+
+        private void OnDrawGizmosSelected()
+        {
+            if (pointOctree == null)
+                return;
+
+            pointOctree.DrawAllBounds(); // Draw node boundaries
+            pointOctree.DrawAllObjects(); // Mark object positions
+        }
+    }
+}
