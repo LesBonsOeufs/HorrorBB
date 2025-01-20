@@ -978,7 +978,7 @@ Transform:
   m_GameObject: {fileID: 160717877}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.101, y: 1.1424845, z: -4.447}
+  m_LocalPosition: {x: -10.29, y: 1.1424845, z: -6.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1292,6 +1292,10 @@ PrefabInstance:
     - target: {fileID: 1110850411663352, guid: cc6f91dba63ce41c5941bb57ac718982, type: 3}
       propertyPath: m_Name
       value: stairs-house
+      objectReference: {fileID: 0}
+    - target: {fileID: 1110850411663352, guid: cc6f91dba63ce41c5941bb57ac718982, type: 3}
+      propertyPath: m_TagString
+      value: SurfaceGraph_AddVertices
       objectReference: {fileID: 0}
     - target: {fileID: 1110850411663352, guid: cc6f91dba63ce41c5941bb57ac718982, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -4628,7 +4632,7 @@ PrefabInstance:
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
       propertyPath: m_Intensity
-      value: 12.946416
+      value: 0.8970005
       objectReference: {fileID: 0}
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
@@ -6849,53 +6853,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1270303139}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1278065136
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1278065137}
-  - component: {fileID: 1278065138}
-  m_Layer: 0
-  m_Name: CollidersBasedOctree
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1278065137
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278065136}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1468001222}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1278065138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278065136}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ae6b718dc13d3c4d973440a380d6b9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  size: 6.5
-  useBoundsTree: 1
-  usePointTree: 0
 --- !u!1001 &1285898997
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7392,7 +7349,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1278065137}
   - {fileID: 2074768420}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9370,6 +9326,10 @@ PrefabInstance:
       value: sofa
       objectReference: {fileID: 0}
     - target: {fileID: 1536908747114662, guid: 05ae3ec95472444fcb22ded793d9ddb9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1536908747114662, guid: 05ae3ec95472444fcb22ded793d9ddb9, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -9680,8 +9640,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 717fd44aa52e5c34095a43a358f4a021, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
+  addVerticesTag: SurfaceGraph_AddVertices
   size: 15
-  pointsSpacing: 0.5
+  pointsSpacing: 1
 --- !u!1 &2121461860
 GameObject:
   m_ObjectHideFlags: 0
@@ -10528,12 +10490,17 @@ PrefabInstance:
         type: 3}
       propertyPath: octree
       value: 
-      objectReference: {fileID: 1278065138}
+      objectReference: {fileID: 0}
     - target: {fileID: 4935035922123281083, guid: 4162f80235b5e8a4fa689de70e310fdf,
         type: 3}
       propertyPath: moveTarget
       value: 
       objectReference: {fileID: 160717878}
+    - target: {fileID: 4935035922123281083, guid: 4162f80235b5e8a4fa689de70e310fdf,
+        type: 3}
+      propertyPath: distanceFromPathPointForNext
+      value: 0.2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

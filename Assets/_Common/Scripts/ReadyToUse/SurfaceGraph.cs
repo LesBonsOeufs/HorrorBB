@@ -1,5 +1,7 @@
 using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Root
@@ -7,11 +9,29 @@ namespace Root
     //Generates world representation:
     //All points must be on a surface, and evenly spread from each other
     //All neighboring points must not have a collider between them, and be closer to each other than around pointsSpacing * 1.5
-    public class SurfaceGraph : MonoBehaviour
+    public class SurfaceGraph : Singleton<SurfaceGraph>
     {
+        [SerializeField, Tag] private string addVerticesTag = "SurfaceGraph_AddVertices";
         [SerializeField] private float size = 15f;
         [SerializeField] private float pointsSpacing = 0.5f;
-        [SerializeField] private PointOctree<GraphPoint> pointOctree;
+        
+        private PointOctree<GraphPoint> pointOctree;
+
+        public GraphPoint GetClosestPoint(Vector3 position, float maxDistance)
+        {
+            GraphPoint[] lNearbyPoints = pointOctree.GetNearby(position, maxDistance);
+
+            if (lNearbyPoints.Length == 0)
+                return null;
+
+            return lNearbyPoints.OrderBy(p => Vector3.Distance(p.position, position)).First();
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            Refresh();
+        }
 
         [Button]
         private void Refresh()
@@ -72,17 +92,17 @@ namespace Root
             }
 
             // Generate points on each face
-            GeneratePointsOnFace(points, corners[0], corners[1], corners[2], corners[3]); // Front
-            GeneratePointsOnFace(points, corners[4], corners[5], corners[6], corners[7]); // Back
-            GeneratePointsOnFace(points, corners[0], corners[1], corners[4], corners[5]); // Bottom
-            GeneratePointsOnFace(points, corners[2], corners[3], corners[6], corners[7]); // Top
-            GeneratePointsOnFace(points, corners[0], corners[2], corners[4], corners[6]); // Left
-            GeneratePointsOnFace(points, corners[1], corners[3], corners[5], corners[7]); // Right
+            GeneratePointsOnFace(points, corners[0], corners[1], corners[2]); // Front
+            GeneratePointsOnFace(points, corners[4], corners[5], corners[6]); // Back
+            GeneratePointsOnFace(points, corners[0], corners[1], corners[4]); // Bottom
+            GeneratePointsOnFace(points, corners[2], corners[3], corners[6]); // Top
+            GeneratePointsOnFace(points, corners[0], corners[2], corners[4]); // Left
+            GeneratePointsOnFace(points, corners[1], corners[3], corners[5]); // Right
 
             return points;
         }
 
-        void GeneratePointsOnFace(List<Vector3> points, Vector3 c1, Vector3 c2, Vector3 c3, Vector3 c4)
+        void GeneratePointsOnFace(List<Vector3> points, Vector3 c1, Vector3 c2, Vector3 c3)
         {
             Vector3 edge1 = c2 - c1;
             Vector3 edge2 = c3 - c1;
@@ -118,29 +138,38 @@ namespace Root
                 Vector3 v2 = meshCollider.transform.TransformPoint(vertices[triangles[i + 1]]);
                 Vector3 v3 = meshCollider.transform.TransformPoint(vertices[triangles[i + 2]]);
 
-                GeneratePointsOnTriangle(v1, v2, v3, points, occupiedCells);
+                GeneratePointsOnTriangle(v1, v2, v3, points, occupiedCells, meshCollider.CompareTag(addVerticesTag));
             }
 
             return points;
         }
 
-        void GeneratePointsOnTriangle(Vector3 v1, Vector3 v2, Vector3 v3, List<Vector3> points, HashSet<Vector3Int> occupiedCells)
+        void GeneratePointsOnTriangle(Vector3 v1, Vector3 v2, Vector3 v3, List<Vector3> points, HashSet<Vector3Int> occupiedCells, bool addVertices)
         {
-            Vector3 normal = Vector3.Cross(v2 - v1, v3 - v1).normalized;
+            Vector3 lNormal = Vector3.Cross(v2 - v1, v3 - v1).normalized;
 
-            Vector3 min = Vector3.Min(Vector3.Min(v1, v2), v3);
-            Vector3 max = Vector3.Max(Vector3.Max(v1, v2), v3);
+            Vector3 lMin = Vector3.Min(Vector3.Min(v1, v2), v3);
+            Vector3 lMax = Vector3.Max(Vector3.Max(v1, v2), v3);
 
-            for (float x = min.x; x <= max.x; x += pointsSpacing)
+            //Add the vertices as points
+            if (addVertices)
             {
-                for (float y = min.y; y <= max.y; y += pointsSpacing)
+                points.Add(v1);
+                points.Add(v2);
+                points.Add(v3);
+            }
+
+            //Add points inside the triangle
+            for (float x = lMin.x; x <= lMax.x; x += pointsSpacing)
+            {
+                for (float y = lMin.y; y <= lMax.y; y += pointsSpacing)
                 {
-                    for (float z = min.z; z <= max.z; z += pointsSpacing)
+                    for (float z = lMin.z; z <= lMax.z; z += pointsSpacing)
                     {
                         Vector3 point = new Vector3(x, y, z);
                         Vector3Int cell = Vector3Int.FloorToInt(point / pointsSpacing);
 
-                        if (!occupiedCells.Contains(cell) && IsPointInTriangle(point, v1, v2, v3, normal))
+                        if (!occupiedCells.Contains(cell) && IsPointInTriangle(point, v1, v2, v3, lNormal))
                         {
                             points.Add(point);
                             occupiedCells.Add(cell);
@@ -177,6 +206,18 @@ namespace Root
             foreach (GraphPoint lPoint in lGraph)
             {
                 pointOctree.GetNearbyNonAlloc(lPoint.position, pointsSpacing * 1.5f, lNearbyPoints);
+
+                for (int i = lNearbyPoints.Count - 1; i >= 0; i--)
+                {
+                    Vector3 lPointToNearby = lNearbyPoints[i].position - lPoint.position;
+                    //Don't start ray at point.position for preventing starting inside the collider
+                    Vector3 lRaycastOrigin = lPoint.position - lPointToNearby.normalized * 0.01f;
+
+                    //If there is a collider between the points, remove the point from the neighbors
+                    if (Physics.Raycast(lRaycastOrigin, lPointToNearby, lPointToNearby.magnitude))
+                        lNearbyPoints.RemoveAt(i);
+                }
+
                 lPoint.neighbors = new List<GraphPoint>(lNearbyPoints);
             }
         }
@@ -188,10 +229,20 @@ namespace Root
 
             pointOctree.DrawAllBounds(); // Draw node boundaries
             pointOctree.DrawAllObjects(); // Mark object positions
+
+            //Draw neighbors
+            foreach (GraphPoint lPoint in pointOctree.GetAll())
+            {
+                foreach (GraphPoint lNeighbor in lPoint.neighbors)
+                {
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawLine(lPoint.position, lNeighbor.position);
+                }
+            }
         }
     }
 
-    public class GraphPoint
+    public class GraphPoint : IEquatable<GraphPoint>
     {
         public Vector3 position;
         public List<GraphPoint> neighbors;
@@ -200,6 +251,11 @@ namespace Root
         {
             this.position = position;
             neighbors = new List<GraphPoint>();
+        }
+
+        public bool Equals(GraphPoint other)
+        {
+            return position == other.position;
         }
     }
 }

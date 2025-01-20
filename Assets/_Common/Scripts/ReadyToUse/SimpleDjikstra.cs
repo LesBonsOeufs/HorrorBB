@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-/// <typeparam name="TSpaceType">Example: Vector2Int will allow using SimpleDjikstra for a 2D grid. Vector3Int, for a 3D grid.</typeparam>
+/// <typeparam name="TSpaceType">What represents a grid square/cube?</typeparam>
 public static class SimpleDjikstra<TSpaceType> where TSpaceType : IEquatable<TSpaceType>
 {
     public static List<TSpaceType> Execute(TSpaceType origin, TSpaceType target, Func<TSpaceType, TSpaceType[]> getNeighborsFunc, Func<TSpaceType, bool> isWalkableFunc)

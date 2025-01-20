@@ -1,7 +1,12 @@
 using NaughtyAttributes;
+using System.Collections.Generic;
 using System.Linq;
-using Unity.VectorGraphics;
 using UnityEngine;
+using UnityEngine.UIElements;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Root
 {
@@ -14,6 +19,7 @@ namespace Root
 
         [Foldout("Movement"), SerializeField] private float speed = .5f;
         [Foldout("Movement"), SerializeField] private float rotationSpeed = 2f;
+        [Foldout("Movement"), SerializeField] private float distanceFromPathPointForNext = .2f;
 
         [Foldout("Raycasting"), SerializeField] private float sphereCastRadius = 0.2f;
         [Foldout("Raycasting"), SerializeField] private float castLength = 1f;
@@ -38,15 +44,62 @@ namespace Root
 
         private void Update()
         {
-            UpdateDynamicLegAnimDurations();
-            PathFinding();
             lookTarget.position = moveTarget.position;
-            Crawl(moveTarget.position - transform.position);
+            UpdateDynamicLegAnimDurations();
+            List<GraphPoint> lPath = PathFinding(moveTarget.position);
+
+            if (lPath == null)
+                return;
+
+#if UNITY_EDITOR
+            //If editor & is selected, show path
+            if (Selection.Contains(gameObject))
+            {
+                for (int i = 0; i < lPath.Count; i++)
+                    Debug.DrawLine(i == 0 ? transform.position : lPath[i - 1].position, lPath[i].position, Color.red);
+            }
+#endif
+
+            bool lIsLastPathPoint = lPath.Count == 1;
+            Vector3 lTargetPosition = lPath[0].position;
+
+            if (IsPathPointReached(lPath[0], lIsLastPathPoint ? null : lPath[1]))
+                lTargetPosition = lIsLastPathPoint ? transform.position : lPath[1].position;
+
+            Crawl(lTargetPosition - transform.position);
         }
 
-        private void PathFinding()
+        private bool IsPathPointReached(GraphPoint point, GraphPoint nextPoint)
         {
-            
+            //Reached if distance is less than distanceFromPathPointForNext
+            Vector3 lOnSurfacePosition = transform.position - transform.up * initialElevation;
+            float lDistance = Vector3.Distance(lOnSurfacePosition, point.position);
+
+            if (lDistance < distanceFromPathPointForNext)
+                return true;
+
+            // Reached if crawler is between point and next point
+            if (nextPoint != null)
+            {
+                Vector3 lPointToNext = (nextPoint.position - point.position).normalized;
+                Vector3 lPointToThis = (lOnSurfacePosition - point.position).normalized;
+
+                if (Vector3.Dot(lPointToNext, lPointToThis) > 0f)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private List<GraphPoint> PathFinding(Vector3 target)
+        {
+            GraphPoint lOriginPoint = SurfaceGraph.Instance.GetClosestPoint(transform.position, 2.5f);
+            GraphPoint lTargetPoint = SurfaceGraph.Instance.GetClosestPoint(target, 2.5f);
+
+            if (lOriginPoint == null || lTargetPoint == null)
+                return null;
+
+            return SimpleDjikstra<GraphPoint>.Execute(lOriginPoint, lTargetPoint, graphPoint => graphPoint.neighbors.ToArray(), graphPoint => true);
         }
 
         /// <param name="direction">Does not need to be normalized</param>
@@ -95,6 +148,13 @@ namespace Root
                 legController.Legs[i].tipAnimationDuration = initLegAnimDurations[i] / Mathf.Abs(speed);
 
             legController.maxTipWait = initControllerMaxTipWait / Mathf.Abs(speed);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            ColorUtility.TryParseHtmlString("#0000FF80", out Color lColor);
+            Gizmos.color = lColor;
+            Gizmos.DrawSphere(transform.position - transform.up * initialElevation, distanceFromPathPointForNext);
         }
     }
 }
