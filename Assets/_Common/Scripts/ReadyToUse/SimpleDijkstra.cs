@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 /// <typeparam name="TSpaceType">What represents a grid square/cube?</typeparam>
-public static class SimpleDjikstra<TSpaceType> where TSpaceType : IEquatable<TSpaceType>
+public static class SimpleDijkstra<TSpaceType> where TSpaceType : IEquatable<TSpaceType>
 {
     public static List<TSpaceType> Execute(TSpaceType origin, TSpaceType target, Func<TSpaceType, TSpaceType[]> getNeighborsFunc, Func<TSpaceType, bool> isWalkableFunc)
     {

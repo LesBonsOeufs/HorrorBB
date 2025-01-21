@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Unity.Mathematics;
-using UnityEngine.Splines;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -106,8 +104,9 @@ namespace Root
             if (lOriginPoint == null || lTargetPoint == null)
                 return null;
 
-            List<GraphPoint> lGraphPath = 
-                SimpleDjikstra<GraphPoint>.Execute(lOriginPoint, lTargetPoint, graphPoint => graphPoint.neighbors.ToArray(), graphPoint => true);
+            List<GraphPoint> lGraphPath =
+                SimpleAGreedy<GraphPoint>.Execute(lOriginPoint, lTargetPoint, graphPoint => graphPoint.neighbors.ToArray(), 
+                graphPoint => true, (point1, point2) => (point1.position - point2.position).sqrMagnitude);
 
             if (lGraphPath == null)
             {
