@@ -40,11 +40,19 @@ public class Leg : MonoBehaviour
     //Does not reset if no movement
     public Vector3 SafePositionDelta => transform.position - lastLastPos;
 
-    public Ray ForwardRay => new(rayForwardOrigin.position, 
+    public Ray ForwardRay => new(rayForwardOrigin.position,
         Vector3.ProjectOnPlane(SafePositionDelta, bodyTransform.up).normalized);
     public Ray DownRay => new(rayDownOrigin.position, bodyTransform.up * -1);
-    public Ray PerchedRay => new(DownRay.origin + DownRay.direction * perchedRayOriginDistFromDown, 
+    public Ray PerchedRay => new(DownRay.origin + DownRay.direction * perchedRayOriginDistFromDown,
         Vector3.Project(bodyTransform.position - transform.position, transform.forward));
+    public Ray InversedPerchedRay
+    {
+        get
+        {
+            Ray lPerchedRay = PerchedRay;
+            return new(lPerchedRay.origin + lPerchedRay.direction * maxPerchedRayDist, -lPerchedRay.direction);
+        }
+    }
 
     //Used for forwardRay's direction
     private Vector3 lastPos;
@@ -89,6 +97,10 @@ public class Leg : MonoBehaviour
         {
             //"Perched" raycasts (as a perched bird on a tree branch) for checking if surface was between previous raycasts
             lHit = Raycast(PerchedRay, maxPerchedRayDist);
+
+            //If perched raycast does not hit, do another one, coming from the raycast's end as its origin
+            //if (lHit == null)
+            //    lHit = Raycast(InversedPerchedRay, maxPerchedRayDist);
         }
 
         if (lHit != null)

@@ -399,7 +399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b99912e4f18ced44bd6f740df255b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTipWait: 0.35
+  maxTipWait: 0.2
   _legs:
   - {fileID: 6456868725615337727}
   - {fileID: 8769473249425202404}
@@ -1571,22 +1571,22 @@ PrefabInstance:
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.5595007
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.2599463
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.6
+      value: -9
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.70710677
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
@@ -1601,7 +1601,7 @@ PrefabInstance:
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.70710677
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
@@ -1994,11 +1994,13 @@ MonoBehaviour:
   moveTarget: {fileID: 0}
   lookTarget: {fileID: 8151005207721888636}
   legController: {fileID: 4678902910170901059}
-  speed: 0.5
-  rotationSpeed: 6
+  speed: 1
+  pitchSpeed: 6
+  yawSpeed: 2
+  rollSpeed: 3
   acceptedDistanceFromTarget: 0.2
   sphereCastRadius: 0.3
   castLength: 0.7
   castAngle: 45
   castOpening: 45
-  initialElevation: 0
+  initialElevation: 0.4

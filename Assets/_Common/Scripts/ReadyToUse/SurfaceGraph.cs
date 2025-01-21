@@ -11,10 +11,12 @@ namespace Root
     //All neighboring points must not have a collider between them, and be closer to each other than around pointsSpacing * 1.5
     public class SurfaceGraph : Singleton<SurfaceGraph>
     {
+        [SerializeField] private bool refreshOnAwake = true;
         [SerializeField, Tag] private string addVerticesTag = "SurfaceGraph_AddVertices";
         [SerializeField] private float size = 15f;
         [SerializeField] private float pointsSpacing = 0.5f;
-        
+        [SerializeField] private float pointsNormalShift = 0.4f;
+
         private PointOctree<GraphPoint> pointOctree;
 
         public GraphPoint GetClosestPoint(Vector3 position, float maxDistance)
@@ -31,33 +33,52 @@ namespace Root
         protected override void Awake()
         {
             base.Awake();
-            Refresh();
+
+            if (refreshOnAwake)
+                Refresh();
         }
 
         [Button]
-        private void Refresh()
+        public void Refresh()
         {
             Collider[] lColliders = FindObjectsByType<Collider>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            GeneratePointOctreeFromColliders(lColliders);
+            List<GraphPoint> lPoints = GeneratePointsFromColliders(lColliders);
+
+            //Fill point octree (for neighbors calculation)
+            pointOctree = new PointOctree<GraphPoint>(size, transform.position, 1f);
+            foreach (GraphPoint lPoint in lPoints)
+                pointOctree.Add(lPoint, lPoint.position);
+
             SetNeighbors();
+
+            if (pointsNormalShift == 0f)
+                return;
+
+            //After neighbors are set, shift points based on normals
+            foreach (GraphPoint lPoint in lPoints)
+                lPoint.position += lPoint.normal * pointsNormalShift;
+
+            //Update point octree
+            pointOctree = new PointOctree<GraphPoint>(size, transform.position, 1f);
+            foreach (GraphPoint lPoint in lPoints)
+                pointOctree.Add(lPoint, lPoint.position);
         }
 
         #region Points Generation
 
-        private void GeneratePointOctreeFromColliders(Collider[] colliders)
+        private List<GraphPoint> GeneratePointsFromColliders(Collider[] colliders)
         {
-            pointOctree = new PointOctree<GraphPoint>(size, transform.position, 1f);
+            List<GraphPoint> lPoints = new();
 
             foreach (Collider lCollider in colliders)
             {
                 if (!lCollider.enabled)
                     continue;
 
-                List<GraphPoint> lSurfacePoints = GenerateSurfacePoints(lCollider);
-
-                foreach (GraphPoint lPoint in lSurfacePoints)
-                    pointOctree.Add(lPoint, lPoint.position);
+                lPoints.AddRange(GenerateSurfacePoints(lCollider));
             }
+
+            return lPoints;
         }
 
         List<GraphPoint> GenerateSurfacePoints(Collider collider)
@@ -72,52 +93,52 @@ namespace Root
 
         List<GraphPoint> GenerateBoxColliderPoints(BoxCollider collider)
         {
-            List<GraphPoint> points = new();
-            Vector3 size = collider.size;
-            Vector3 center = collider.center;
+            List<GraphPoint> lPoints = new();
+            Vector3 lSize = collider.size;
+            Vector3 lCenter = collider.center;
 
             // Calculate the world space corners of the box collider
             Vector3[] corners = new Vector3[8];
-            corners[0] = new Vector3(-size.x, -size.y, -size.z) / 2f;
-            corners[1] = new Vector3(size.x, -size.y, -size.z) / 2f;
-            corners[2] = new Vector3(-size.x, size.y, -size.z) / 2f;
-            corners[3] = new Vector3(size.x, size.y, -size.z) / 2f;
-            corners[4] = new Vector3(-size.x, -size.y, size.z) / 2f;
-            corners[5] = new Vector3(size.x, -size.y, size.z) / 2f;
-            corners[6] = new Vector3(-size.x, size.y, size.z) / 2f;
-            corners[7] = new Vector3(size.x, size.y, size.z) / 2f;
+            corners[0] = new Vector3(-lSize.x, -lSize.y, -lSize.z) / 2f;
+            corners[1] = new Vector3(lSize.x, -lSize.y, -lSize.z) / 2f;
+            corners[2] = new Vector3(-lSize.x, lSize.y, -lSize.z) / 2f;
+            corners[3] = new Vector3(lSize.x, lSize.y, -lSize.z) / 2f;
+            corners[4] = new Vector3(-lSize.x, -lSize.y, lSize.z) / 2f;
+            corners[5] = new Vector3(lSize.x, -lSize.y, lSize.z) / 2f;
+            corners[6] = new Vector3(-lSize.x, lSize.y, lSize.z) / 2f;
+            corners[7] = new Vector3(lSize.x, lSize.y, lSize.z) / 2f;
 
             for (int i = 0; i < 8; i++)
             {
-                corners[i] = collider.transform.TransformPoint(center + corners[i]);
+                corners[i] = collider.transform.TransformPoint(lCenter + corners[i]);
             }
 
             // Generate points on each face
-            GeneratePointsOnFace(points, corners[0], corners[1], corners[2], collider.transform.forward * -1); // Front
-            GeneratePointsOnFace(points, corners[4], corners[5], corners[6], collider.transform.forward); // Back
-            GeneratePointsOnFace(points, corners[0], corners[1], corners[4], collider.transform.up * -1); // Bottom
-            GeneratePointsOnFace(points, corners[2], corners[3], corners[6], collider.transform.up); // Top
-            GeneratePointsOnFace(points, corners[0], corners[2], corners[4], collider.transform.right * -1); // Left
-            GeneratePointsOnFace(points, corners[1], corners[3], corners[5], collider.transform.right); // Right
+            GeneratePointsOnFace(lPoints, corners[0], corners[1], corners[2], collider.transform.forward * -1); // Front
+            GeneratePointsOnFace(lPoints, corners[4], corners[5], corners[6], collider.transform.forward); // Back
+            GeneratePointsOnFace(lPoints, corners[0], corners[1], corners[4], collider.transform.up * -1); // Bottom
+            GeneratePointsOnFace(lPoints, corners[2], corners[3], corners[6], collider.transform.up); // Top
+            GeneratePointsOnFace(lPoints, corners[0], corners[2], corners[4], collider.transform.right * -1); // Left
+            GeneratePointsOnFace(lPoints, corners[1], corners[3], corners[5], collider.transform.right); // Right
 
-            return points;
+            return lPoints;
         }
 
         void GeneratePointsOnFace(List<GraphPoint> points, Vector3 c1, Vector3 c2, Vector3 c3, Vector3 normal)
         {
-            Vector3 edge1 = c2 - c1;
-            Vector3 edge2 = c3 - c1;
+            Vector3 lEdge1 = c2 - c1;
+            Vector3 lEdge2 = c3 - c1;
 
-            int stepsX = Mathf.CeilToInt(edge1.magnitude / pointsSpacing);
-            int stepsY = Mathf.CeilToInt(edge2.magnitude / pointsSpacing);
+            int lStepsX = Mathf.CeilToInt(lEdge1.magnitude / pointsSpacing);
+            int lStepsY = Mathf.CeilToInt(lEdge2.magnitude / pointsSpacing);
 
-            for (int x = 0; x <= stepsX; x++)
+            for (int x = 0; x <= lStepsX; x++)
             {
-                for (int y = 0; y <= stepsY; y++)
+                for (int y = 0; y <= lStepsY; y++)
                 {
-                    float u = x / (float)stepsX;
-                    float v = y / (float)stepsY;
-                    Vector3 point = c1 + u * edge1 + v * edge2;
+                    float u = x / (float)lStepsX;
+                    float v = y / (float)lStepsY;
+                    Vector3 point = c1 + u * lEdge1 + v * lEdge2;
                     points.Add(new GraphPoint(point, normal));
                 }
             }
@@ -125,23 +146,23 @@ namespace Root
 
         List<GraphPoint> GenerateMeshColliderPoints(MeshCollider meshCollider)
         {
-            List<GraphPoint> points = new();
-            Mesh mesh = meshCollider.sharedMesh;
-            Vector3[] vertices = mesh.vertices;
-            int[] triangles = mesh.triangles;
+            List<GraphPoint> lPoints = new();
+            Mesh lMesh = meshCollider.sharedMesh;
+            Vector3[] lVertices = lMesh.vertices;
+            int[] lTriangles = lMesh.triangles;
 
             // Create a 3D grid to store occupied cells
             HashSet<Vector3Int> occupiedCells = new HashSet<Vector3Int>();
 
-            for (int i = 0; i < triangles.Length; i += 3)
+            for (int i = 0; i < lTriangles.Length; i += 3)
             {
-                Vector3 v1 = meshCollider.transform.TransformPoint(vertices[triangles[i]]);
-                Vector3 v2 = meshCollider.transform.TransformPoint(vertices[triangles[i + 1]]);
-                Vector3 v3 = meshCollider.transform.TransformPoint(vertices[triangles[i + 2]]);
-                GeneratePointsOnTriangle(points, v1, v2, v3, occupiedCells, meshCollider.CompareTag(addVerticesTag));
+                Vector3 v1 = meshCollider.transform.TransformPoint(lVertices[lTriangles[i]]);
+                Vector3 v2 = meshCollider.transform.TransformPoint(lVertices[lTriangles[i + 1]]);
+                Vector3 v3 = meshCollider.transform.TransformPoint(lVertices[lTriangles[i + 2]]);
+                GeneratePointsOnTriangle(lPoints, v1, v2, v3, occupiedCells, meshCollider.CompareTag(addVerticesTag));
             }
 
-            return points;
+            return lPoints;
         }
 
         void GeneratePointsOnTriangle(List<GraphPoint> points, Vector3 v1, Vector3 v2, Vector3 v3, HashSet<Vector3Int> occupiedCells, bool addVertices)
@@ -166,13 +187,13 @@ namespace Root
                 {
                     for (float z = lMin.z; z <= lMax.z; z += pointsSpacing)
                     {
-                        Vector3 lPoint = new Vector3(x, y, z);
-                        Vector3Int lCell = Vector3Int.FloorToInt(lPoint / pointsSpacing);
+                        Vector3 point = new Vector3(x, y, z);
+                        Vector3Int cell = Vector3Int.FloorToInt(point / pointsSpacing);
 
-                        if (!occupiedCells.Contains(lCell) && IsPointInTriangle(lPoint, v1, v2, v3, lNormal))
+                        if (!occupiedCells.Contains(cell) && IsPointInTriangle(point, v1, v2, v3, lNormal))
                         {
-                            points.Add(new GraphPoint(lPoint, lNormal));
-                            occupiedCells.Add(lCell);
+                            points.Add(new GraphPoint(point, lNormal));
+                            occupiedCells.Add(cell);
                         }
                     }
                 }
