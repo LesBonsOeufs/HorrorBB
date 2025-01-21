@@ -19,7 +19,7 @@ namespace Root
 
         [Foldout("Movement"), SerializeField] private float speed = .5f;
         [Foldout("Movement"), SerializeField] private float rotationSpeed = 2f;
-        [Foldout("Movement"), SerializeField] private float distanceFromPathPointForNext = .2f;
+        [Foldout("Movement"), SerializeField] private float acceptedDistanceFromTarget = .2f;
 
         [Foldout("Raycasting"), SerializeField] private float sphereCastRadius = 0.2f;
         [Foldout("Raycasting"), SerializeField] private float castLength = 1f;
@@ -30,6 +30,11 @@ namespace Root
 
         private float initControllerMaxTipWait;
         private float[] initLegAnimDurations;
+
+        /// <summary>
+        /// Is not directly on surface, in case raycasts are needed
+        /// </summary>
+        private Vector3 PositionOnSurface => transform.position - transform.up * initialElevation * 0.95f;
 
         private void Start()
         {
@@ -44,45 +49,80 @@ namespace Root
 
         private void Update()
         {
-            lookTarget.position = moveTarget.position;
             UpdateDynamicLegAnimDurations();
-            List<GraphPoint> lPath = PathFinding(moveTarget.position);
+            Vector3 lNextPos = NextPositionToTarget(moveTarget.position) ?? transform.position;
+            Crawl(lNextPos - transform.position);
+            lookTarget.position = moveTarget.position;
+        }
+
+        #region PathFinding
+
+        private Vector3? NextPositionToTarget(Vector3 target)
+        {
+            List<Vector3> lPath = PathFinding(target);
 
             if (lPath == null)
-                return;
+                return null;
+
+            while (IsPathPointReached(lPath[0], lPath.Count == 1 ? null : lPath[1]))
+            {
+                if (lPath.Count == 1)
+                    lPath[0] = transform.position;
+                else
+                    lPath.RemoveAt(0);
+            }
+
+            Vector3 lTargetPosition = lPath[0];
 
 #if UNITY_EDITOR
             //If editor & is selected, show path
             if (Selection.Contains(gameObject))
             {
                 for (int i = 0; i < lPath.Count; i++)
-                    Debug.DrawLine(i == 0 ? transform.position : lPath[i - 1].position, lPath[i].position, Color.red);
+                    Debug.DrawLine(i == 0 ?
+                        PositionOnSurface :
+                        lPath[i - 1], lPath[i], Color.red);
             }
 #endif
 
-            bool lIsLastPathPoint = lPath.Count == 1;
-            Vector3 lTargetPosition = lPath[0].position;
-
-            if (IsPathPointReached(lPath[0], lIsLastPathPoint ? null : lPath[1]))
-                lTargetPosition = lIsLastPathPoint ? transform.position : lPath[1].position;
-
-            Crawl(lTargetPosition - transform.position);
+            return lTargetPosition;
         }
 
-        private bool IsPathPointReached(GraphPoint point, GraphPoint nextPoint)
+        private List<Vector3> PathFinding(Vector3 target)
+        {
+            GraphPoint lOriginPoint = SurfaceGraph.Instance.GetClosestPoint(PositionOnSurface, 2.5f);
+            GraphPoint lTargetPoint = SurfaceGraph.Instance.GetClosestPoint(target, 2.5f);
+
+            if (lOriginPoint == null || lTargetPoint == null)
+                return null;
+
+            List<GraphPoint> lGraphPath = 
+                SimpleDjikstra<GraphPoint>.Execute(lOriginPoint, lTargetPoint, graphPoint => graphPoint.neighbors.ToArray(), graphPoint => true);
+
+            if (lGraphPath == null)
+                return null;
+
+            List<Vector3> lPath = lGraphPath.Select(graphPoint => graphPoint.position).ToList();
+
+            Plane lLastPathPointSurface = new(lGraphPath[^1].normal, lGraphPath[^1].position);
+            lPath.Add(lLastPathPointSurface.ClosestPointOnPlane(target));
+
+            return lPath;
+        }
+
+        private bool IsPathPointReached(Vector3 point, Vector3? nextPoint = null)
         {
             //Reached if distance is less than distanceFromPathPointForNext
-            Vector3 lOnSurfacePosition = transform.position - transform.up * initialElevation;
-            float lDistance = Vector3.Distance(lOnSurfacePosition, point.position);
+            float lDistance = Vector3.Distance(PositionOnSurface, point);
 
-            if (lDistance < distanceFromPathPointForNext)
+            if (lDistance < acceptedDistanceFromTarget)
                 return true;
 
             // Reached if crawler is between point and next point
             if (nextPoint != null)
             {
-                Vector3 lPointToNext = (nextPoint.position - point.position).normalized;
-                Vector3 lPointToThis = (lOnSurfacePosition - point.position).normalized;
+                Vector3 lPointToNext = (nextPoint.Value - point).normalized;
+                Vector3 lPointToThis = (PositionOnSurface - point).normalized;
 
                 if (Vector3.Dot(lPointToNext, lPointToThis) > 0f)
                     return true;
@@ -91,16 +131,7 @@ namespace Root
             return false;
         }
 
-        private List<GraphPoint> PathFinding(Vector3 target)
-        {
-            GraphPoint lOriginPoint = SurfaceGraph.Instance.GetClosestPoint(transform.position, 2.5f);
-            GraphPoint lTargetPoint = SurfaceGraph.Instance.GetClosestPoint(target, 2.5f);
-
-            if (lOriginPoint == null || lTargetPoint == null)
-                return null;
-
-            return SimpleDjikstra<GraphPoint>.Execute(lOriginPoint, lTargetPoint, graphPoint => graphPoint.neighbors.ToArray(), graphPoint => true);
-        }
+        #endregion
 
         /// <param name="direction">Does not need to be normalized</param>
         private void Crawl(Vector3 direction)
@@ -129,7 +160,11 @@ namespace Root
             Vector3 lAverageNormal = ((lFrontHit.normal * lFrontProximityRatio) + (lBackHit.normal * lBackProximityRatio)).normalized;
             Vector3 lPlanePoint = new Plane(lAverageNormal, lAveragePoint).ClosestPointOnPlane(transform.position);
             Vector3 lElevation = lAverageNormal * initialElevation;
+
             Vector3 lVelocity = Vector3.ProjectOnPlane(direction, lAverageNormal).normalized * speed * Time.deltaTime;
+            if (lVelocity.magnitude <= 0.001f)
+                lVelocity = Vector3.zero;
+
             transform.position = lPlanePoint + lElevation + lVelocity;
 
             if (lVelocity != Vector3.zero)
@@ -154,7 +189,7 @@ namespace Root
         {
             ColorUtility.TryParseHtmlString("#0000FF80", out Color lColor);
             Gizmos.color = lColor;
-            Gizmos.DrawSphere(transform.position - transform.up * initialElevation, distanceFromPathPointForNext);
+            Gizmos.DrawSphere(PositionOnSurface, acceptedDistanceFromTarget);
         }
     }
 }

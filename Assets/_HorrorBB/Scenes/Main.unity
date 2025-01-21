@@ -4632,7 +4632,7 @@ PrefabInstance:
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.8970005
+      value: 0.25241178
       objectReference: {fileID: 0}
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
@@ -10488,19 +10488,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4935035922123281083, guid: 4162f80235b5e8a4fa689de70e310fdf,
         type: 3}
-      propertyPath: octree
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935035922123281083, guid: 4162f80235b5e8a4fa689de70e310fdf,
-        type: 3}
       propertyPath: moveTarget
       value: 
       objectReference: {fileID: 160717878}
-    - target: {fileID: 4935035922123281083, guid: 4162f80235b5e8a4fa689de70e310fdf,
-        type: 3}
-      propertyPath: distanceFromPathPointForNext
-      value: 0.2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

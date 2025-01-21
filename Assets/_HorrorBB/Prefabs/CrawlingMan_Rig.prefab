@@ -1993,12 +1993,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveTarget: {fileID: 0}
   lookTarget: {fileID: 8151005207721888636}
-  octree: {fileID: 0}
+  legController: {fileID: 4678902910170901059}
   speed: 0.5
   rotationSpeed: 6
+  acceptedDistanceFromTarget: 0.2
   sphereCastRadius: 0.3
   castLength: 0.7
   castAngle: 45
   castOpening: 45
   initialElevation: 0
-  legController: {fileID: 4678902910170901059}
