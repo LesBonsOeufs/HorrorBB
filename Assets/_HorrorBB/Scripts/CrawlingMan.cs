@@ -2,7 +2,7 @@ using NaughtyAttributes;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
+using System.Collections;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -22,6 +22,7 @@ namespace Root
         [Foldout("Movement"), SerializeField] private float yawSpeed = 6f;
         [Foldout("Movement"), SerializeField] private float rollSpeed = 6f;
         [Foldout("Movement"), SerializeField] private float acceptedDistanceFromTarget = .2f;
+        [Foldout("Movement"), SerializeField] private float pathfindingCooldown = 2f;
 
         [Foldout("Raycasting"), SerializeField] private float sphereCastRadius = 0.2f;
         [Foldout("Raycasting"), SerializeField] private float castLength = 1f;
@@ -33,6 +34,7 @@ namespace Root
 
         private float initControllerMaxTipWait;
         private float[] initLegAnimDurations;
+        private List<GraphPoint> currentPath;
 
         private void Start()
         {
@@ -41,42 +43,51 @@ namespace Root
 
             if (autoInitElevation && Physics.Raycast(new Ray(transform.position, transform.up * -1), out RaycastHit lHit, 1f))
                 initialElevation = lHit.distance;
+
+            StartCoroutine(RefreshPath());
+        }
+
+        private IEnumerator RefreshPath()
+        {
+            while (true)
+            {
+                currentPath = PathFinding(moveTarget.position);
+                yield return new WaitForSeconds(pathfindingCooldown);
+            }
         }
 
         private void Update()
         {
             UpdateDynamicLegAnimDurations();
-            Vector3 lNextPos = NextPositionToTarget(moveTarget.position) ?? transform.position;
+            Vector3 lNextPos = NextPositionToTarget() ?? transform.position;
             Crawl(lNextPos - transform.position);
             lookTarget.position = moveTarget.position;
         }
 
         #region PathFinding
 
-        private Vector3? NextPositionToTarget(Vector3 target)
+        private Vector3? NextPositionToTarget()
         {
-            List<GraphPoint> lPath = PathFinding(target);
-
-            if (lPath == null)
+            if (currentPath == null)
                 return null;
 
-            while (IsPathPointReached(lPath[0].position, lPath.Count == 1 ? null : lPath[1].position))
+            while (IsPathPointReached(currentPath[0].position, currentPath.Count == 1 ? null : currentPath[1].position))
             {
-                if (lPath.Count == 1)
+                if (currentPath.Count == 1)
                 {
-                    lPath = null;
+                    currentPath = null;
                     break;
                 }
                 else
-                    lPath.RemoveAt(0);
+                    currentPath.RemoveAt(0);
             }
 
             Vector3 lTargetPosition;
 
-            if (lPath == null)
+            if (currentPath == null)
                 lTargetPosition = transform.position;
             else
-                lTargetPosition = lPath[0].position;
+                lTargetPosition = currentPath[0].position;
 
             return lTargetPosition;
         }
@@ -95,8 +106,8 @@ namespace Root
             {
                 foreach (GraphPoint lNeighbor in lOriginPoint.neighbors)
                 {
-                    Debug.DrawLine(lOriginPoint.position, lNeighbor.position, new Color(0f, 1f, 0f, 0.5f));
-                    Extension_Debug.DrawCross(lNeighbor.position, 0.1f, new Color(1f, 0f, 0f, 0.5f));
+                    Debug.DrawLine(lOriginPoint.position, lNeighbor.position, new Color(0f, 1f, 0f, 0.5f), pathfindingCooldown);
+                    Extension_Debug.DrawCross(lNeighbor.position, 0.1f, new Color(1f, 0f, 0f, 0.5f), pathfindingCooldown);
                 }
             }
 #endif
@@ -111,9 +122,9 @@ namespace Root
                 //If editor & is selected, show origin/target points
                 if (Selection.Contains(gameObject))
                 {
-                    Extension_Debug.DrawCross(lOriginPoint.position, 0.25f, Color.red);
-                    Extension_Debug.DrawCross(lTargetPoint.position, 0.25f, Color.red);
-                    Debug.DrawLine(lOriginPoint.position, lTargetPoint.position, Color.red);
+                    Extension_Debug.DrawCross(lOriginPoint.position, 0.25f, Color.red, pathfindingCooldown);
+                    Extension_Debug.DrawCross(lTargetPoint.position, 0.25f, Color.red, pathfindingCooldown);
+                    Debug.DrawLine(lOriginPoint.position, lTargetPoint.position, Color.red, pathfindingCooldown);
                 }
 #endif
 
@@ -125,11 +136,11 @@ namespace Root
             //If editor & is selected, show origin/target points
             if (Selection.Contains(gameObject))
             {
-                Extension_Debug.DrawCross(lOriginPoint.position, 0.25f, Color.green);
-                Extension_Debug.DrawCross(lTargetPoint.position, 0.25f, Color.green);
+                Extension_Debug.DrawCross(lOriginPoint.position, 0.25f, Color.green, pathfindingCooldown);
+                Extension_Debug.DrawCross(lTargetPoint.position, 0.25f, Color.green, pathfindingCooldown);
 
                 for (int i = 1; i < lGraphPath.Count; i++)
-                    Debug.DrawLine(lGraphPath[i - 1].position, lGraphPath[i].position, Color.green);
+                    Debug.DrawLine(lGraphPath[i - 1].position, lGraphPath[i].position, Color.green, pathfindingCooldown);
             }
 #endif
 

@@ -1571,17 +1571,17 @@ PrefabInstance:
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1
+      value: 2.2
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.4
+      value: 3.6
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9
+      value: -6.7000003
       objectReference: {fileID: 0}
     - target: {fileID: 2425420053880214634, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
@@ -1994,13 +1994,15 @@ MonoBehaviour:
   moveTarget: {fileID: 0}
   lookTarget: {fileID: 8151005207721888636}
   legController: {fileID: 4678902910170901059}
-  speed: 1
+  speed: 3
   pitchSpeed: 6
   yawSpeed: 2
   rollSpeed: 3
   acceptedDistanceFromTarget: 0.2
+  pathfindingCooldown: 0
   sphereCastRadius: 0.3
   castLength: 0.7
   castAngle: 45
   castOpening: 45
+  autoInitElevation: 0
   initialElevation: 0.4
