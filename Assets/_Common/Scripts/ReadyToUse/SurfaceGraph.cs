@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Root
 {
@@ -14,19 +15,24 @@ namespace Root
         [SerializeField] private bool refreshOnAwake = true;
         [SerializeField, Tag] private string addVerticesTag = "SurfaceGraph_AddVertices";
         [SerializeField] private float size = 15f;
-        [SerializeField] private float pointsSpacing = 0.5f;
+        [SerializeField] private float pointsSpacing = 1f;
         [SerializeField] private float pointsNormalShift = 0.4f;
+        [SerializeField] private float neighborMaxDistance = 1.5f;
+
+        [SerializeField] private bool keepOnlyReachableFrom = false;
+        [InfoBox("This has a significant cost on generation", EInfoBoxType.Warning), 
+        ShowIf(nameof(keepOnlyReachableFrom)), SerializeField] private Vector3 reachablePoint = Vector3.zero;
 
         private PointOctree<GraphPoint> pointOctree;
 
         public GraphPoint GetClosestPoint(Vector3 position, float maxDistance)
         {
             List<GraphPoint> lNearbyPoints = pointOctree.GetNearby(position, maxDistance).ToList();
+            RemoveNonDirectPoints(position, lNearbyPoints);
 
             if (lNearbyPoints.Count == 0)
                 return null;
 
-            RemoveNonDirectPoints(position, lNearbyPoints);
             return lNearbyPoints.OrderBy(p => Vector3.Distance(p.position, position)).First();
         }
 
@@ -51,17 +57,11 @@ namespace Root
 
             SetNeighbors();
 
-            if (pointsNormalShift == 0f)
-                return;
+            if (keepOnlyReachableFrom)
+                SelectReachables(lPoints);
 
-            //After neighbors are set, shift points based on normals
-            foreach (GraphPoint lPoint in lPoints)
-                lPoint.position += lPoint.normal * pointsNormalShift;
-
-            //Update point octree
-            pointOctree = new PointOctree<GraphPoint>(size, transform.position, 1f);
-            foreach (GraphPoint lPoint in lPoints)
-                pointOctree.Add(lPoint, lPoint.position);
+            if (pointsNormalShift != 0f)
+                NormalShift(lPoints);
         }
 
         #region Points Generation
@@ -152,14 +152,14 @@ namespace Root
             int[] lTriangles = lMesh.triangles;
 
             // Create a 3D grid to store occupied cells
-            HashSet<Vector3Int> occupiedCells = new HashSet<Vector3Int>();
+            HashSet<Vector3Int> lOccupiedCells = new HashSet<Vector3Int>();
 
             for (int i = 0; i < lTriangles.Length; i += 3)
             {
                 Vector3 v1 = meshCollider.transform.TransformPoint(lVertices[lTriangles[i]]);
                 Vector3 v2 = meshCollider.transform.TransformPoint(lVertices[lTriangles[i + 1]]);
                 Vector3 v3 = meshCollider.transform.TransformPoint(lVertices[lTriangles[i + 2]]);
-                GeneratePointsOnTriangle(lPoints, v1, v2, v3, occupiedCells, meshCollider.CompareTag(addVerticesTag));
+                GeneratePointsOnTriangle(lPoints, v1, v2, v3, lOccupiedCells, meshCollider.CompareTag(addVerticesTag));
             }
 
             return lPoints;
@@ -219,6 +219,8 @@ namespace Root
 
         #endregion
 
+        #region Set Neighbors
+
         private void SetNeighbors()
         {
             List<GraphPoint> lNearbyPoints = new();
@@ -226,7 +228,7 @@ namespace Root
 
             foreach (GraphPoint lPoint in lGraph)
             {
-                pointOctree.GetNearbyNonAlloc(lPoint.position, pointsSpacing * 1.5f, lNearbyPoints);
+                pointOctree.GetNearbyNonAlloc(lPoint.position, neighborMaxDistance, lNearbyPoints);
                 RemoveNonDirectPoints(lPoint.position, lNearbyPoints);
                 lPoint.neighbors = new List<GraphPoint>(lNearbyPoints);
             }
@@ -239,18 +241,82 @@ namespace Root
         {
             for (int i = testedPoints.Count - 1; i >= 0; i--)
             {
-                Vector3 lPointToNearby = testedPoints[i].position - position;
-                //Don't start ray at point.position for preventing starting inside the collider
-                Vector3 lRaycastOrigin = position - lPointToNearby.normalized * 0.01f;
-
                 //If there is a collider between the points, remove the point from the neighbors
-                if (Physics.Raycast(lRaycastOrigin, lPointToNearby, lPointToNearby.magnitude))
+                if (SafeRaycast(position, testedPoints[i].position))
                     testedPoints.RemoveAt(i);
             }
         }
 
+        #endregion
+
+        #region Optional
+
+        private void SelectReachables(List<GraphPoint> points)
+        {
+            GraphPoint lReachablePointOnGraph = GetClosestPoint(reachablePoint, size);
+            List<GraphPoint> lReachables = new() { lReachablePointOnGraph };
+            HashSet<GraphPoint> lAlreadyAdded = new() { lReachablePointOnGraph };
+            List<GraphPoint> lNextNeighbors = new(lReachablePointOnGraph.neighbors);
+            ICollection<GraphPoint> lFilteredNeighbors;
+
+            while (true)
+            {
+                //Make sure not to add two times the same point
+                lFilteredNeighbors = lNextNeighbors.Where(neighbor => !lAlreadyAdded.Contains(neighbor)).ToList();
+                lReachables.AddRange(lFilteredNeighbors);
+
+                lNextNeighbors.Clear();
+
+                //If no new neighbors, all points have been found
+                if (lFilteredNeighbors.Count == 0)
+                    break;
+
+                foreach (GraphPoint lNeighbor in lFilteredNeighbors)
+                {
+                    lNextNeighbors.AddRange(lNeighbor.neighbors);
+                    lAlreadyAdded.Add(lNeighbor);
+                }
+            }
+
+            points = lReachables;
+        }
+
+        private void NormalShift(List<GraphPoint> points)
+        {
+            //After neighbors are set, shift points based on normals
+            foreach (GraphPoint lPoint in points)
+            {
+                Vector3 lShift = lPoint.normal * pointsNormalShift;
+
+                //If shifting will traverse a collider, don't shift
+                if (!SafeRaycast(lPoint.position, lPoint.position + lShift))
+                    lPoint.position += lShift;
+            }
+
+            //Update point octree
+            pointOctree = new PointOctree<GraphPoint>(size, transform.position, 1f);
+            foreach (GraphPoint lPoint in points)
+                pointOctree.Add(lPoint, lPoint.position);
+        }
+
+        private bool SafeRaycast(Vector3 origin, Vector3 target)
+        {
+            //Don't start ray at point.position for preventing starting inside a collider
+            Vector3 lRaycastOrigin = origin - (target - origin).normalized * 0.1f;
+            Vector3 lOriginToTarget = target - lRaycastOrigin;
+            return Physics.Raycast(lRaycastOrigin, lOriginToTarget, lOriginToTarget.magnitude);
+        }
+
+        #endregion
+
         private void OnDrawGizmosSelected()
         {
+            if (keepOnlyReachableFrom)
+            {
+                Gizmos.color = Color.white;
+                Gizmos.DrawCube(reachablePoint, Vector3.one * 0.5f);
+            }
+
             if (pointOctree == null)
                 return;
 

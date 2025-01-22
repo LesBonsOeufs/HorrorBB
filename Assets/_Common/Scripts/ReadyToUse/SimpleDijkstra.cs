@@ -20,7 +20,7 @@ public static class SimpleDijkstra<TSpaceType> where TSpaceType : IEquatable<TSp
             {
                 lPathTile = lTilesToTest[i];
 
-                if (EqualityComparer<TSpaceType>.Default.Equals(lPathTile.position, target))
+                if (lPathTile.position.Equals(target))
                     return lPathTile.GetPath();
 
                 foreach (TSpaceType lNeighbor in getNeighborsFunc(lPathTile.position))

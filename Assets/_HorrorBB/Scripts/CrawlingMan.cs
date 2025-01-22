@@ -28,7 +28,8 @@ namespace Root
         [Foldout("Raycasting"), SerializeField, Range(0f, 90f)] private float castAngle = 45f;
         [Foldout("Raycasting"), SerializeField, Range(0f, 90f)] private float castOpening = 90f;
 
-        [SerializeField] private float initialElevation = 0.4f;
+        [SerializeField] private bool autoInitElevation = true;
+        [InfoBox("If auto, will be used as fallback value"), SerializeField] private float initialElevation = 0.4f;
 
         private float initControllerMaxTipWait;
         private float[] initLegAnimDurations;
@@ -38,10 +39,8 @@ namespace Root
             initControllerMaxTipWait = legController.maxTipWait;
             initLegAnimDurations = legController.Legs.Select(leg => leg.tipAnimationDuration).ToArray(); 
 
-            if (Physics.Raycast(new Ray(transform.position, transform.up * -1), out RaycastHit lHit, 1f))
+            if (autoInitElevation && Physics.Raycast(new Ray(transform.position, transform.up * -1), out RaycastHit lHit, 1f))
                 initialElevation = lHit.distance;
-            else
-                initialElevation = 1f;
         }
 
         private void Update()
@@ -77,32 +76,30 @@ namespace Root
             if (lPath == null)
                 lTargetPosition = transform.position;
             else
-            {
                 lTargetPosition = lPath[0].position;
-
-#if UNITY_EDITOR
-                //If editor & is selected, show path
-                if (Selection.Contains(gameObject))
-                {
-                    for (int i = 0; i < lPath.Count; i++)
-                        Debug.DrawLine(i == 0 ?
-                            transform.position :
-                            lPath[i - 1].position, lPath[i].position, Color.red);
-                }
-#endif
-            }
 
             return lTargetPosition;
         }
 
         private List<GraphPoint> PathFinding(Vector3 target)
         {
-            float lMaxDistance = 2.5f;
-            GraphPoint lOriginPoint = SurfaceGraph.Instance.GetClosestPoint(transform.position, lMaxDistance);
-            GraphPoint lTargetPoint = SurfaceGraph.Instance.GetClosestPoint(target, lMaxDistance);
+            GraphPoint lOriginPoint = SurfaceGraph.Instance.GetClosestPoint(transform.position, 1.5f);
+            GraphPoint lTargetPoint = SurfaceGraph.Instance.GetClosestPoint(target, 2.5f);
 
             if (lOriginPoint == null || lTargetPoint == null)
                 return null;
+
+#if UNITY_EDITOR
+            //If editor & is selected, show origin/target points
+            if (Selection.Contains(gameObject))
+            {
+                foreach (GraphPoint lNeighbor in lOriginPoint.neighbors)
+                {
+                    Debug.DrawLine(lOriginPoint.position, lNeighbor.position, new Color(0f, 1f, 0f, 0.5f));
+                    Extension_Debug.DrawCross(lNeighbor.position, 0.1f, new Color(1f, 0f, 0f, 0.5f));
+                }
+            }
+#endif
 
             List<GraphPoint> lGraphPath =
                 SimpleAGreedy<GraphPoint>.Execute(lOriginPoint, lTargetPoint, graphPoint => graphPoint.neighbors.ToArray(), 
@@ -110,9 +107,31 @@ namespace Root
 
             if (lGraphPath == null)
             {
+#if UNITY_EDITOR
+                //If editor & is selected, show origin/target points
+                if (Selection.Contains(gameObject))
+                {
+                    Extension_Debug.DrawCross(lOriginPoint.position, 0.25f, Color.red);
+                    Extension_Debug.DrawCross(lTargetPoint.position, 0.25f, Color.red);
+                    Debug.DrawLine(lOriginPoint.position, lTargetPoint.position, Color.red);
+                }
+#endif
+
                 //If no path could be made, try reaching target directly
-                return new List<GraphPoint> { lTargetPoint }; ;
+                return new List<GraphPoint> { lTargetPoint };
             }
+
+#if UNITY_EDITOR
+            //If editor & is selected, show origin/target points
+            if (Selection.Contains(gameObject))
+            {
+                Extension_Debug.DrawCross(lOriginPoint.position, 0.25f, Color.green);
+                Extension_Debug.DrawCross(lTargetPoint.position, 0.25f, Color.green);
+
+                for (int i = 1; i < lGraphPath.Count; i++)
+                    Debug.DrawLine(lGraphPath[i - 1].position, lGraphPath[i].position, Color.green);
+            }
+#endif
 
             Plane lLastPathPointSurface = new(lGraphPath[^1].normal, lGraphPath[^1].position);
             lGraphPath.Add(new GraphPoint(lLastPathPointSurface.ClosestPointOnPlane(target), lLastPathPointSurface.normal));

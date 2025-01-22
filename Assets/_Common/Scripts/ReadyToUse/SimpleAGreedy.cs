@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public static class SimpleAGreedy<TSpaceType> where TSpaceType : IEquatable<TSpaceType>
 {
     public static List<TSpaceType> Execute(TSpaceType origin, TSpaceType target,
-            Func<TSpaceType, TSpaceType[]> getNeighborsFunc,
+            Func<TSpaceType, IEnumerable<TSpaceType>> getNeighborsFunc,
             Func<TSpaceType, bool> isWalkableFunc,
             Func<TSpaceType, TSpaceType, float> heuristicFunc)
     {
@@ -12,32 +12,37 @@ public static class SimpleAGreedy<TSpaceType> where TSpaceType : IEquatable<TSpa
             return null;
 
         var lOpenSet = new SimplePriorityQueue<PathTile>();
-        var lClosedSet = new HashSet<TSpaceType>();
+        var lAllTiles = new Dictionary<TSpaceType, PathTile>();
         var lStartTile = new PathTile(origin, null, 0, heuristicFunc(origin, target));
 
-        lOpenSet.Enqueue(lStartTile, lStartTile.fScore);
+        lOpenSet.Enqueue(lStartTile, lStartTile.FScore);
+        lAllTiles[origin] = lStartTile;
 
         while (lOpenSet.Count > 0)
         {
-            PathTile currentTile = lOpenSet.Dequeue();
+            PathTile lCurrentTile = lOpenSet.Dequeue();
 
-            if (EqualityComparer<TSpaceType>.Default.Equals(currentTile.position, target))
-                return currentTile.GetPath();
+            if (lCurrentTile.Position.Equals(target))
+                return lCurrentTile.GetPath();
 
-            lClosedSet.Add(currentTile.position);
-
-            foreach (TSpaceType neighbor in getNeighborsFunc(currentTile.position))
+            foreach (TSpaceType lNeighbor in getNeighborsFunc(lCurrentTile.Position))
             {
-                if (!isWalkableFunc(neighbor) || lClosedSet.Contains(neighbor))
+                if (!isWalkableFunc(lNeighbor))
                     continue;
 
-                float lTentativeGScore = currentTile.gScore + 1; // Assuming uniform cost of 1
-                float lHScore = heuristicFunc(neighbor, target);
-                PathTile lNeighborTile = new PathTile(neighbor, currentTile, lTentativeGScore, lHScore);
+                float lTentativeGScore = lCurrentTile.GScore + 1; // Assuming uniform cost of 1
 
-                if (!lOpenSet.Contains(lNeighborTile) || lTentativeGScore < lNeighborTile.gScore)
+                if (!lAllTiles.TryGetValue(lNeighbor, out PathTile lNeighborTile))
                 {
-                    lOpenSet.Enqueue(lNeighborTile, lNeighborTile.fScore);
+                    lNeighborTile = new PathTile(lNeighbor, lCurrentTile, lTentativeGScore, heuristicFunc(lNeighbor, target));
+                    lAllTiles[lNeighbor] = lNeighborTile;
+                    lOpenSet.Enqueue(lNeighborTile, lNeighborTile.FScore);
+                }
+                else if (lTentativeGScore < lNeighborTile.GScore)
+                {
+                    lNeighborTile.UpdateTile(lCurrentTile, lTentativeGScore);
+                    // Re-enqueue with updated priority
+                    lOpenSet.Enqueue(lNeighborTile, lNeighborTile.FScore);
                 }
             }
         }
@@ -47,37 +52,42 @@ public static class SimpleAGreedy<TSpaceType> where TSpaceType : IEquatable<TSpa
 
     private class PathTile : IComparable<PathTile>
     {
-        public TSpaceType position;
-        public PathTile previousTile;
-        public float gScore;
-        public float fScore;
+        public TSpaceType Position { get; }
+        public PathTile PreviousTile { get; private set; }
+        public float GScore { get; private set; }
+        public float FScore { get; private set; }
 
         public PathTile(TSpaceType position, PathTile previousTile, float gScore, float hScore)
         {
-            this.position = position;
-            this.previousTile = previousTile;
-            this.gScore = gScore;
-            this.fScore = gScore + hScore; // f(n) = g(n) + h(n)
+            Position = position;
+            PreviousTile = previousTile;
+            GScore = gScore;
+            FScore = gScore + hScore;
         }
+
+        public void UpdateTile(PathTile previousTile, float gScore)
+        {
+            float lHScore = FScore - GScore;  // Extract the heuristic score
+            PreviousTile = previousTile;
+            GScore = gScore;
+            FScore = GScore + lHScore;  // Recalculate FScore with the new GScore
+        }
+
+        public int CompareTo(PathTile other) => FScore.CompareTo(other.FScore);
 
         public List<TSpaceType> GetPath()
         {
-            var path = new List<TSpaceType>();
-            var current = this;
+            List<TSpaceType> lPath = new();
+            PathTile lCurrent = this;
 
-            while (current != null)
+            while (lCurrent != null)
             {
-                path.Add(current.position);
-                current = current.previousTile;
+                lPath.Add(lCurrent.Position);
+                lCurrent = lCurrent.PreviousTile;
             }
 
-            path.Reverse();
-            return path;
-        }
-
-        public int CompareTo(PathTile other)
-        {
-            return fScore.CompareTo(other.fScore);
+            lPath.Reverse();
+            return lPath;
         }
     }
 }
