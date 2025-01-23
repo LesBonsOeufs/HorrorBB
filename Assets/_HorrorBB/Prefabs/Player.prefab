@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3829046328148064544}
   - component: {fileID: 865796760676632608}
   - component: {fileID: 2760963628395694681}
+  - component: {fileID: 1590968342863555555}
   m_Layer: 0
   m_Name: PlayerCam
   m_TagString: Untagged
@@ -186,6 +187,29 @@ MonoBehaviour:
         DecelTime: 0.15
   PlayerIndex: -1
   AutoEnableInputs: 1
+--- !u!114 &1590968342863555555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97891638447735551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ApplyAfter: 2
+  ChannelMask: 1
+  Gain: 0
+  Use2DDistance: 0
+  UseCameraSpace: 1
+  ReactionSettings:
+    m_SecondaryNoise: {fileID: 11400000, guid: ce0f99467bab83540a43a555bc6d3c08, type: 2}
+    AmplitudeGain: -1
+    FrequencyGain: 1
+    Duration: 1
+    m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &764988652358138022
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,6 +222,7 @@ GameObject:
   - component: {fileID: 99064252964203820}
   - component: {fileID: 5159255448577490475}
   - component: {fileID: 2542232814754004367}
+  - component: {fileID: 1587528296408964638}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -303,6 +328,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
+  distanceForStep: 1.2
+  headbobbing: {fileID: 1587528296408964638}
+  testStepCd: 0.65
+--- !u!114 &1587528296408964638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764988652358138022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47275b56381c8564ba74ca4386c5789f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  source: {fileID: 4429799461056757454}
+  listener: {fileID: 1590968342863555555}
 --- !u!1 &2201985489915606846
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,6 +354,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8339492527405232953}
+  - component: {fileID: 4429799461056757454}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -327,10 +370,90 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2201985489915606846}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8002308575696249645}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4429799461056757454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2201985489915606846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ImpulseDefinition:
+    ImpulseChannel: 1
+    ImpulseShape: 0
+    CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0.11107837
+        outSlope: 0.11107837
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.3517915
+      - serializedVersion: 3
+        time: 0.5016383
+        value: 0.99114597
+        inSlope: -0.039337564
+        outSlope: -0.039337564
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.16371699
+        outWeight: 0.52458084
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: -3.0899882
+        outSlope: -3.0899882
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.08883639
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ImpulseDuration: 0.17
+    ImpulseType: 0
+    DissipationRate: 0.25
+    RawSignal: {fileID: 0}
+    AmplitudeGain: 1
+    FrequencyGain: 1
+    RepeatMode: 0
+    Randomize: 1
+    TimeEnvelope:
+      AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      AttackTime: 0
+      SustainTime: 0.2
+      DecayTime: 0.7
+      ScaleWithImpact: 1
+      HoldForever: 0
+    ImpactRadius: 100
+    DirectionMode: 0
+    DissipationMode: 2
+    DissipationDistance: 100
+    PropagationSpeed: 343
+  DefaultVelocity: {x: 0, y: -1, z: 0}
