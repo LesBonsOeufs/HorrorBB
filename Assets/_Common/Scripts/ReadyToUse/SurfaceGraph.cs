@@ -88,7 +88,7 @@ namespace Root
             else if (collider is BoxCollider lBoxCollider)
                 return GenerateBoxColliderPoints(lBoxCollider);
             else
-                return null;
+                return new List<GraphPoint>();
         }
 
         List<GraphPoint> GenerateBoxColliderPoints(BoxCollider collider)
