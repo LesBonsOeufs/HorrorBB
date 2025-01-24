@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,8 +8,10 @@ namespace Root
     public class Player : MonoBehaviour
     {
         [SerializeField] private float speed = 2f;
-        [SerializeField] private float distanceForStep = 1f;
-        [SerializeField] private HeadBobbing headbobbing;
+
+        [Foldout("Step"), SerializeField] private float distanceForStep = 1f;
+        [Foldout("Step"), SerializeField] private HeadBobbing headbobbing;
+        [Foldout("Step"), SerializeField] private AudioSource stepSource;
 
         private CharacterController controller;
         private float gravity = -9.81f;
@@ -18,18 +21,11 @@ namespace Root
         private Vector3 lastPosition;
         private float stepDistanceCounter = 0f;
 
-        [SerializeField] private float testStepCd = 0.5f;
-        [SerializeField] private bool testStepRepeating = false;
-
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             controller = GetComponent<CharacterController>();
-
-            if (testStepRepeating)
-                InvokeRepeating(nameof(Step), 0f, testStepCd);
-
             lastPosition = transform.position;
         }
 
@@ -62,6 +58,7 @@ namespace Root
         private void Step()
         {
             headbobbing.Execute();
+            stepSource.Play();
         }
 
         #region Player Input Messages
