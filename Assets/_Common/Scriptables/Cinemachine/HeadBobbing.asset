@@ -20,20 +20,20 @@ MonoBehaviour:
     Y:
       Frequency: 0
       Amplitude: 0
-      Constant: 0
+      Constant: 1
     Z:
       Frequency: 0
       Amplitude: 0
-      Constant: 0
+      Constant: 1
   OrientationNoise:
   - X:
       Frequency: 0
       Amplitude: 0
-      Constant: 0
+      Constant: 1
     Y:
       Frequency: 0
       Amplitude: 0
-      Constant: 0
+      Constant: 1
     Z:
       Frequency: 0
       Amplitude: 20
