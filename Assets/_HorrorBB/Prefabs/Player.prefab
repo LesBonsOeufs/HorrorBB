@@ -141,8 +141,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoiseProfile: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   PivotOffset: {x: 0, y: 0, z: 0}
-  AmplitudeGain: 0.2
-  FrequencyGain: 0.2
+  AmplitudeGain: 0.3
+  FrequencyGain: 0.4
   m_NoiseOffsets: {x: 618.4664, y: 757.33777, z: -358.10696}
 --- !u!114 &2760963628395694681
 MonoBehaviour:
@@ -199,14 +199,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyAfter: 2
+  ApplyAfter: 3
   ChannelMask: 1
   Gain: 0
   Use2DDistance: 0
   UseCameraSpace: 1
   ReactionSettings:
     m_SecondaryNoise: {fileID: 11400000, guid: ce0f99467bab83540a43a555bc6d3c08, type: 2}
-    AmplitudeGain: 0.4
+    AmplitudeGain: 0.2
     FrequencyGain: 1
     Duration: 0.4
     m_NoiseOffsets: {x: 0, y: 0, z: 0}

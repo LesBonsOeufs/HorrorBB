@@ -16,7 +16,7 @@ MonoBehaviour:
   - X:
       Frequency: 0
       Amplitude: -0.2
-      Constant: 0
+      Constant: 1
     Y:
       Frequency: 0
       Amplitude: 0
@@ -37,4 +37,4 @@ MonoBehaviour:
     Z:
       Frequency: 0
       Amplitude: 20
-      Constant: 0
+      Constant: 1
