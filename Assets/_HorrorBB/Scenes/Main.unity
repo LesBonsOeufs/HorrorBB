@@ -3387,6 +3387,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4082353457768393500, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
+      propertyPath: m_Name
+      value: Light
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082353457768393500, guid: 0d0d62f6179998847a8718fe00c398c6,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -4871,7 +4876,7 @@ PrefabInstance:
     - target: {fileID: 1833526208913758827, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.9999995
+      value: -7.3999996
       objectReference: {fileID: 0}
     - target: {fileID: 1833526208913758827, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
@@ -5045,7 +5050,7 @@ PrefabInstance:
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.27965957
+      value: 0.22404628
       objectReference: {fileID: 0}
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
@@ -11015,6 +11020,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CrawlingMan
+      objectReference: {fileID: 0}
+    - target: {fileID: 4440294339578842200, guid: 4162f80235b5e8a4fa689de70e310fdf,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4935035922123281083, guid: 4162f80235b5e8a4fa689de70e310fdf,
         type: 3}
