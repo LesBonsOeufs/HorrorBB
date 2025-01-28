@@ -122,13 +122,14 @@ public class Interactor : MonoBehaviour
         if (!useCameraFrustum)
             return;
 
-        if (colliderToInteractableToFrustumTest.TryGetValue(other, out Interactable lInteractable) && !_usableInteractables.Contains(lInteractable))
+        if (colliderToInteractableToFrustumTest.TryGetValue(other, out Interactable lInteractable))
         {
             Vector3 lViewportPos = Camera.main.WorldToViewportPoint(lInteractable.transform.position);
+            bool lIsInFrustum = lViewportPos.x >= 0f && lViewportPos.x <= 1f && lViewportPos.y >= 0f && lViewportPos.y <= 1f && lViewportPos.z > 0f;
 
-            if (lViewportPos.x >= 0f && lViewportPos.x <= 1f && lViewportPos.y >= 0f && lViewportPos.y <= 1f && lViewportPos.z > 0f)
+            if (!_usableInteractables.Contains(lInteractable) && lIsInFrustum)
                 AddToUsables(lInteractable);
-            else
+            else if (_usableInteractables.Contains(lInteractable) && !lIsInFrustum)
                 RemoveFromUsables(lInteractable);
         }
     }

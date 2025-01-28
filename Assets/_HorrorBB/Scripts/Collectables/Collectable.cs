@@ -8,12 +8,13 @@ namespace Root
     public class Collectable : Interactable
     {
         [SerializeField] private MeshRenderer meshRenderer;
+        [SerializeField] private Outline outline;
         [SerializeField] private float alphaTweenDuration = 0.75f;
         [Expandable, SerializeField] private CollectableInfo info;
 
-        public override void InteractorEnter() { }
+        public override void InteractorEnter() => outline.enabled = true;
 
-        public override void InteractorExit() { }
+        public override void InteractorExit() => outline.enabled = false;
 
         public override void Interact(Interactor interactor, bool isInteracting)
         {

@@ -206,7 +206,7 @@ MonoBehaviour:
   UseCameraSpace: 1
   ReactionSettings:
     m_SecondaryNoise: {fileID: 11400000, guid: ce0f99467bab83540a43a555bc6d3c08, type: 2}
-    AmplitudeGain: 0.065
+    AmplitudeGain: 0.06
     FrequencyGain: 1
     Duration: 0.4
     m_NoiseOffsets: {x: 0, y: 0, z: 0}
