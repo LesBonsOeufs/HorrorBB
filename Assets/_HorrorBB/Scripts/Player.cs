@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace Root
 {
-    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(CharacterController), typeof(Interactor))]
     public class Player : MonoBehaviour
     {
         [SerializeField] private float speed = 2f;
@@ -14,6 +14,7 @@ namespace Root
         [Foldout("Step"), SerializeField] private AudioSource stepSource;
 
         private CharacterController controller;
+        private Interactor interactor;
         private float gravity = -9.81f;
         private Vector3 moveInput;
         private Vector3 additionalVelocity;
@@ -26,6 +27,7 @@ namespace Root
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             controller = GetComponent<CharacterController>();
+            interactor = GetComponent<Interactor>();
             lastPosition = transform.position;
         }
 
@@ -67,6 +69,14 @@ namespace Root
         {
             Vector2 lInput = inputValue.Get<Vector2>();
             moveInput = new Vector3(lInput.x, 0, lInput.y);
+        }
+
+        private void OnInteract(InputValue inputValue)
+        {
+            if (inputValue.isPressed)
+                interactor.StartInteraction();
+            else
+                interactor.StopInteraction();
         }
 
         #endregion

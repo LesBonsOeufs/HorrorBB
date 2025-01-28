@@ -206,7 +206,7 @@ MonoBehaviour:
   UseCameraSpace: 1
   ReactionSettings:
     m_SecondaryNoise: {fileID: 11400000, guid: ce0f99467bab83540a43a555bc6d3c08, type: 2}
-    AmplitudeGain: 0.07
+    AmplitudeGain: 0.065
     FrequencyGain: 1
     Duration: 0.4
     m_NoiseOffsets: {x: 0, y: 0, z: 0}
@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 5159255448577490475}
   - component: {fileID: 2542232814754004367}
   - component: {fileID: 1587528296408964638}
+  - component: {fileID: 8156812503816061090}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -345,6 +346,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   source: {fileID: 4429799461056757454}
   listener: {fileID: 1590968342863555555}
+--- !u!114 &8156812503816061090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764988652358138022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3726a57844afe87419791fc9f18e8250, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useCameraFrustum: 1
 --- !u!1 &2201985489915606846
 GameObject:
   m_ObjectHideFlags: 0
