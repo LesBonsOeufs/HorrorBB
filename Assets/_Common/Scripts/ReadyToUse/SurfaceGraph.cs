@@ -241,7 +241,16 @@ namespace Root
             {
                 pointOctree.GetNearbyNonAlloc(lPoint.position, neighborMaxDistance, lNearbyPoints);
                 RemoveNonDirectPoints(lPoint.position, lNearbyPoints);
-                lPoint.neighbors = new List<GraphPoint>(lNearbyPoints);
+
+                foreach (GraphPoint lNeighbor in lNearbyPoints)
+                {
+                    if (!lPoint.neighbors.Contains(lNeighbor))
+                        lPoint.neighbors.Add(lNeighbor);
+
+                    //For security, also add the point as a neighbor of its neighbors
+                    if (!lNeighbor.neighbors.Contains(lPoint))
+                        lNeighbor.neighbors.Add(lPoint);
+                }
             }
         }
 
@@ -358,13 +367,13 @@ namespace Root
     {
         public Vector3 position;
         public Vector3 normal;
-        public List<GraphPoint> neighbors;
+        public HashSet<GraphPoint> neighbors;
 
         public GraphPoint(Vector3 position, Vector3 normal)
         {
             this.position = position;
             this.normal = normal;
-            neighbors = new List<GraphPoint>();
+            neighbors = new HashSet<GraphPoint>();
         }
 
         public bool Equals(GraphPoint other)
