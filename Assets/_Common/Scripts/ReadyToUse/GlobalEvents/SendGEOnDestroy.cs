@@ -1,12 +1,17 @@
-using GE;
 using UnityEngine;
 
-public class SendGEOnDestroy : MonoBehaviour
+namespace GE
 {
-    [SerializeField] private E_GlobalEvents globalEvent;
-
-    private void OnDestroy()
+    public class SendGEOnDestroy : MonoBehaviour
     {
-        GlobalEvents.Spread(globalEvent);
+        [SerializeField] private E_GlobalEvents globalEvent;
+
+        private void OnDestroy()
+        {
+            if (GlobalEvents.Instance == null)
+                return;
+
+            GlobalEvents.Instance.Spread(globalEvent);
+        }
     }
 }

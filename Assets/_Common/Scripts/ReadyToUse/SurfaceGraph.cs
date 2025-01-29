@@ -72,7 +72,7 @@ namespace Root
 
             foreach (Collider lCollider in colliders)
             {
-                if (!lCollider.enabled)
+                if (!lCollider.enabled || lCollider.isTrigger)
                     continue;
 
                 lPoints.AddRange(GenerateSurfacePoints(lCollider));
@@ -337,8 +337,8 @@ namespace Root
             //Draw normals
             foreach (GraphPoint lPoint in lPoints)
             {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(lPoint.position, lPoint.position + lPoint.normal * 0.1f);
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawLine(lPoint.position, lPoint.position + lPoint.normal * 0.25f);
             }
         }
     }

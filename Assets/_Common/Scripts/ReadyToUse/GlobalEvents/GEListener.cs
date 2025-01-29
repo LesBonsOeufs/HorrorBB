@@ -3,14 +3,14 @@ using UnityEngine.Events;
 
 namespace GE
 {
-    public class GlobalEventsListener : MonoBehaviour
+    public class GEListener : MonoBehaviour
     {
         [SerializeField] private E_GlobalEvents eventToAnswer;
         [SerializeField] private UnityEvent reaction;
 
         private void Awake()
         {
-            GlobalEvents.OnSpread += GlobalEvents_OnSpread;
+            GlobalEvents.Instance.OnSpread += GlobalEvents_OnSpread;
         }
 
         private void GlobalEvents_OnSpread(E_GlobalEvents globalEvent)
