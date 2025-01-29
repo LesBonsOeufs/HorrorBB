@@ -266,6 +266,45 @@
             ]
         },
         {
+            "name": "Hiding",
+            "id": "ae3d2bed-d131-4cee-8009-2ad9e81da2b5",
+            "actions": [
+                {
+                    "name": "GetOut",
+                    "type": "Button",
+                    "id": "69cc013c-b0ce-4fcd-b198-b100e1b35f51",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "87a5028a-9f8f-4862-b2d3-b1e93c47a3bc",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "GetOut",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cf160ece-9d15-4618-bb3d-c2f13ab54dc4",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "GetOut",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "UI",
             "id": "21d5418f-1328-4773-aa6a-88136d088528",
             "actions": [

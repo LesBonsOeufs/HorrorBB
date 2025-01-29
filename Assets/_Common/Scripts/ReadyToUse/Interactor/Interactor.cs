@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public delegate void InteractorEventHandler();
@@ -94,8 +95,22 @@ public class Interactor : MonoBehaviour
         return lClosestInteractable;
     }
 
+    private void OnDisable()
+    {
+        List<Interactable> lListedUsables = _usableInteractables.ToList();
+
+        for (int i = lListedUsables.Count - 1; i >= 0; i--)
+            RemoveFromUsables(lListedUsables[i]);
+
+        if (useCameraFrustum)
+            colliderToInteractableToFrustumTest.Clear();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        if (!enabled)
+            return;
+
         if (other.TryGetComponent(out Interactable lInteractable))
         {
             if (useCameraFrustum)
@@ -107,6 +122,9 @@ public class Interactor : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (!enabled)
+            return;
+
         if (other.TryGetComponent(out Interactable lInteractable))
         {
             if (useCameraFrustum)
@@ -119,7 +137,7 @@ public class Interactor : MonoBehaviour
     //Could be more optimized
     private void OnTriggerStay(Collider other)
     {
-        if (!useCameraFrustum)
+        if (!enabled || !useCameraFrustum)
             return;
 
         if (colliderToInteractableToFrustumTest.TryGetValue(other, out Interactable lInteractable))

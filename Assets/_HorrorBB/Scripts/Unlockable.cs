@@ -4,11 +4,10 @@ using UnityEngine.Events;
 
 namespace Root
 {
-    public class Unlockable : Interactable
+    public class Unlockable : OutlinedInteractable
     {
         [SerializeField] private UnityEvent onUnlock;
         [SerializeField] private E_Collectable requiredCollectable = E_Collectable.Key;
-        [SerializeField] private Outline outline;
 
         private bool CanBeUnlocked => Inventory.Instance.HasCollectable(requiredCollectable);
 
@@ -17,15 +16,7 @@ namespace Root
             if (!CanBeUnlocked)
                 return;
 
-            outline.enabled = true;
-        }
-
-        public override void InteractorExit()
-        {
-            if (!CanBeUnlocked)
-                return;
-
-            outline.enabled = false;
+            base.InteractorEnter();
         }
 
         public override void Interact(Interactor interactor, bool isInteracting)

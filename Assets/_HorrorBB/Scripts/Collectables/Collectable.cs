@@ -1,20 +1,14 @@
 using DG.Tweening;
 using NaughtyAttributes;
-using System;
 using UnityEngine;
 
 namespace Root
 {
-    public class Collectable : Interactable
+    public class Collectable : OutlinedInteractable
     {
         [SerializeField] private MeshRenderer meshRenderer;
-        [SerializeField] private Outline outline;
         [SerializeField] private float alphaTweenDuration = 0.75f;
         [Expandable, SerializeField] private CollectableInfo info;
-
-        public override void InteractorEnter() => outline.enabled = true;
-
-        public override void InteractorExit() => outline.enabled = false;
 
         public override void Interact(Interactor interactor, bool isInteracting)
         {

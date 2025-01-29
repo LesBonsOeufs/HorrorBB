@@ -1,13 +1,18 @@
 using NaughtyAttributes;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Root
 {
-    [RequireComponent(typeof(CharacterController), typeof(Interactor))]
-    public class Player : MonoBehaviour
+    [RequireComponent(typeof(CharacterController), typeof(Interactor), typeof(PlayerInput))]
+    public class Player : Singleton<Player>
     {
+        private const string DEFAULT_ACTION_MAP = "Player";
+        private const string HIDE_ACTION_MAP = "Hiding";
+
         [SerializeField] private float speed = 2f;
+        [SerializeField] private new CinemachineCamera camera;
 
         [Foldout("Step"), SerializeField] private float distanceForStep = 1f;
         [Foldout("Step"), SerializeField] private HeadBobbing headbobbing;
@@ -15,6 +20,7 @@ namespace Root
 
         private CharacterController controller;
         private Interactor interactor;
+
         private float gravity = -9.81f;
         private Vector3 moveInput;
         private Vector3 additionalVelocity;
@@ -22,16 +28,32 @@ namespace Root
         private Vector3 lastPosition;
         private float stepDistanceCounter = 0f;
 
+        public PlayerInput Input { get; private set; }
+
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             controller = GetComponent<CharacterController>();
             interactor = GetComponent<Interactor>();
+            Input = GetComponent<PlayerInput>();
             lastPosition = transform.position;
         }
 
-        void Update()
+        public void SetHideMode(bool isHiding)
+        {
+            Input.SwitchCurrentActionMap(isHiding ? HIDE_ACTION_MAP : DEFAULT_ACTION_MAP);
+            enabled = !isHiding;
+            controller.enabled = !isHiding;
+            interactor.enabled = !isHiding;
+        }
+
+        public void ResetCamera()
+        {
+            camera.ForceCameraPosition(camera.transform.position, transform.rotation);
+        }
+
+        private void Update()
         {
             if (controller.isGrounded && additionalVelocity.y < 0)
                 additionalVelocity.y = 0f;

@@ -328,7 +328,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9cfc733efaaaf44f9954fe9d929f16e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   speed: 2.2
+  camera: {fileID: 4486038256811167307}
   distanceForStep: 1.2
   headbobbing: {fileID: 1587528296408964638}
   stepSource: {fileID: 6643539587555845898}
