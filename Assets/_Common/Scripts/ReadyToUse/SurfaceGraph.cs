@@ -23,6 +23,8 @@ namespace Root
         [SerializeField] private bool keepOnlyReachableFrom = false;
         [ShowIf(nameof(keepOnlyReachableFrom)), SerializeField] private Vector3 reachablePoint = Vector3.zero;
 
+        [Foldout("Advanced"), Tooltip("Does not influence the final position of the points"), SerializeField] 
+        private float neighborAssignmentPurposeNormalShift = 0.01f;
         [Foldout("Advanced"), SerializeField] private float safeRaycastOffset = 0.1f;
         [Foldout("Advanced"), SerializeField] private float centerSpaceCheckRadius = 0.1f;
 
@@ -39,6 +41,7 @@ namespace Root
         public IEnumerable<GraphPoint> GetSortedClosePoints(Vector3 position, float maxDistance)
         {
             List<GraphPoint> lNearbyPoints = pointOctree.GetNearby(position, maxDistance).ToList();
+            //Here, maybe should not use safeRaycasts
             RemoveNonDirectPoints(position, lNearbyPoints);
 
             if (lNearbyPoints.Count == 0)
@@ -66,13 +69,15 @@ namespace Root
             foreach (GraphPoint lPoint in lPoints)
                 pointOctree.Add(lPoint, lPoint.position);
 
+            NormalShift(lPoints, neighborAssignmentPurposeNormalShift);
+
             SetNeighbors();
 
             if (keepOnlyReachableFrom)
                 SelectReachables(lPoints);
 
             if (pointsNormalShift != 0f)
-                NormalShift(lPoints);
+                NormalShift(lPoints, pointsNormalShift - neighborAssignmentPurposeNormalShift);
         }
 
         #region Points Generation
@@ -240,16 +245,14 @@ namespace Root
             foreach (GraphPoint lPoint in lGraph)
             {
                 pointOctree.GetNearbyNonAlloc(lPoint.position, neighborMaxDistance, lNearbyPoints);
-                RemoveNonDirectPoints(lPoint.position, lNearbyPoints);
 
-                foreach (GraphPoint lNeighbor in lNearbyPoints)
+                foreach (GraphPoint lNearby in lNearbyPoints)
                 {
-                    if (!lPoint.neighbors.Contains(lNeighbor))
-                        lPoint.neighbors.Add(lNeighbor);
+                    if (lPoint.neighbors.Contains(lNearby) || !IsConnectionValid(lPoint.position, lNearby.position))
+                        continue;
 
-                    //For security, also add the point as a neighbor of its neighbors
-                    if (!lNeighbor.neighbors.Contains(lPoint))
-                        lNeighbor.neighbors.Add(lPoint);
+                    lPoint.neighbors.Add(lNearby);
+                    lNearby.neighbors.Add(lPoint);
                 }
             }
         }
@@ -259,23 +262,38 @@ namespace Root
         /// </summary>
         private void RemoveNonDirectPoints(Vector3 position, List<GraphPoint> testedPoints)
         {
-            Collider[] _ = new Collider[0];
+            Vector3 lPositionToTested;
 
             for (int i = testedPoints.Count - 1; i >= 0; i--)
             {
-                //If there is a collider between the points, remove the point from the neighbors
-                if (SafeRaycast(position, testedPoints[i].position))
-                    testedPoints.RemoveAt(i);
-                else if (centerSpaceCheckRadius > 0f)
-                {
-                    //If the center of the points does not have enough room, remove the point from the neighbors
-                    //(good for very small gaps, like attached colliders)
-                    Vector3 lCenter = (position + testedPoints[i].position) * 0.5f;
+                lPositionToTested = testedPoints[i].position - position;
 
-                    if (Physics.OverlapSphereNonAlloc(lCenter, centerSpaceCheckRadius, _, ~0, QueryTriggerInteraction.Ignore) >= 2)
-                        testedPoints.RemoveAt(i);
+                if (Physics.Raycast(position, lPositionToTested, lPositionToTested.magnitude))
+                    testedPoints.RemoveAt(i);
+            }
+        }
+
+        private readonly Collider[] pointDirectTest_overlaps = new Collider[2];
+        private bool IsConnectionValid(Vector3 position1, Vector3 position2)
+        {
+            //If there is a collider between the points, not valid
+            //Check both ways
+            if (SafeRaycast(position1, position2) || SafeRaycast(position2, position1))
+                return false;
+            else if (centerSpaceCheckRadius > 0f)
+            {
+                //If the center of the points does not have enough room, not valid
+                //(good for very small gaps, like attached colliders)
+                Vector3 lCenter = (position1 + position2) * 0.5f;
+
+                if (Physics.OverlapSphereNonAlloc(lCenter, centerSpaceCheckRadius, pointDirectTest_overlaps, ~0, QueryTriggerInteraction.Ignore) >= 2)
+                {
+                    Array.Clear(pointDirectTest_overlaps, 0, pointDirectTest_overlaps.Length);
+                    return false;
                 }
             }
+
+            return true;
         }
 
         #endregion
@@ -314,12 +332,12 @@ namespace Root
             points.AddRange(lReachablePoints);
         }
 
-        private void NormalShift(List<GraphPoint> points)
+        private void NormalShift(List<GraphPoint> points, float shifting)
         {
             //After neighbors are set, shift points based on normals
             foreach (GraphPoint lPoint in points)
             {
-                Vector3 lShift = lPoint.normal * pointsNormalShift;
+                Vector3 lShift = lPoint.normal * shifting;
 
                 //If shifting will traverse a collider, don't shift
                 if (!SafeRaycast(lPoint.position, lPoint.position + lShift))

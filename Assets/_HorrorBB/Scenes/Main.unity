@@ -5208,7 +5208,7 @@ PrefabInstance:
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
       propertyPath: m_Intensity
-      value: 2.783954
+      value: 0.26266614
       objectReference: {fileID: 0}
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
@@ -11181,6 +11181,7 @@ MonoBehaviour:
   neighborMaxDistance: 1.5
   keepOnlyReachableFrom: 1
   reachablePoint: {x: -1.04, y: 1, z: -3.3}
+  neighborAssignmentPurposeNormalShift: 0.01
   safeRaycastOffset: 0.1
   centerSpaceCheckRadius: 0.1
 --- !u!1 &2121461860
