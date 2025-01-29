@@ -8,8 +8,19 @@ public static class SimpleAGreedy<TSpaceType> where TSpaceType : IEquatable<TSpa
             Func<TSpaceType, bool> isWalkableFunc,
             Func<TSpaceType, TSpaceType, float> heuristicFunc)
     {
+        return Execute(origin, target, getNeighborsFunc, isWalkableFunc, heuristicFunc, out _);
+    }
+
+    public static List<TSpaceType> Execute(TSpaceType origin, TSpaceType target,
+            Func<TSpaceType, IEnumerable<TSpaceType>> getNeighborsFunc,
+            Func<TSpaceType, bool> isWalkableFunc,
+            Func<TSpaceType, TSpaceType, float> heuristicFunc, out IEnumerable<TSpaceType> attemptedTiles)
+    {
         if (!isWalkableFunc(origin) || !isWalkableFunc(target))
+        {
+            attemptedTiles = null;
             return null;
+        }
 
         var lOpenSet = new SimplePriorityQueue<PathTile>();
         var lAllTiles = new Dictionary<TSpaceType, PathTile>();
@@ -23,7 +34,10 @@ public static class SimpleAGreedy<TSpaceType> where TSpaceType : IEquatable<TSpa
             PathTile lCurrentTile = lOpenSet.Dequeue();
 
             if (lCurrentTile.Position.Equals(target))
+            {
+                attemptedTiles = lAllTiles.Keys;
                 return lCurrentTile.GetPath();
+            }
 
             foreach (TSpaceType lNeighbor in getNeighborsFunc(lCurrentTile.Position))
             {
@@ -47,6 +61,7 @@ public static class SimpleAGreedy<TSpaceType> where TSpaceType : IEquatable<TSpa
             }
         }
 
+        attemptedTiles = lAllTiles.Keys;
         return null; // No path found
     }
 

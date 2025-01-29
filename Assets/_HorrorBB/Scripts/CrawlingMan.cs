@@ -113,12 +113,15 @@ namespace Root
 
             List<GraphPoint> lGraphPath =
                 SimpleAGreedy<GraphPoint>.Execute(lOriginPoint, lTargetPoint, graphPoint => graphPoint.neighbors.ToArray(),
-                graphPoint => true, (point1, point2) => (point1.position - point2.position).sqrMagnitude);
+                graphPoint => true, (point1, point2) => (point1.position - point2.position).sqrMagnitude, out IEnumerable<GraphPoint> lAttempts);
 
             if (lGraphPath == null)
             {
                 lGraphPath = new() { lOriginPoint, lTargetPoint };
                 DrawPathSelected(lGraphPath, Color.red);
+
+                foreach (GraphPoint lAttempt in lAttempts)
+                    Extension_Debug.DrawCross(lAttempt.position, 0.1f, Color.red, pathfindingCooldown);
             }
             else
                 DrawPathSelected(lGraphPath, Color.green);
