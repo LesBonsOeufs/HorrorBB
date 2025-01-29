@@ -23,6 +23,8 @@ namespace Root
         [InfoBox("This has a significant cost on generation", EInfoBoxType.Warning), 
         ShowIf(nameof(keepOnlyReachableFrom)), SerializeField] private Vector3 reachablePoint = Vector3.zero;
 
+        [Foldout("Advanced"), SerializeField] private float safeRaycastOffset = 0.1f;
+
         private PointOctree<GraphPoint> pointOctree;
 
         public GraphPoint GetClosestPoint(Vector3 position, float maxDistance)
@@ -302,7 +304,7 @@ namespace Root
         private bool SafeRaycast(Vector3 origin, Vector3 target)
         {
             //Don't start ray at point.position for preventing starting inside a collider
-            Vector3 lRaycastOrigin = origin - (target - origin).normalized * 0.1f;
+            Vector3 lRaycastOrigin = origin - (target - origin).normalized * safeRaycastOffset;
             Vector3 lOriginToTarget = target - lRaycastOrigin;
             return Physics.Raycast(lRaycastOrigin, lOriginToTarget, lOriginToTarget.magnitude);
         }
