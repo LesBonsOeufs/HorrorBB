@@ -29,13 +29,21 @@ namespace Root
 
         public GraphPoint GetClosestPoint(Vector3 position, float maxDistance)
         {
+            return GetSortedClosePoints(position, maxDistance)?.First();
+        }
+
+        /// <summary>
+        /// Gets all direct points under maxDistance from the position, sorted by proximity
+        /// </summary>
+        public IEnumerable<GraphPoint> GetSortedClosePoints(Vector3 position, float maxDistance)
+        {
             List<GraphPoint> lNearbyPoints = pointOctree.GetNearby(position, maxDistance).ToList();
             RemoveNonDirectPoints(position, lNearbyPoints);
 
             if (lNearbyPoints.Count == 0)
                 return null;
 
-            return lNearbyPoints.OrderBy(p => Vector3.Distance(p.position, position)).First();
+            return lNearbyPoints.OrderBy(p => Vector3.Distance(p.position, position));
         }
 
         protected override void Awake()
