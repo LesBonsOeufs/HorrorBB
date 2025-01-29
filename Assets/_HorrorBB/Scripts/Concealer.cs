@@ -3,15 +3,32 @@ using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
+using NaughtyAttributes;
+using DG.Tweening;
 
 namespace Root
 {
     public class Concealer : OutlinedInteractable
     {
+        [Foldout("Events"), SerializeField] private UnityEvent onStartEnter;
+        [Foldout("Events"), SerializeField] private UnityEvent onEndEnter;
+        [Foldout("Events"), SerializeField] private UnityEvent onStartLeave;
+        [Foldout("Events"), SerializeField] private UnityEvent onEndLeave;
+
         [SerializeField] private InputActionReference outActionRef;
         [SerializeField] private new CinemachineCamera camera;
-        [SerializeField, Range(0f, 1f)] private float blendPercentageForOut = 0.9f;
+        [SerializeField, Range(0f, 1f)] private float inBlendRatio = 0.6f;
+        [SerializeField, Range(0f, 1f)] private float outBlendRatio = 1f;
+
         private Vector3 entryPosition;
+        private Tween endEnterTween;
+
+        private float? GetCurrentBlendRemainingTime()
+        {
+            CinemachineBlend lBlend = Camera.main.GetComponent<CinemachineBrain>().ActiveBlend;
+            return lBlend == null ? null : (lBlend.Duration - lBlend.TimeInBlend);
+        }
 
         public override void Interact(Interactor interactor, bool isInteracting)
         {
@@ -19,6 +36,7 @@ namespace Root
 
             if (isInteracting)
             {
+                onStartEnter?.Invoke();
                 camera.enabled = true;
                 entryPosition = interactor.transform.position;
                 Player.Instance.SetHideMode(true);
@@ -28,6 +46,14 @@ namespace Root
 
         private IEnumerator OutCoroutine()
         {
+            //Wait one frame for camera blend to start
+            yield return null;
+
+            float? lRemainingBlendTime = GetCurrentBlendRemainingTime();
+
+            if (lRemainingBlendTime != null)
+                endEnterTween = DOVirtual.DelayedCall(lRemainingBlendTime.Value * inBlendRatio, () => onEndEnter?.Invoke(), false);
+
             Player lPlayer = Player.Instance;
 
             while (true)
@@ -39,6 +65,8 @@ namespace Root
                 yield return null;
             }
 
+            endEnterTween?.Kill();
+            onStartLeave?.Invoke();
             Vector3 lCameraToEntry = entryPosition - camera.transform.position;
             lCameraToEntry.y = 0f;
             lPlayer.transform.rotation = Quaternion.LookRotation(lCameraToEntry, lPlayer.transform.up);
@@ -46,11 +74,12 @@ namespace Root
             camera.enabled = false;
             yield return null;
 
-            CinemachineBlend lBlend = Camera.main.GetComponent<CinemachineBrain>().ActiveBlend;
+            lRemainingBlendTime = GetCurrentBlendRemainingTime();
 
-            if (lBlend != null)
-                yield return new WaitForSeconds((lBlend.Duration - lBlend.TimeInBlend) * blendPercentageForOut);
+            if (lRemainingBlendTime != null)
+                yield return new WaitForSeconds(lRemainingBlendTime.Value * outBlendRatio);
 
+            onEndLeave?.Invoke();
             lPlayer.SetHideMode(false);
         }
 

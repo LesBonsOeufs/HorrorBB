@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3473333941421301274}
   - component: {fileID: 6832328953981006865}
   - component: {fileID: 1078181878938737579}
+  - component: {fileID: 6767100209830097700}
   m_Layer: 0
   m_Name: Key
   m_TagString: Untagged
@@ -101,8 +102,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 872d07b0ae1a6c34994dd83c4bcd0a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshRenderer: {fileID: 5144725842818460604}
   outline: {fileID: 1078181878938737579}
+  meshRenderer: {fileID: 5144725842818460604}
   alphaTweenDuration: 0.3
   info: {fileID: 11400000, guid: 27a8b01917cc30e40842c471330a7af6, type: 2}
 --- !u!135 &6832328953981006865
@@ -144,3 +145,16 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!114 &6767100209830097700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3703712911756119413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdb9fffef1f779d449d466e84843edaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  globalEvent: 0
