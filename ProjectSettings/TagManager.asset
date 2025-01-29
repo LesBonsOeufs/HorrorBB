@@ -5,7 +5,6 @@ TagManager:
   serializedVersion: 3
   tags:
   - SurfaceGraph_AddVertices
-  - SurfaceGraph_Ignore
   layers:
   - Default
   - TransparentFX

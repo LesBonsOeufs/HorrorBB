@@ -5208,7 +5208,7 @@ PrefabInstance:
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.26266614
+      value: 0.22724214
       objectReference: {fileID: 0}
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
@@ -10139,11 +10139,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6952540829135213492, guid: d33e3484571e4f34394d13dca64ef285,
         type: 3}
-      propertyPath: m_TagString
-      value: SurfaceGraph_Ignore
-      objectReference: {fileID: 0}
-    - target: {fileID: 6952540829135213492, guid: d33e3484571e4f34394d13dca64ef285,
-        type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -10204,7 +10199,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6952540829135213492, guid: d33e3484571e4f34394d13dca64ef285,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1879134205}
+      addedObject: {fileID: 1879134208}
   m_SourcePrefab: {fileID: 100100000, guid: d33e3484571e4f34394d13dca64ef285, type: 3}
 --- !u!4 &1879134202 stripped
 Transform:
@@ -10212,8 +10207,8 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1879134201}
   m_PrefabAsset: {fileID: 0}
---- !u!136 &1879134205
-CapsuleCollider:
+--- !u!65 &1879134208
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -10230,10 +10225,8 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.2859155
-  m_Height: 1.5344504
-  m_Direction: 1
+  serializedVersion: 3
+  m_Size: {x: 0.18, y: 1.5344504, z: 0.18}
   m_Center: {x: -0.04550697, y: 0.77735966, z: -0.09145439}
 --- !u!1 &1892055057
 GameObject:
@@ -11174,7 +11167,6 @@ MonoBehaviour:
   dontDestroyOnLoad: 0
   refreshOnAwake: 1
   addVerticesTag: SurfaceGraph_AddVertices
-  ignoreTag: SurfaceGraph_Ignore
   size: 15
   pointsSpacing: 1
   pointsNormalShift: 0.4
@@ -11183,7 +11175,7 @@ MonoBehaviour:
   reachablePoint: {x: -1.04, y: 1, z: -3.3}
   neighborAssignmentPurposeNormalShift: 0.01
   safeRaycastOffset: 0.1
-  centerSpaceCheckRadius: 0.1
+  sphereCastRadius: 0.009
 --- !u!1 &2121461860
 GameObject:
   m_ObjectHideFlags: 0

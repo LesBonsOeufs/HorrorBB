@@ -14,7 +14,6 @@ namespace Root
     {
         [SerializeField] private bool refreshOnAwake = true;
         [SerializeField, Tag] private string addVerticesTag = "SurfaceGraph_AddVertices";
-        [SerializeField, Tag] private string ignoreTag = "SurfaceGraph_Ignore";
         [SerializeField] private float size = 15f;
         [SerializeField] private float pointsSpacing = 1f;
         [SerializeField] private float pointsNormalShift = 0.4f;
@@ -26,7 +25,7 @@ namespace Root
         [Foldout("Advanced"), Tooltip("Does not influence the final position of the points"), SerializeField] 
         private float neighborAssignmentPurposeNormalShift = 0.01f;
         [Foldout("Advanced"), SerializeField] private float safeRaycastOffset = 0.1f;
-        [Foldout("Advanced"), SerializeField] private float centerSpaceCheckRadius = 0.1f;
+        [Foldout("Advanced"), SerializeField] private float sphereCastRadius = 0.009f;
 
         private PointOctree<GraphPoint> pointOctree;
 
@@ -88,7 +87,7 @@ namespace Root
 
             foreach (Collider lCollider in colliders)
             {
-                if (lCollider.CompareTag(ignoreTag) || !lCollider.enabled || lCollider.isTrigger)
+                if (!lCollider.enabled || lCollider.isTrigger)
                     continue;
 
                 lPoints.AddRange(GenerateSurfacePoints(lCollider));
@@ -248,7 +247,12 @@ namespace Root
 
                 foreach (GraphPoint lNearby in lNearbyPoints)
                 {
-                    if (lPoint.neighbors.Contains(lNearby) || !IsConnectionValid(lPoint.position, lNearby.position))
+                    if (lPoint == lNearby || lPoint.neighbors.Contains(lNearby))
+                        continue;
+
+                    //If there is a collider between the points, not valid
+                    //Check both ways
+                    if (SafeSpherecast(lPoint.position, lNearby.position) || SafeSpherecast(lNearby.position, lPoint.position))
                         continue;
 
                     lPoint.neighbors.Add(lNearby);
@@ -271,29 +275,6 @@ namespace Root
                 if (Physics.Raycast(position, lPositionToTested, lPositionToTested.magnitude))
                     testedPoints.RemoveAt(i);
             }
-        }
-
-        private readonly Collider[] pointDirectTest_overlaps = new Collider[2];
-        private bool IsConnectionValid(Vector3 position1, Vector3 position2)
-        {
-            //If there is a collider between the points, not valid
-            //Check both ways
-            if (SafeRaycast(position1, position2) || SafeRaycast(position2, position1))
-                return false;
-            else if (centerSpaceCheckRadius > 0f)
-            {
-                //If the center of the points does not have enough room, not valid
-                //(good for very small gaps, like attached colliders)
-                Vector3 lCenter = (position1 + position2) * 0.5f;
-
-                if (Physics.OverlapSphereNonAlloc(lCenter, centerSpaceCheckRadius, pointDirectTest_overlaps, ~0, QueryTriggerInteraction.Ignore) >= 2)
-                {
-                    Array.Clear(pointDirectTest_overlaps, 0, pointDirectTest_overlaps.Length);
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         #endregion
@@ -340,7 +321,7 @@ namespace Root
                 Vector3 lShift = lPoint.normal * shifting;
 
                 //If shifting will traverse a collider, don't shift
-                if (!SafeRaycast(lPoint.position, lPoint.position + lShift))
+                if (!SafeSpherecast(lPoint.position, lPoint.position + lShift))
                     lPoint.position += lShift;
             }
 
@@ -350,12 +331,12 @@ namespace Root
                 pointOctree.Add(lPoint, lPoint.position);
         }
 
-        private bool SafeRaycast(Vector3 origin, Vector3 target)
+        private bool SafeSpherecast(Vector3 origin, Vector3 target)
         {
             //Don't start ray at point.position for preventing starting inside a collider
             Vector3 lRaycastOrigin = origin - (target - origin).normalized * safeRaycastOffset;
             Vector3 lOriginToTarget = target - lRaycastOrigin;
-            return Physics.Raycast(lRaycastOrigin, lOriginToTarget, lOriginToTarget.magnitude);
+            return Physics.SphereCast(new Ray(lRaycastOrigin, lOriginToTarget), sphereCastRadius, lOriginToTarget.magnitude);
         }
 
         #endregion

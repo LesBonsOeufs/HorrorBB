@@ -101,30 +101,32 @@ namespace Root
                 return null;
 
 #if UNITY_EDITOR
-            if (Selection.Contains(gameObject))
-            {
-                foreach (GraphPoint lNeighbor in lOriginPoint.neighbors)
-                {
-                    Debug.DrawLine(lOriginPoint.position, lNeighbor.position, new Color(0f, 1f, 0f, 0.5f), pathfindingCooldown);
-                    Extension_Debug.DrawCross(lNeighbor.position, 0.1f, new Color(1f, 0f, 0f, 0.5f), pathfindingCooldown);
-                }
-            }
+            
 #endif
 
             List<GraphPoint> lGraphPath =
                 SimpleAGreedy<GraphPoint>.Execute(lOriginPoint, lTargetPoint, graphPoint => graphPoint.neighbors.ToArray(),
                 graphPoint => true, (point1, point2) => (point1.position - point2.position).sqrMagnitude, out IEnumerable<GraphPoint> lAttempts);
 
-            if (lGraphPath == null)
-            {
+            bool lPathfindingFailed = lGraphPath == null;
+            if (lPathfindingFailed)
                 lGraphPath = new() { lOriginPoint, lTargetPoint };
-                DrawPathSelected(lGraphPath, Color.red);
 
+#if UNITY_EDITOR
+            Color lDrawColor = lPathfindingFailed ? Color.red : Color.green;
+
+            if (Selection.Contains(gameObject))
+            {
+                for (int i = 1; i < lGraphPath.Count; i++)
+                    Debug.DrawLine(lGraphPath[i - 1].position, lGraphPath[i].position, lDrawColor, pathfindingCooldown);
+
+                foreach (GraphPoint lNeighbor in lOriginPoint.neighbors)
+                    Debug.DrawLine(lOriginPoint.position, lNeighbor.position, new Color(0f, 1f, 0f, 0.5f), pathfindingCooldown);
                 foreach (GraphPoint lAttempt in lAttempts)
-                    Extension_Debug.DrawCross(lAttempt.position, 0.1f, Color.red, pathfindingCooldown);
+                    Extension_Debug.DrawCross(lAttempt.position, 0.1f, lDrawColor, pathfindingCooldown);
             }
-            else
-                DrawPathSelected(lGraphPath, Color.green);
+            
+#endif
 
             Plane lLastPathPointSurface = new(lGraphPath[^1].normal, lGraphPath[^1].position);
             lGraphPath.Add(new GraphPoint(lLastPathPointSurface.ClosestPointOnPlane(target), lLastPathPointSurface.normal));
@@ -217,20 +219,6 @@ namespace Root
                 legController.Legs[i].tipAnimationDuration = initLegAnimDurations[i] / Mathf.Abs(speed);
 
             legController.maxTipWait = initControllerMaxTipWait / Mathf.Abs(speed);
-        }
-
-        private void DrawPathSelected(List<GraphPoint> path, Color color)
-        {
-#if UNITY_EDITOR
-            if (Selection.Contains(gameObject))
-            {
-                Extension_Debug.DrawCross(path[0].position, 0.25f, color, pathfindingCooldown);
-                Extension_Debug.DrawCross(path[^1].position, 0.25f, color, pathfindingCooldown);
-
-                for (int i = 1; i < path.Count; i++)
-                    Debug.DrawLine(path[i - 1].position, path[i].position, color, pathfindingCooldown);
-            }
-#endif
         }
 
         private void OnDrawGizmosSelected()
