@@ -21,10 +21,10 @@ namespace Root
         [SerializeField] private float neighborMaxDistance = 1.5f;
 
         [SerializeField] private bool keepOnlyReachableFrom = false;
-        [InfoBox("This has a significant cost on generation", EInfoBoxType.Warning), 
-        ShowIf(nameof(keepOnlyReachableFrom)), SerializeField] private Vector3 reachablePoint = Vector3.zero;
+        [ShowIf(nameof(keepOnlyReachableFrom)), SerializeField] private Vector3 reachablePoint = Vector3.zero;
 
         [Foldout("Advanced"), SerializeField] private float safeRaycastOffset = 0.1f;
+        [Foldout("Advanced"), SerializeField] private float centerSpaceCheckRadius = 0.1f;
 
         private PointOctree<GraphPoint> pointOctree;
 
@@ -259,11 +259,22 @@ namespace Root
         /// </summary>
         private void RemoveNonDirectPoints(Vector3 position, List<GraphPoint> testedPoints)
         {
+            Collider[] _ = new Collider[0];
+
             for (int i = testedPoints.Count - 1; i >= 0; i--)
             {
                 //If there is a collider between the points, remove the point from the neighbors
                 if (SafeRaycast(position, testedPoints[i].position))
                     testedPoints.RemoveAt(i);
+                else if (centerSpaceCheckRadius > 0f)
+                {
+                    //If the center of the points does not have enough room, remove the point from the neighbors
+                    //(good for very small gaps, like attached colliders)
+                    Vector3 lCenter = (position + testedPoints[i].position) * 0.5f;
+
+                    if (Physics.OverlapSphereNonAlloc(lCenter, centerSpaceCheckRadius, _, ~0, QueryTriggerInteraction.Ignore) >= 2)
+                        testedPoints.RemoveAt(i);
+                }
             }
         }
 
@@ -273,32 +284,34 @@ namespace Root
 
         private void SelectReachables(List<GraphPoint> points)
         {
-            GraphPoint lReachablePointOnGraph = GetClosestPoint(reachablePoint, size);
-            List<GraphPoint> lReachables = new() { lReachablePointOnGraph };
-            HashSet<GraphPoint> lAlreadyAdded = new() { lReachablePointOnGraph };
-            List<GraphPoint> lNextNeighbors = new(lReachablePointOnGraph.neighbors);
-            ICollection<GraphPoint> lFilteredNeighbors;
+            GraphPoint lStartPoint = GetClosestPoint(reachablePoint, size);
 
-            while (true)
+            if (lStartPoint == null)
             {
-                //Make sure not to add two times the same point
-                lFilteredNeighbors = lNextNeighbors.Where(neighbor => !lAlreadyAdded.Contains(neighbor)).ToList();
-                lReachables.AddRange(lFilteredNeighbors);
+                Debug.LogError("Initial reachable point on graph could not be found");
+                return;
+            }
 
-                lNextNeighbors.Clear();
+            HashSet<GraphPoint> lReachablePoints = new() { lStartPoint };
+            Queue<GraphPoint> lQueue = new();
+            lQueue.Enqueue(lStartPoint);
 
-                //If no new neighbors, all points have been found
-                if (lFilteredNeighbors.Count == 0)
-                    break;
-
-                foreach (GraphPoint lNeighbor in lFilteredNeighbors)
+            while (lQueue.Count > 0)
+            {
+                GraphPoint current = lQueue.Dequeue();
+                foreach (GraphPoint neighbor in current.neighbors)
                 {
-                    lNextNeighbors.AddRange(lNeighbor.neighbors);
-                    lAlreadyAdded.Add(lNeighbor);
+                    if (!lReachablePoints.Contains(neighbor))
+                    {
+                        lReachablePoints.Add(neighbor);
+                        lQueue.Enqueue(neighbor);
+                    }
                 }
             }
 
-            points = lReachables;
+            // Update the points list with only reachable points
+            points.Clear();
+            points.AddRange(lReachablePoints);
         }
 
         private void NormalShift(List<GraphPoint> points)
