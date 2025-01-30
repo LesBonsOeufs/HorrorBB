@@ -19,16 +19,10 @@ namespace Root
 
         [Foldout("Movement"), SerializeField] private float speed = .5f;
         [Foldout("Movement"), SerializeField] private float rotationSpeed = 5f;
-        [Foldout("Movement"), SerializeField] private float acceptedDistanceFromTarget = .2f;
-        [Foldout("Movement"), SerializeField] private float pathfindingCooldown = 2f;
 
-        [Foldout("Raycasting"), SerializeField] private float sphereCastRadius = 0.2f;
-        [Foldout("Raycasting"), SerializeField] private float castLength = 1f;
-        [Foldout("Raycasting"), SerializeField, Range(0f, 90f)] private float castAngle = 45f;
-        [Foldout("Raycasting"), SerializeField, Range(0f, 90f)] private float castOpening = 90f;
-
-        [SerializeField] private bool autoInitElevation = true;
-        [InfoBox("If auto, will be used as fallback value"), SerializeField] private float initialElevation = 0.4f;
+        [Foldout("Pathfinding"), SerializeField] private float maxAngleCost = 1f;
+        [Foldout("Pathfinding"), SerializeField] private float pathfindingCooldown = 2f;
+        [Foldout("Pathfinding"), SerializeField] private float acceptedDistanceFromTarget = .2f;
 
         private Transform target;
         private float initControllerMaxTipWait;
@@ -39,10 +33,6 @@ namespace Root
         {
             initControllerMaxTipWait = legController.maxTipWait;
             initLegAnimDurations = legController.Legs.Select(leg => leg.tipAnimationDuration).ToArray(); 
-
-            if (autoInitElevation && Physics.Raycast(new Ray(transform.position, transform.up * -1), out RaycastHit lHit, 1f))
-                initialElevation = lHit.distance;
-
             StartCoroutine(RefreshPath());
         }
 
@@ -78,15 +68,22 @@ namespace Root
             if (lOriginPoint == null || lTargetPoint == null)
                 return null;
 
-            static IEnumerable<GraphPoint> lNeighborsFunc(GraphPoint graphPoint) => graphPoint.neighbors.ToArray();
-            static bool lIsWalkableFunc(GraphPoint graphPoint) => true;
-            static float lHeuristic(GraphPoint point1, GraphPoint point2) => (point1.position - point2.position).sqrMagnitude;
-            //Cost varies from 1 to 3
-            static float lCostFromToFunc(GraphPoint point1, GraphPoint point2) => 2 - Vector3.Dot(point1.normal, point2.normal);
+            IEnumerable<GraphPoint> lNeighborsFunc(GraphPoint graphPoint) => graphPoint.neighbors.ToArray();
+            bool lIsWalkableFunc(GraphPoint graphPoint) => true;
+            float lGetEuclideanDistance(GraphPoint point1, GraphPoint point2) => (point1.position - point2.position).sqrMagnitude;
+            float lGetAngleCost(GraphPoint point1, GraphPoint point2)
+            {
+                if (maxAngleCost <= 0f)
+                    return 0f;
+
+                //From 0 (same normal) to 1 (opposite normal)
+                float lAngleFactor = (1f - Vector3.Dot(point1.normal, point2.normal)) * 0.5f;
+                return lAngleFactor * maxAngleCost;
+            }
 
             List<GraphPoint> lGraphPath =
                 SimpleAGreedy<GraphPoint>.Execute(lOriginPoint, lTargetPoint, lNeighborsFunc, lIsWalkableFunc, 
-                lHeuristic, out IEnumerable<GraphPoint> lAttempts, lCostFromToFunc);
+                lGetEuclideanDistance, out IEnumerable<GraphPoint> lAttempts, lGetAngleCost);
 
             bool lPathfindingFailed = lGraphPath == null;
             if (lPathfindingFailed)
@@ -105,7 +102,6 @@ namespace Root
                 foreach (GraphPoint lAttempt in lAttempts)
                     Extension_Debug.DrawCross(lAttempt.position, 0.1f, lDrawColor, pathfindingCooldown);
             }
-            
 #endif
 
             Plane lLastPathPointSurface = new(lGraphPath[^1].normal, lGraphPath[^1].position);
@@ -181,35 +177,6 @@ namespace Root
 
             Quaternion lTargetRotation = Quaternion.LookRotation(lDirection, lPoint.normal);
             transform.rotation = Quaternion.Slerp(transform.rotation, lTargetRotation, rotationSpeed * Time.deltaTime);
-        }
-
-        private Vector3 PositionCorrection()
-        {
-            RaycastHit lFrontHit;
-            RaycastHit lBackHit;
-
-            ///This method allows smooth point average
-            bool lFrontHasHit = Physics.SphereCast(new Ray(transform.position,
-                Quaternion.AngleAxis(-castAngle - castOpening, transform.right) * transform.up * -1), sphereCastRadius, out lFrontHit, castLength);
-            bool lBackHasHit = Physics.SphereCast(new Ray(transform.position,
-                Quaternion.AngleAxis(-castAngle + castOpening, transform.right) * transform.up * -1), sphereCastRadius, out lBackHit, castLength);
-
-            Vector3 lFrontToBack = lBackHit.point - lFrontHit.point;
-            float lFrontProximityRatio = lFrontHasHit ? 1f - (lFrontHit.distance / castLength) : 0f;
-            float lBackProximityRatio = lBackHasHit ? 1f - (lBackHit.distance / castLength) : 0f;
-
-            //0 = front point, 1 = back point
-            float lDistanceBasedMultiplier = lFrontProximityRatio + lBackProximityRatio;
-            if (lDistanceBasedMultiplier == 0)
-                lDistanceBasedMultiplier = 0.5f;
-            else
-                lDistanceBasedMultiplier = lBackProximityRatio / lDistanceBasedMultiplier;
-            Vector3 lAveragePoint = lFrontHit.point + lFrontToBack.normalized * lFrontToBack.magnitude * lDistanceBasedMultiplier;
-            Vector3 lAverageNormal = ((lFrontHit.normal * lFrontProximityRatio) + (lBackHit.normal * lBackProximityRatio)).normalized;
-            Vector3 lPlanePoint = new Plane(lAverageNormal, lAveragePoint).ClosestPointOnPlane(transform.position);
-            Vector3 lElevation = lAverageNormal * initialElevation;
-
-            return lPlanePoint + lElevation;
         }
 
         private void UpdateDynamicLegAnimDurations()

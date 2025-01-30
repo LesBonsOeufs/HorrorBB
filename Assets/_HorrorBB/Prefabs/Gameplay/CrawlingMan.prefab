@@ -2008,14 +2008,9 @@ MonoBehaviour:
   legController: {fileID: 4678902910170901059}
   speed: 3
   rotationSpeed: 5
-  acceptedDistanceFromTarget: 0.2
+  maxAngleCost: 1
   pathfindingCooldown: 0
-  sphereCastRadius: 0.3
-  castLength: 0.7
-  castAngle: 45
-  castOpening: 45
-  autoInitElevation: 0
-  initialElevation: 0.4
+  acceptedDistanceFromTarget: 0.2
 --- !u!135 &1312757026656104175
 SphereCollider:
   m_ObjectHideFlags: 0

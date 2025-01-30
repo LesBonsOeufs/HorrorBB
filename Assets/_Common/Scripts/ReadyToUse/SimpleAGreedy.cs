@@ -7,15 +7,15 @@ public static class SimpleAGreedy<TSpaceType> where TSpaceType : IEquatable<TSpa
     public static List<TSpaceType> Execute(TSpaceType origin, TSpaceType target,
             Func<TSpaceType, IEnumerable<TSpaceType>> getNeighborsFunc,
             Func<TSpaceType, bool> isWalkableFunc,
-            Func<TSpaceType, TSpaceType, float> heuristicFunc, Func<TSpaceType, TSpaceType, float> costFromTo = null)
+            Func<TSpaceType, TSpaceType, float> heuristicFunc, Func<TSpaceType, TSpaceType, float> addedCostFromTo = null)
     {
-        return Execute(origin, target, getNeighborsFunc, isWalkableFunc, heuristicFunc, out _, costFromTo);
+        return Execute(origin, target, getNeighborsFunc, isWalkableFunc, heuristicFunc, out _, addedCostFromTo);
     }
 
     public static List<TSpaceType> Execute(TSpaceType origin, TSpaceType target,
             Func<TSpaceType, IEnumerable<TSpaceType>> getNeighborsFunc,
             Func<TSpaceType, bool> isWalkableFunc,
-            Func<TSpaceType, TSpaceType, float> heuristicFunc, out IEnumerable<TSpaceType> attemptedTiles, Func<TSpaceType, TSpaceType, float> costFromTo = null)
+            Func<TSpaceType, TSpaceType, float> heuristicFunc, out IEnumerable<TSpaceType> attemptedTiles, Func<TSpaceType, TSpaceType, float> addedCostFromTo = null)
     {
         if (!isWalkableFunc(origin) || !isWalkableFunc(target))
         {
@@ -23,7 +23,7 @@ public static class SimpleAGreedy<TSpaceType> where TSpaceType : IEquatable<TSpa
             return null;
         }
 
-        bool lIsCostFuncUsed = costFromTo != null;
+        bool lIsCostFuncUsed = addedCostFromTo != null;
         var lOpenSet = new SimplePriorityQueue<PathTile>();
         var lAllTiles = new Dictionary<TSpaceType, PathTile>();
         var lStartTile = new PathTile(origin, null, 0, heuristicFunc(origin, target));
@@ -46,12 +46,10 @@ public static class SimpleAGreedy<TSpaceType> where TSpaceType : IEquatable<TSpa
                 if (!isWalkableFunc(lNeighbor))
                     continue;
 
-                float lTentativeGScore = lCurrentTile.GScore;
+                float lTentativeGScore = lCurrentTile.GScore + 1;
 
                 if (lIsCostFuncUsed)
-                    lTentativeGScore += costFromTo(lCurrentTile.Position, lNeighbor);
-                else
-                    lTentativeGScore += 1; // Assuming uniform cost of 1
+                    lTentativeGScore += addedCostFromTo(lCurrentTile.Position, lNeighbor);
 
                 if (!lAllTiles.TryGetValue(lNeighbor, out PathTile lNeighborTile))
                 {
