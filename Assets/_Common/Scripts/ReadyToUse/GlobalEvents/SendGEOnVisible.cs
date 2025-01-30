@@ -12,8 +12,11 @@ namespace GE
 
         [SerializeField] private E_GlobalEvents globalEvent;
         [SerializeField] private E_GlobalEvents[] previouslyRequiredEvents;
+        [SerializeField, Tooltip("Use for triggering the event only if the player is looking for more than X updates")] 
+        private int requiredConsecutiveUpdates = 0;
 
         private float counter = 0f;
+        private int consecutiveUpdates = 0;
 
         private void Update()
         {
@@ -21,6 +24,8 @@ namespace GE
 
             if (counter < SECONDS_PER_UPDATE)
                 return;
+
+            counter = 0f;
 
             foreach (E_GlobalEvents lRequiredEvents in previouslyRequiredEvents)
             {
@@ -31,6 +36,11 @@ namespace GE
             Camera lCamera = useMainCamera ? Camera.main : camera;
 
             if (lCamera != null && lCamera.IsPointVisible(transform.position))
+                consecutiveUpdates++;
+            else
+                consecutiveUpdates = 0;
+
+            if (consecutiveUpdates > requiredConsecutiveUpdates)
                 GlobalEvents.Instance.Spread(globalEvent);
         }
 

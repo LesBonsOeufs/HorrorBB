@@ -30,7 +30,7 @@ namespace GE
         {
             if (WasSpread(globalEvent))
             {
-                Debug.LogWarning($"Event {globalEvent} has already been spread.");
+                //Debug.LogWarning($"Event {globalEvent} has already been spread.");
                 return;
             }
 

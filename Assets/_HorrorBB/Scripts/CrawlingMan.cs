@@ -51,7 +51,7 @@ namespace Root
             UpdateDynamicLegAnimDurations();
             RemoveReachedPathPoints();
             FollowPath();
-            lookTarget.position = target.position;
+            lookTarget.position = Player.Instance.transform.position;
         }
 
         public void SetTarget(Transform target)
