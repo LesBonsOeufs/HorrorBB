@@ -2007,9 +2007,7 @@ MonoBehaviour:
   lookTarget: {fileID: 8151005207721888636}
   legController: {fileID: 4678902910170901059}
   speed: 3
-  pitchSpeed: 6
-  yawSpeed: 2
-  rollSpeed: 3
+  rotationSpeed: 5
   acceptedDistanceFromTarget: 0.2
   pathfindingCooldown: 0
   sphereCastRadius: 0.3

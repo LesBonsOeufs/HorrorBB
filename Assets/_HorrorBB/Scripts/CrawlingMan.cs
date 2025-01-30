@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Collections;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -17,9 +18,7 @@ namespace Root
         private LegController legController;
 
         [Foldout("Movement"), SerializeField] private float speed = .5f;
-        [Foldout("Movement"), SerializeField] private float pitchSpeed = 6f;
-        [Foldout("Movement"), SerializeField] private float yawSpeed = 6f;
-        [Foldout("Movement"), SerializeField] private float rollSpeed = 6f;
+        [Foldout("Movement"), SerializeField] private float rotationSpeed = 5f;
         [Foldout("Movement"), SerializeField] private float acceptedDistanceFromTarget = .2f;
         [Foldout("Movement"), SerializeField] private float pathfindingCooldown = 2f;
 
@@ -55,8 +54,8 @@ namespace Root
         private void Update()
         {
             UpdateDynamicLegAnimDurations();
-            Vector3 lNextPos = NextPositionToTarget() ?? transform.position;
-            Crawl(lNextPos - transform.position);
+            RemoveReachedPathPoints();
+            FollowPath();
             lookTarget.position = target.position;
         }
 
@@ -71,32 +70,6 @@ namespace Root
             }
         }
 
-        private Vector3? NextPositionToTarget()
-        {
-            if (currentPath == null)
-                return null;
-
-            while (IsPathPointReached(currentPath[0].position, currentPath.Count == 1 ? null : currentPath[1].position))
-            {
-                if (currentPath.Count == 1)
-                {
-                    currentPath = null;
-                    break;
-                }
-                else
-                    currentPath.RemoveAt(0);
-            }
-
-            Vector3 lTargetPosition;
-
-            if (currentPath == null)
-                lTargetPosition = transform.position;
-            else
-                lTargetPosition = currentPath[0].position;
-
-            return lTargetPosition;
-        }
-
         private List<GraphPoint> PathFinding(Vector3 target)
         {
             GraphPoint lOriginPoint = SurfaceGraph.Instance.GetClosestPoint(transform.position, 1.5f);
@@ -105,9 +78,15 @@ namespace Root
             if (lOriginPoint == null || lTargetPoint == null)
                 return null;
 
+            static IEnumerable<GraphPoint> lNeighborsFunc(GraphPoint graphPoint) => graphPoint.neighbors.ToArray();
+            static bool lIsWalkableFunc(GraphPoint graphPoint) => true;
+            static float lHeuristic(GraphPoint point1, GraphPoint point2) => (point1.position - point2.position).sqrMagnitude;
+            //Cost varies from 1 to 3
+            static float lCostFromToFunc(GraphPoint point1, GraphPoint point2) => 2 - Vector3.Dot(point1.normal, point2.normal);
+
             List<GraphPoint> lGraphPath =
-                SimpleAGreedy<GraphPoint>.Execute(lOriginPoint, lTargetPoint, graphPoint => graphPoint.neighbors.ToArray(),
-                graphPoint => true, (point1, point2) => (point1.position - point2.position).sqrMagnitude, out IEnumerable<GraphPoint> lAttempts);
+                SimpleAGreedy<GraphPoint>.Execute(lOriginPoint, lTargetPoint, lNeighborsFunc, lIsWalkableFunc, 
+                lHeuristic, out IEnumerable<GraphPoint> lAttempts, lCostFromToFunc);
 
             bool lPathfindingFailed = lGraphPath == null;
             if (lPathfindingFailed)
@@ -135,6 +114,37 @@ namespace Root
             return lGraphPath;
         }
 
+        private Vector3? RemoveReachedPathPoints() => RemoveReachedPathPoints(out _);
+        private Vector3? RemoveReachedPathPoints(out GraphPoint lastReached)
+        {
+            lastReached = null;
+
+            if (currentPath == null)
+                return null;
+
+            while (IsPathPointReached(currentPath[0].position, currentPath.Count == 1 ? null : currentPath[1].position))
+            {
+                lastReached = currentPath[0];
+
+                if (currentPath.Count == 1)
+                {
+                    currentPath = null;
+                    break;
+                }
+                else
+                    currentPath.RemoveAt(0);
+            }
+
+            Vector3 lTargetPosition;
+
+            if (currentPath == null)
+                lTargetPosition = transform.position;
+            else
+                lTargetPosition = currentPath[0].position;
+
+            return lTargetPosition;
+        }
+
         private bool IsPathPointReached(Vector3 point, Vector3? nextPoint = null)
         {
             //Reached if distance is less than distanceFromPathPointForNext
@@ -158,13 +168,27 @@ namespace Root
 
         #endregion
 
-        /// <param name="direction">Does not need to be normalized</param>
-        private void Crawl(Vector3 direction)
+        private void FollowPath()
+        {
+            GraphPoint lPoint = currentPath?[0];
+
+            if (lPoint == null)
+                return;
+
+            Vector3 lDirection = (lPoint.position - transform.position).normalized;
+            Vector3 lMovement = speed * Time.deltaTime * lDirection;
+            transform.position += lMovement;
+
+            Quaternion lTargetRotation = Quaternion.LookRotation(lDirection, lPoint.normal);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lTargetRotation, rotationSpeed * Time.deltaTime);
+        }
+
+        private Vector3 PositionCorrection()
         {
             RaycastHit lFrontHit;
             RaycastHit lBackHit;
 
-            ///This method allows smooth point average, but can easily lose contact
+            ///This method allows smooth point average
             bool lFrontHasHit = Physics.SphereCast(new Ray(transform.position,
                 Quaternion.AngleAxis(-castAngle - castOpening, transform.right) * transform.up * -1), sphereCastRadius, out lFrontHit, castLength);
             bool lBackHasHit = Physics.SphereCast(new Ray(transform.position,
@@ -180,35 +204,12 @@ namespace Root
                 lDistanceBasedMultiplier = 0.5f;
             else
                 lDistanceBasedMultiplier = lBackProximityRatio / lDistanceBasedMultiplier;
-
             Vector3 lAveragePoint = lFrontHit.point + lFrontToBack.normalized * lFrontToBack.magnitude * lDistanceBasedMultiplier;
             Vector3 lAverageNormal = ((lFrontHit.normal * lFrontProximityRatio) + (lBackHit.normal * lBackProximityRatio)).normalized;
             Vector3 lPlanePoint = new Plane(lAverageNormal, lAveragePoint).ClosestPointOnPlane(transform.position);
             Vector3 lElevation = lAverageNormal * initialElevation;
 
-            Vector3 lVelocity;
-
-            if (direction == Vector3.zero)
-                lVelocity = Vector3.zero;
-            else
-                lVelocity = speed * Time.deltaTime * Vector3.ProjectOnPlane(transform.forward, lAverageNormal).normalized;
-
-            transform.position = lPlanePoint + lElevation + lVelocity;
-
-            if (lVelocity != Vector3.zero)
-            {
-                Quaternion lTargetRotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(direction, lAverageNormal), lAverageNormal);
-                Quaternion lRelativeRot = Quaternion.Inverse(transform.rotation) * lTargetRotation;
-                Vector3 lRelativeEuleer = lRelativeRot.eulerAngles;
-
-                Quaternion lPitchRot = Quaternion.Euler(lRelativeEuleer.x, 0, 0);
-                Quaternion lYawRot = Quaternion.Euler(0, lRelativeEuleer.y, 0);
-                Quaternion lRollRot = Quaternion.Euler(0, 0, lRelativeEuleer.z);
-
-                transform.rotation *= Quaternion.Slerp(Quaternion.identity, lPitchRot, pitchSpeed * Time.deltaTime);
-                transform.rotation *= Quaternion.Slerp(Quaternion.identity, lYawRot, yawSpeed * Time.deltaTime);
-                transform.rotation *= Quaternion.Slerp(Quaternion.identity, lRollRot, rollSpeed * Time.deltaTime);
-            }
+            return lPlanePoint + lElevation;
         }
 
         private void UpdateDynamicLegAnimDurations()
