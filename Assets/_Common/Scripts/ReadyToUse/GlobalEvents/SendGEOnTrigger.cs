@@ -6,13 +6,13 @@ namespace GE
     [RequireComponent(typeof(Collider))]
     public class SendGEOnTrigger : MonoBehaviour
     {
-        [SerializeField, Tag] private string playerTag = "Player";
+        [SerializeField, Tag] private string requiredTag = "Player";
         [SerializeField] private E_GlobalEvents globalEvent;
         [SerializeField] private E_GlobalEvents[] previouslyRequiredEvents;
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag(playerTag))
+            if (!other.CompareTag(requiredTag))
                 return;
 
             foreach (E_GlobalEvents lRequiredEvents in previouslyRequiredEvents)
@@ -27,6 +27,12 @@ namespace GE
         private void OnValidate()
         {
             GetComponent<Collider>().isTrigger = true;
+        }
+
+        private void OnDrawGizmos()
+        {
+            GlobalEvents.ToGEGizmosColor();
+            Gizmos.DrawCube(transform.position, Vector3.one * 0.1f);
         }
     }
 }

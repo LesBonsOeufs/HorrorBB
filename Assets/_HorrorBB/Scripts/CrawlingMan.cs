@@ -12,7 +12,6 @@ namespace Root
 {
     public class CrawlingMan : MonoBehaviour
     {
-        [InfoBox("Must not be child of this"), SerializeField] private Transform moveTarget;
         [InfoBox("From RigLook"), SerializeField] private Transform lookTarget;
         [InfoBox("Fill for dynamic leg anim duration & maxTipWait (each initial duration will be divided with speed)"), SerializeField]
         private LegController legController;
@@ -32,6 +31,7 @@ namespace Root
         [SerializeField] private bool autoInitElevation = true;
         [InfoBox("If auto, will be used as fallback value"), SerializeField] private float initialElevation = 0.4f;
 
+        private Transform target;
         private float initControllerMaxTipWait;
         private float[] initLegAnimDurations;
         private List<GraphPoint> currentPath;
@@ -47,13 +47,9 @@ namespace Root
             StartCoroutine(RefreshPath());
         }
 
-        private IEnumerator RefreshPath()
+        public void SetTarget(Transform target)
         {
-            while (true)
-            {
-                currentPath = PathFinding(moveTarget.position);
-                yield return new WaitForSeconds(pathfindingCooldown);
-            }
+            this.target = target;
         }
 
         private void Update()
@@ -61,10 +57,19 @@ namespace Root
             UpdateDynamicLegAnimDurations();
             Vector3 lNextPos = NextPositionToTarget() ?? transform.position;
             Crawl(lNextPos - transform.position);
-            lookTarget.position = moveTarget.position;
+            lookTarget.position = target.position;
         }
 
         #region PathFinding
+
+        private IEnumerator RefreshPath()
+        {
+            while (true)
+            {
+                currentPath = PathFinding(target.position);
+                yield return new WaitForSeconds(pathfindingCooldown);
+            }
+        }
 
         private Vector3? NextPositionToTarget()
         {
@@ -99,10 +104,6 @@ namespace Root
 
             if (lOriginPoint == null || lTargetPoint == null)
                 return null;
-
-#if UNITY_EDITOR
-            
-#endif
 
             List<GraphPoint> lGraphPath =
                 SimpleAGreedy<GraphPoint>.Execute(lOriginPoint, lTargetPoint, graphPoint => graphPoint.neighbors.ToArray(),

@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - SurfaceGraph_AddVertices
+  - Monster
   layers:
   - Default
   - TransparentFX

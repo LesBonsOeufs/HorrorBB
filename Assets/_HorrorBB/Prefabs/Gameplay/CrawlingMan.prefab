@@ -1628,6 +1628,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2425420053880244296, guid: bfb088f5e041d3447bcbdd94813f3a41,
+        type: 3}
+      propertyPath: m_TagString
+      value: Monster
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2425420053880344305, guid: bfb088f5e041d3447bcbdd94813f3a41, type: 3}
     m_RemovedGameObjects: []
@@ -1951,7 +1956,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4440294339578842200}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2d8418b0b9634b1892b0268dd9c2743, type: 3}
   m_Name: 
@@ -1999,7 +2004,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f98350e34a9313842b8264af8ca3fa4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTarget: {fileID: 0}
   lookTarget: {fileID: 8151005207721888636}
   legController: {fileID: 4678902910170901059}
   speed: 3

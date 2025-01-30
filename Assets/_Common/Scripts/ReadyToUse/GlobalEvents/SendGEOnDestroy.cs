@@ -13,5 +13,11 @@ namespace GE
 
             GlobalEvents.Instance.Spread(globalEvent);
         }
+
+        private void OnDrawGizmos()
+        {
+            GlobalEvents.ToGEGizmosColor();
+            Gizmos.DrawSphere(transform.position, 0.1f);
+        }
     }
 }
