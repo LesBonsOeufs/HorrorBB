@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Collections;
-using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -21,12 +20,20 @@ namespace Root
         [Foldout("Movement"), SerializeField] private float rotationSpeed = 5f;
 
         [Foldout("Pathfinding"), SerializeField] private float maxAngleCost = 1f;
+        [Foldout("Pathfinding"), SerializeField] private float targetMovementForRefresh = .5f;
         [Foldout("Pathfinding"), SerializeField] private float pathfindingCooldown = 2f;
         [Foldout("Pathfinding"), SerializeField] private float acceptedDistanceFromTarget = .2f;
 
+        [Foldout("PFSmoothing"), SerializeField] private int smoothIterations = 5;
+        [Foldout("PFSmoothing"), SerializeField] private float smoothFactor = 0.5f;
+        [Foldout("PFSmoothing"), SerializeField] private PathSmoothing.E_SmoothingMethod smoothMethod = PathSmoothing.E_SmoothingMethod.COLLISION_ADAPTIVE;
+
         private Transform target;
+        private Vector3 lastTargetPosition;
+
         private float initControllerMaxTipWait;
         private float[] initLegAnimDurations;
+
         private List<GraphPoint> currentPath;
 
         private void Start()
@@ -36,17 +43,26 @@ namespace Root
             StartCoroutine(RefreshPath());
         }
 
-        public void SetTarget(Transform target)
-        {
-            this.target = target;
-        }
-
         private void Update()
         {
+            if (target ==  null) 
+                return;
+
             UpdateDynamicLegAnimDurations();
             RemoveReachedPathPoints();
             FollowPath();
             lookTarget.position = target.position;
+        }
+
+        public void SetTarget(Transform target)
+        {
+            this.target = target;
+
+            if (target != null)
+            {
+                lastTargetPosition = target.position;
+                currentPath = PathFinding(target.position);
+            }
         }
 
         #region PathFinding
@@ -55,7 +71,12 @@ namespace Root
         {
             while (true)
             {
-                currentPath = PathFinding(target.position);
+                if (target != null && (lastTargetPosition - target.position).magnitude > targetMovementForRefresh)
+                {
+                    currentPath = PathFinding(target.position);
+                    lastTargetPosition = target.position;
+                }
+
                 yield return new WaitForSeconds(pathfindingCooldown);
             }
         }
@@ -84,6 +105,8 @@ namespace Root
             List<GraphPoint> lGraphPath =
                 SimpleAGreedy<GraphPoint>.Execute(lOriginPoint, lTargetPoint, lNeighborsFunc, lIsWalkableFunc, 
                 lGetEuclideanDistance, out IEnumerable<GraphPoint> lAttempts, lGetAngleCost);
+
+            lGraphPath = PathSmoothing.Execute(lGraphPath, smoothMethod, smoothIterations, smoothFactor);
 
             bool lPathfindingFailed = lGraphPath == null;
             if (lPathfindingFailed)

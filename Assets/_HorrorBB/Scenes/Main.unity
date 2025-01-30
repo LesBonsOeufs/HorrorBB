@@ -5385,7 +5385,7 @@ PrefabInstance:
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.22833939
+      value: 0.25052953
       objectReference: {fileID: 0}
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
@@ -8616,7 +8616,7 @@ Transform:
   m_GameObject: {fileID: 1415807715}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.543685, y: 4.9040003, z: -6.065675}
+  m_LocalPosition: {x: -11.543685, y: 4.9, z: -5.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11457,9 +11457,8 @@ MonoBehaviour:
   refreshOnAwake: 1
   addVerticesTag: SurfaceGraph_AddVertices
   size: 15
-  pointsSpacing: 1
+  pointsSpacing: 0.75
   pointsNormalShift: 0.4
-  neighborMaxDistance: 1.5
   keepOnlyReachableFrom: 1
   reachablePoint: {x: -1.04, y: 1, z: -3.3}
   neighborAssignmentPurposeNormalShift: 0.01

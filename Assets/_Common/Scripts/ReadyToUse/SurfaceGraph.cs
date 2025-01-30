@@ -17,7 +17,6 @@ namespace Root
         [SerializeField] private float size = 15f;
         [SerializeField] private float pointsSpacing = 1f;
         [SerializeField] private float pointsNormalShift = 0.4f;
-        [SerializeField] private float neighborMaxDistance = 1.5f;
 
         [SerializeField] private bool keepOnlyReachableFrom = false;
         [ShowIf(nameof(keepOnlyReachableFrom)), SerializeField] private Vector3 reachablePoint = Vector3.zero;
@@ -243,7 +242,7 @@ namespace Root
 
             foreach (GraphPoint lPoint in lGraph)
             {
-                pointOctree.GetNearbyNonAlloc(lPoint.position, neighborMaxDistance, lNearbyPoints);
+                pointOctree.GetNearbyNonAlloc(lPoint.position, pointsSpacing * 1.5f, lNearbyPoints);
 
                 foreach (GraphPoint lNearby in lNearbyPoints)
                 {

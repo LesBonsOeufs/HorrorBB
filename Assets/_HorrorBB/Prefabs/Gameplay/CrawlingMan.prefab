@@ -2009,8 +2009,12 @@ MonoBehaviour:
   speed: 3
   rotationSpeed: 5
   maxAngleCost: 1
+  targetMovementForRefresh: 0.5
   pathfindingCooldown: 0
   acceptedDistanceFromTarget: 0.2
+  smoothIterations: 5
+  smoothFactor: 0.5
+  smoothMethod: 2
 --- !u!135 &1312757026656104175
 SphereCollider:
   m_ObjectHideFlags: 0
