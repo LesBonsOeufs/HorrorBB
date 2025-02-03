@@ -1,0 +1,159 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1233149941 &-8130000752495680971
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: household_clock_tick_tock_loop-16_{-8130000752495680971}
+  m_AudioClip: {fileID: 8300000, guid: fb89ca97d29d84145a56ed1e5afb8bc7, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-7613401893342742922
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: household_clock_tick_tock_loop-15_{-7613401893342742922}
+  m_AudioClip: {fileID: 8300000, guid: cb86f0ce6ab5f894caa2d26d501a5d33, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-7397889688241467535
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: household_clock_tick_tock_loop-10_{-7397889688241467535}
+  m_AudioClip: {fileID: 8300000, guid: 886072fd08f541d46b74669b9968996f, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-7156937815421778803
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: household_clock_tick_tock_loop-02_{-7156937815421778803}
+  m_AudioClip: {fileID: 8300000, guid: 9c1810f171295284d839fc4cf7f513bf, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-4893960385758315652
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: household_clock_tick_tock_loop-03_{-4893960385758315652}
+  m_AudioClip: {fileID: 8300000, guid: b6c42a6d350a22a49bd378b282920711, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-4723467988044027089
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: household_clock_tick_tock_loop-04_{-4723467988044027089}
+  m_AudioClip: {fileID: 8300000, guid: 236314a4d39a16d4d9150b1494888d4c, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &691799475592813974
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: household_clock_tick_tock_loop-07_{691799475592813974}
+  m_AudioClip: {fileID: 8300000, guid: aceb9fc08a095a644a8d22db75b5e025, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &2000060397375210316
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: household_clock_tick_tock_loop-01_{2000060397375210316}
+  m_AudioClip: {fileID: 8300000, guid: b5f118e9e3dcae04f81dc2eed8231c38, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &4395237180701218031
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: household_clock_tick_tock_loop-11_{4395237180701218031}
+  m_AudioClip: {fileID: 8300000, guid: efb511d28264b0b4da5f559d8dd24e9a, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &4572515498474774966
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: household_clock_tick_tock_loop-09_{4572515498474774966}
+  m_AudioClip: {fileID: 8300000, guid: 15eb6c44a3bdb08428d5b1053e1e930e, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &4683371064253280291
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: household_clock_tick_tock_loop-12_{4683371064253280291}
+  m_AudioClip: {fileID: 8300000, guid: bad5a3df6d96d8942a54538d313354ba, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1307931743 &6418180475301049370
+AudioRandomContainer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ARC_Tick
+  m_Volume: 0
+  m_Pitch: -100
+  m_AutomaticTriggerTime: 1.2
+  m_LoopCount: 1
+  m_VolumeRandomizationRange: {x: 0, y: 0}
+  m_PitchRandomizationRange: {x: -200, y: 100}
+  m_AutomaticTriggerTimeRandomizationRange: {x: 0, y: 0}
+  m_LoopCountRandomizationRange: {x: 0, y: 0}
+  m_Elements:
+  - {fileID: 2000060397375210316}
+  - {fileID: -7156937815421778803}
+  - {fileID: -4893960385758315652}
+  - {fileID: -4723467988044027089}
+  - {fileID: 691799475592813974}
+  - {fileID: 6907777321564084268}
+  - {fileID: 4572515498474774966}
+  - {fileID: -7397889688241467535}
+  - {fileID: 4395237180701218031}
+  - {fileID: 4683371064253280291}
+  - {fileID: -7613401893342742922}
+  - {fileID: -8130000752495680971}
+  m_AvoidRepeatingLast: 0
+  m_PlaybackMode: 0
+  m_TriggerMode: 0
+  m_AutomaticTriggerMode: 0
+  m_LoopMode: 2
+  m_VolumeRandomizationEnabled: 0
+  m_PitchRandomizationEnabled: 0
+  m_AutomaticTriggerTimeRandomizationEnabled: 0
+  m_LoopCountRandomizationEnabled: 0
+--- !u!1233149941 &6907777321564084268
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: household_clock_tick_tock_loop-08_{6907777321564084268}
+  m_AudioClip: {fileID: 8300000, guid: ded36418426d8444db9f1501038228cc, type: 3}
+  m_Volume: 0
+  m_Enabled: 1

@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Leg : MonoBehaviour
 {
+    //Additional
+    [SerializeField] private AudioSource stepSFX;
+
     [SerializeField] private Transform bodyTransform;
     [SerializeField] private Transform rayForwardOrigin;
     [SerializeField] private Transform rayDownOrigin;
@@ -133,6 +136,7 @@ public class Leg : MonoBehaviour
 
     private IEnumerator AnimateLeg()
     {
+        stepSFX.PlayDelayed(tipAnimationDuration + tipAnimationFrameTime);
         Animating = true;
 
         float lTimer = 0.0f;

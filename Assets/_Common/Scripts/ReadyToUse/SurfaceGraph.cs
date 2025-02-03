@@ -14,6 +14,7 @@ namespace Root
     {
         [SerializeField] private bool refreshOnAwake = true;
         [SerializeField, Tag] private string addVerticesTag = "SurfaceGraph_AddVertices";
+        [SerializeField, Tag] private string skipColliderTag = "SurfaceGraph_Skip";
         [SerializeField] private float size = 15f;
         [SerializeField] private float pointsSpacing = 1f;
         [SerializeField] private float pointsNormalShift = 0.4f;
@@ -86,7 +87,7 @@ namespace Root
 
             foreach (Collider lCollider in colliders)
             {
-                if (!lCollider.enabled || lCollider.isTrigger)
+                if (!lCollider.enabled || lCollider.isTrigger || lCollider.CompareTag(skipColliderTag))
                     continue;
 
                 lPoints.AddRange(GenerateSurfacePoints(lCollider));
