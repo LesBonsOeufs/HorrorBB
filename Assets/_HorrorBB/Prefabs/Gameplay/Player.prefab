@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2133696091659066235}
   - component: {fileID: 4486038256811167307}
-  - component: {fileID: 3792655928662199317}
+  - component: {fileID: 7158868392970470530}
   - component: {fileID: 3829046328148064544}
   - component: {fileID: 865796760676632608}
   - component: {fileID: 2760963628395694681}
@@ -36,7 +36,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8002308575696249645}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -7.252, y: 0, z: 0}
 --- !u!114 &4486038256811167307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,7 +80,7 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
---- !u!114 &3792655928662199317
+--- !u!114 &7158868392970470530
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,10 +89,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 97891638447735551}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36d1163fa822e8b418a0a603ec078d5c, type: 3}
+  m_Script: {fileID: 11500000, guid: b617507da6d07e749b7efdb34e1173e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damping: 0
+  TrackerSettings:
+    BindingMode: 4
+    PositionDamping: {x: 0, y: 0.25, z: 0}
+    AngularDampingMode: 0
+    RotationDamping: {x: 1, y: 1, z: 1}
+    QuaternionDamping: 1
+  FollowOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &3829046328148064544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,7 +215,7 @@ MonoBehaviour:
     AmplitudeGain: 0.06
     FrequencyGain: 1
     Duration: 0.4
-    m_NoiseOffsets: {x: 0, y: 0, z: 0}
+    m_NoiseOffsets: {x: 5.694519, y: -775.8031, z: -708.9739}
 --- !u!1 &764988652358138022
 GameObject:
   m_ObjectHideFlags: 0
