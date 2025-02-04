@@ -106,6 +106,8 @@ MonoBehaviour:
   meshRenderer: {fileID: 5144725842818460604}
   alphaTweenDuration: 0.3
   info: {fileID: 11400000, guid: 27a8b01917cc30e40842c471330a7af6, type: 2}
+  collectedSFX: {fileID: 8300000, guid: a6487f9397103c248831ea57a222612a, type: 3}
+  volume: 0.2
 --- !u!135 &6832328953981006865
 SphereCollider:
   m_ObjectHideFlags: 0

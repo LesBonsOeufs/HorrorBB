@@ -12,6 +12,7 @@ namespace GE
 
         [SerializeField] private E_GlobalEvents globalEvent;
         [SerializeField] private E_GlobalEvents[] previouslyRequiredEvents;
+        [SerializeField] private float maxDistance = Mathf.Infinity;
         [SerializeField, Tooltip("Use for triggering the event only if the player is looking for more than X updates")] 
         private int requiredConsecutiveUpdates = 0;
 
@@ -35,7 +36,7 @@ namespace GE
 
             Camera lCamera = useMainCamera ? Camera.main : camera;
 
-            if (lCamera != null && lCamera.IsPointVisible(transform.position))
+            if (lCamera != null && lCamera.IsPointVisible(transform.position) && (lCamera.transform.position - transform.position).magnitude < maxDistance)
                 consecutiveUpdates++;
             else
                 consecutiveUpdates = 0;
@@ -49,6 +50,7 @@ namespace GE
             GlobalEvents.ToGEGizmosColor();
             Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.localScale);
             Gizmos.DrawFrustum(-transform.forward * 0.15f, 60f, 0.1f, 0f, 1f);
+            Gizmos.DrawWireSphere(Vector3.zero, maxDistance);
         }
     }
 }

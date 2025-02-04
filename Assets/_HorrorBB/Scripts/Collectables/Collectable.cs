@@ -9,6 +9,8 @@ namespace Root
         [SerializeField] private MeshRenderer meshRenderer;
         [SerializeField] private float alphaTweenDuration = 0.75f;
         [Expandable, SerializeField] private CollectableInfo info;
+        [Foldout("Sound"), SerializeField] private AudioClip collectedSFX;
+        [Foldout("Sound"), SerializeField] private float volume = 1f;
 
         public override void Interact(Interactor interactor, bool isInteracting)
         {
@@ -22,6 +24,9 @@ namespace Root
         {
             if (ActiveInteractor != null)
                 ActiveInteractor.RemoveFromUsables(this);
+
+            if (collectedSFX != null)
+                AudioSource.PlayClipAtPoint(collectedSFX, transform.position, volume);
 
             Inventory.Instance.Add(info);
 
