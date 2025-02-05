@@ -1,15 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1233149941 &1355779116188512427
-AudioContainerElement:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: zapsplat_foley_footstep_barefoot_single_wooden_step_004_19183_{1355779116188512427}
-  m_AudioClip: {fileID: 8300000, guid: 7cf91aa51880c1e41917a41397a5ce88, type: 3}
-  m_Volume: 0
-  m_Enabled: 1
 --- !u!1307931743 &6418180475301049370
 AudioRandomContainer:
   m_ObjectHideFlags: 0
@@ -17,19 +7,19 @@ AudioRandomContainer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ARC_Steps
-  m_Volume: 0
-  m_Pitch: 0
+  m_Volume: -8
+  m_Pitch: 659
   m_AutomaticTriggerTime: 0
   m_LoopCount: 1
-  m_VolumeRandomizationRange: {x: -10, y: 0}
-  m_PitchRandomizationRange: {x: -300, y: 150}
+  m_VolumeRandomizationRange: {x: -2, y: 0}
+  m_PitchRandomizationRange: {x: -974.82996, y: 103.40137}
   m_AutomaticTriggerTimeRandomizationRange: {x: 0, y: 0}
   m_LoopCountRandomizationRange: {x: 0, y: 0}
   m_Elements:
-  - {fileID: 1355779116188512427}
-  - {fileID: 8287009652652854066}
-  - {fileID: 9031071220184463242}
-  m_AvoidRepeatingLast: 0
+  - {fileID: 9199301653916261522}
+  - {fileID: 8964762241390845097}
+  - {fileID: 8091332796335336597}
+  m_AvoidRepeatingLast: 1
   m_PlaybackMode: 2
   m_TriggerMode: 0
   m_AutomaticTriggerMode: 1
@@ -38,23 +28,33 @@ AudioRandomContainer:
   m_PitchRandomizationEnabled: 1
   m_AutomaticTriggerTimeRandomizationEnabled: 0
   m_LoopCountRandomizationEnabled: 0
---- !u!1233149941 &8287009652652854066
+--- !u!1233149941 &8091332796335336597
 AudioContainerElement:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: zapsplat_foley_footstep_barefoot_single_wooden_step_005_19184_{8287009652652854066}
-  m_AudioClip: {fileID: 8300000, guid: 7831bef44bc85b44999ae7702f6fc71e, type: 3}
+  m_Name: wood03_{8091332796335336597}
+  m_AudioClip: {fileID: 8300000, guid: 39f074d327641ad4287e7408db94f8a6, type: 3}
+  m_Volume: -5
+  m_Enabled: 1
+--- !u!1233149941 &8964762241390845097
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: wood02_{8964762241390845097}
+  m_AudioClip: {fileID: 8300000, guid: 82fcf4f6ff5cf8d44aec01cb1009c8bc, type: 3}
   m_Volume: 0
   m_Enabled: 1
---- !u!1233149941 &9031071220184463242
+--- !u!1233149941 &9199301653916261522
 AudioContainerElement:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: zapsplat_foley_footstep_barefoot_single_wooden_step_006_19185_{9031071220184463242}
-  m_AudioClip: {fileID: 8300000, guid: 00a25f47c19b46c45aea902b75c18b34, type: 3}
+  m_Name: wood01_{9199301653916261522}
+  m_AudioClip: {fileID: 8300000, guid: 991901aa6858bba43b9b04e85c8545f0, type: 3}
   m_Volume: 0
   m_Enabled: 1

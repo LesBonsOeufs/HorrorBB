@@ -196,13 +196,18 @@ PrefabInstance:
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.3045016
+      value: 2.6733181
       objectReference: {fileID: 0}
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
       propertyPath: m_BounceIntensity
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3707654985934402405, guid: 0d0d62f6179998847a8718fe00c398c6,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 3a711b8d4d107214c87cc3438dbb2b6a, type: 2}
     - target: {fileID: 3832293862149051943, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
       propertyPath: m_Name
@@ -231,11 +236,37 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4984140560404173303}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2915166930962535088, guid: 0d0d62f6179998847a8718fe00c398c6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7929999924050307641}
     - targetCorrespondingSourceObject: {fileID: 4082353457768393500, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 120939420448885582}
   m_SourcePrefab: {fileID: 100100000, guid: 0d0d62f6179998847a8718fe00c398c6, type: 3}
+--- !u!1 &12513812136759545 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2915166930962535088, guid: 0d0d62f6179998847a8718fe00c398c6,
+    type: 3}
+  m_PrefabInstance: {fileID: 2907273524753089097}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7929999924050307641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 12513812136759545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f731a5db93155a64c92f0c2b7960c7f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetLight: {fileID: 1918382773593476015}
+  targetRenderer: {fileID: 0}
+  materialIndex: 0
+  emissionMultiplier: 2.5
 --- !u!1 &1224938456343456085 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4082353457768393500, guid: 0d0d62f6179998847a8718fe00c398c6,

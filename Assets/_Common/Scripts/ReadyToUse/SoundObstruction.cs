@@ -6,13 +6,15 @@ using System.Collections.Generic;
 
 public class SoundObstruction : MonoBehaviour
 {
-    [SerializeField] private float checkMaxDistance = 10f;
     [SerializeField, InfoBox("Sources closer than this will not be muffled")] private float minDistance = 0.7f;
+    [SerializeField] private float checkMaxDistance = 10f;
     [SerializeField] private bool isObstructedAfterMax = false;
-    [SerializeField, InfoBox("Sources that are not in either groups will not be touched")] private AudioMixerGroup directGroup;
+    [HorizontalLine]
+    [SerializeField, InfoBox("Sources that are not in either groups will not be touched.\nNon-obstructable sounds should be placed in a separate group.")]
+    private AudioMixerGroup directGroup;
     [SerializeField] private AudioMixerGroup obstructedGroup;
+    [HorizontalLine]
     [SerializeField] private LayerMask obstructorMask = ~0;
-    [SerializeField, Range(0f, 1f)] private float minSpatialBlend = 0.3f;
 
     private IEnumerable<AudioSource> audioSources;
 
@@ -23,9 +25,8 @@ public class SoundObstruction : MonoBehaviour
 
     public void RefreshAudioSources()
     {
-        audioSources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None).Where(
-            source => (source.outputAudioMixerGroup == obstructedGroup || source.outputAudioMixerGroup == directGroup) &&
-            source.spatialBlend > minSpatialBlend);
+        audioSources = FindObjectsByType<AudioSource>(FindObjectsInactive.Include, FindObjectsSortMode.None).Where(
+            source => source.outputAudioMixerGroup == obstructedGroup || source.outputAudioMixerGroup == directGroup);
     }
 
     private void Update()

@@ -73,7 +73,8 @@ AudioMixerGroupController:
   m_Name: Effect
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: 5ea18e26789bc884aaa799e2acaef2d2
-  m_Children: []
+  m_Children:
+  - {fileID: -55493294334317133}
   m_Volume: a30fc7d5d86362c42a8164d22dc41136
   m_Pitch: 7fb96bdbd549050478486dc49509ddbb
   m_Send: 00000000000000000000000000000000
@@ -125,6 +126,25 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!243 &-55493294334317133
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Effect_NonObstructable
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: c8b2769a96686fd4793133e1d53bf0af
+  m_Children: []
+  m_Volume: bd0bba27f2daab34ea01a6ec26ecdc54
+  m_Pitch: d6f9c5ac04f9a8a43a7f5a90c2b829ac
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 860009799269281632}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!241 &24100000
 AudioMixerController:
   m_ObjectHideFlags: 0
@@ -148,6 +168,7 @@ AudioMixerController:
     - 32dae21f271eb7f42b91c38988e83415
     - 5ea18e26789bc884aaa799e2acaef2d2
     - 9ae7b1fa929d48647bfd2f9ffa7d2398
+    - c8b2769a96686fd4793133e1d53bf0af
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -209,6 +230,20 @@ AudioMixerSnapshotController:
     9c1500a757165d54b83268b38ab2932b: 100
     30a30119bf6228843805e5745ede2325: -29.33333
   m_TransitionOverrides: {}
+--- !u!244 &860009799269281632
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 64f33949b5a82c54b86ff3a1c3ea4428
+  m_EffectName: Attenuation
+  m_MixLevel: d3f8fe29fd07c50409efc36833a70008
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!244 &1410242836906303326
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
