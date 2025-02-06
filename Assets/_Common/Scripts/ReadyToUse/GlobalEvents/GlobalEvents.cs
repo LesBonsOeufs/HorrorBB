@@ -44,7 +44,6 @@ namespace GE
     {
         FirstKeyRetrieved,
         PlayerReturnedDownstairs,
-        MonsterUpstairs,
         PlayerApproachedMonster
     }
 }

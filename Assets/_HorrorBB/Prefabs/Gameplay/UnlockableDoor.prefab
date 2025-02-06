@@ -127,7 +127,7 @@ MonoBehaviour:
   openSpeed: 2.5
   ease: 4
   sfxSource: {fileID: 9172835620976864430}
-  openSFX: {fileID: 8300000, guid: 2ceeb2bb526671b43941ebcd6536e594, type: 3}
+  openSFX: {fileID: 8300000, guid: 4bdf4442cc2ed664da252022bffed640, type: 3}
   closeSFX: {fileID: 0}
   closeEndSFX: {fileID: 0}
 --- !u!82 &9172835620976864430

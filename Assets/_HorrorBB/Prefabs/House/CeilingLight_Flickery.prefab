@@ -46,7 +46,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 68929d4809d00dd42b45cc83f995b4d6, type: 3}
   m_Resource: {fileID: 8300000, guid: 68929d4809d00dd42b45cc83f995b4d6, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -196,7 +196,7 @@ PrefabInstance:
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
       propertyPath: m_Intensity
-      value: 2.6733181
+      value: 0.24254711
       objectReference: {fileID: 0}
     - target: {fileID: 3659107807292738022, guid: 0d0d62f6179998847a8718fe00c398c6,
         type: 3}
