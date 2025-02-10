@@ -89,11 +89,11 @@ AudioRandomContainer:
   m_Name: ARC_CrawlSteps_Ambient
   m_Volume: -5
   m_Pitch: -100
-  m_AutomaticTriggerTime: 2
+  m_AutomaticTriggerTime: 1
   m_LoopCount: 1
   m_VolumeRandomizationRange: {x: 0, y: 0}
   m_PitchRandomizationRange: {x: -50, y: 150}
-  m_AutomaticTriggerTimeRandomizationRange: {x: -0.5, y: 7}
+  m_AutomaticTriggerTimeRandomizationRange: {x: -0.5, y: 2}
   m_LoopCountRandomizationRange: {x: 0, y: 0}
   m_Elements:
   - {fileID: -6742108996654368886}
@@ -105,7 +105,7 @@ AudioRandomContainer:
   - {fileID: 4362157666350583346}
   - {fileID: 6871579542166848865}
   - {fileID: -341528727004919765}
-  m_AvoidRepeatingLast: 0
+  m_AvoidRepeatingLast: 1
   m_PlaybackMode: 2
   m_TriggerMode: 1
   m_AutomaticTriggerMode: 1
