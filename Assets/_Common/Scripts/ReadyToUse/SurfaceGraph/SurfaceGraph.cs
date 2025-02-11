@@ -31,8 +31,14 @@ namespace Root
         private float neighborAssignmentPurposeNormalShift = 0.01f;
         [Foldout("Advanced"), SerializeField] private float safeSphereCastOffset = 0.11f;
         [Foldout("Advanced"), SerializeField] private float sphereCastRadius = 0.009f;
-        
-        [SerializeField, ReadOnly] private SerializedGraphData data;
+
+#if UNITY_EDITOR
+        [Foldout("Debug"), SerializeField] private bool showBounds = true;
+        [Foldout("Debug"), SerializeField] private bool showPoints = true;
+        [Foldout("Debug"), SerializeField] private bool showNeighbors = true;
+        [Foldout("Debug"), SerializeField] private bool showNormals = true;
+#endif
+
         private PointOctree<GraphPoint> pointOctree;
 
         public GraphPoint GetClosestPoint(Vector3 position, float maxDistance)
@@ -63,17 +69,21 @@ namespace Root
 
         private void OnValidate()
         {
-            ApplyFromData();
+            if (pointOctree == null)
+                ApplyFromData();
         }
 
         private void ApplyFromData()
         {
-            if (data == null)
+            if (!LocalDataSaver<SerializedGraphData>.CheckIfSaveExists())
                 return;
+
+            //Load graph data
+            List<GraphPoint> lPoints = LocalDataSaver<SerializedGraphData>.CurrentData.GetPoints();
 
             //Update point octree
             pointOctree = new PointOctree<GraphPoint>(size, transform.position, 1f);
-            foreach (GraphPoint lPoint in data.Points)
+            foreach (GraphPoint lPoint in lPoints)
                 pointOctree.Add(lPoint, lPoint.position);
         }
 
@@ -81,24 +91,27 @@ namespace Root
         public void Build()
         {
             Collider[] lColliders = FindObjectsByType<Collider>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            data = new SerializedGraphData(GeneratePointsFromColliders(lColliders));
+            List<GraphPoint> lPoints = GeneratePointsFromColliders(lColliders);
 
             //Fill point octree (for neighbors calculation)
             pointOctree = new PointOctree<GraphPoint>(size, transform.position, 1f);
-            foreach (GraphPoint lPoint in data.Points)
+            foreach (GraphPoint lPoint in lPoints)
                 pointOctree.Add(lPoint, lPoint.position);
 
-            NormalShift(data.Points, neighborAssignmentPurposeNormalShift);
+            NormalShift(lPoints, neighborAssignmentPurposeNormalShift);
 
             SetNeighbors();
 
             if (keepOnlyReachableFrom)
-                SelectReachables(data.Points);
+                SelectReachables(lPoints);
 
             //TO DO: add option for forcing NormalShift (no safeCast), for being able to have a final shift inferior to neighborAssignment shift
             if (pointsNormalShift >= neighborAssignmentPurposeNormalShift)
-                NormalShift(data.Points, pointsNormalShift - neighborAssignmentPurposeNormalShift);
+                NormalShift(lPoints, pointsNormalShift - neighborAssignmentPurposeNormalShift);
 
+            //Save built graph
+            LocalDataSaver<SerializedGraphData>.CurrentData.SetPoints(lPoints);
+            LocalDataSaver<SerializedGraphData>.SaveCurrentData();
             ApplyFromData();
         }
 
@@ -360,6 +373,7 @@ namespace Root
 
         #endregion
 
+#if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
             if (keepOnlyReachableFrom)
@@ -371,26 +385,35 @@ namespace Root
             if (pointOctree == null)
                 return;
 
-            pointOctree.DrawAllBounds(); // Draw node boundaries
-            pointOctree.DrawAllObjects(); // Mark object positions
+            if (showBounds)
+                pointOctree.DrawAllBounds();
+
+            if (showPoints)
+                pointOctree.DrawAllObjects();
+
             ICollection<GraphPoint> lPoints = pointOctree.GetAll();
 
-            //Draw neighbors
-            foreach (GraphPoint lPoint in lPoints)
+            if (showNeighbors)
             {
-                foreach (GraphPoint lNeighbor in lPoint.neighbors)
+                foreach (GraphPoint lPoint in lPoints)
                 {
-                    Gizmos.color = Color.green;
-                    Gizmos.DrawLine(lPoint.position, lNeighbor.position);
+                    foreach (GraphPoint lNeighbor in lPoint.neighbors)
+                    {
+                        Gizmos.color = Color.green;
+                        Gizmos.DrawLine(lPoint.position, lNeighbor.position);
+                    }
                 }
             }
 
-            //Draw normals
-            foreach (GraphPoint lPoint in lPoints)
+            if (showNormals)
             {
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawLine(lPoint.position, lPoint.position + lPoint.normal * 0.25f);
+                foreach (GraphPoint lPoint in lPoints)
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawLine(lPoint.position, lPoint.position + lPoint.normal * 0.25f);
+                }
             }
         }
+#endif
     }
 }
