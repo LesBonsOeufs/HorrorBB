@@ -14,7 +14,12 @@ namespace Root
     {
         [SerializeField] private bool refreshOnAwake = true;
         [SerializeField, Tag] private string addVerticesTag = "SurfaceGraph_AddVertices";
-        [SerializeField, Tag] private string skipColliderTag = "SurfaceGraph_Skip";
+        [SerializeField, Tag, Tooltip("Will not generate any point based on colliders with this tag")] private string skipColliderTag = "SurfaceGraph_Skip";
+
+        [field: SerializeField, Tooltip("Will completely ignore colliders outside of this mask: No point generated, and not used for any collision test." +
+                                        "It is advised to make agents also ignore these colliders by default.")]
+        public LayerMask ValidColliders { get; private set; } = ~0;
+
         [SerializeField] private float size = 15f;
         [SerializeField] private float pointsSpacing = 1f;
         [SerializeField] private float pointsNormalShift = 0.4f;
@@ -24,7 +29,7 @@ namespace Root
 
         [Foldout("Advanced"), Tooltip("Does not influence the final position of the points"), SerializeField] 
         private float neighborAssignmentPurposeNormalShift = 0.01f;
-        [Foldout("Advanced"), SerializeField] private float safeRaycastOffset = 0.1f;
+        [Foldout("Advanced"), SerializeField] private float safeSphereCastOffset = 0.11f;
         [Foldout("Advanced"), SerializeField] private float sphereCastRadius = 0.009f;
 
         private PointOctree<GraphPoint> pointOctree;
@@ -75,8 +80,14 @@ namespace Root
             if (keepOnlyReachableFrom)
                 SelectReachables(lPoints);
 
-            if (pointsNormalShift != 0f)
+            //TO DO: add option for forcing NormalShift (no safeCast), for being able to have a final shift inferior to neighborAssignment shift
+            if (pointsNormalShift >= neighborAssignmentPurposeNormalShift)
                 NormalShift(lPoints, pointsNormalShift - neighborAssignmentPurposeNormalShift);
+
+            //Update point octree
+            pointOctree = new PointOctree<GraphPoint>(size, transform.position, 1f);
+            foreach (GraphPoint lPoint in lPoints)
+                pointOctree.Add(lPoint, lPoint.position);
         }
 
         #region Points Generation
@@ -87,7 +98,8 @@ namespace Root
 
             foreach (Collider lCollider in colliders)
             {
-                if (!lCollider.enabled || lCollider.isTrigger || lCollider.CompareTag(skipColliderTag))
+                if (!ValidColliders.ContainsLayer(lCollider.gameObject.layer) || 
+                    !lCollider.enabled || lCollider.isTrigger || lCollider.CompareTag(skipColliderTag))
                     continue;
 
                 lPoints.AddRange(GenerateSurfacePoints(lCollider));
@@ -139,7 +151,7 @@ namespace Root
             return lPoints;
         }
 
-        void GeneratePointsOnFace(List<GraphPoint> points, Vector3 c1, Vector3 c2, Vector3 c3, Vector3 normal)
+        private void GeneratePointsOnFace(List<GraphPoint> points, Vector3 c1, Vector3 c2, Vector3 c3, Vector3 normal)
         {
             Vector3 lEdge1 = c2 - c1;
             Vector3 lEdge2 = c3 - c1;
@@ -180,7 +192,7 @@ namespace Root
             return lPoints;
         }
 
-        void GeneratePointsOnTriangle(List<GraphPoint> points, Vector3 v1, Vector3 v2, Vector3 v3, HashSet<Vector3Int> occupiedCells, bool addVertices)
+        private void GeneratePointsOnTriangle(List<GraphPoint> points, Vector3 v1, Vector3 v2, Vector3 v3, HashSet<Vector3Int> occupiedCells, bool addVertices)
         {
             Vector3 lNormal = Vector3.Cross(v2 - v1, v3 - v1).normalized;
 
@@ -215,7 +227,7 @@ namespace Root
             }
         }
 
-        bool IsPointInTriangle(Vector3 point, Vector3 v1, Vector3 v2, Vector3 v3, Vector3 normal)
+        private bool IsPointInTriangle(Vector3 point, Vector3 v1, Vector3 v2, Vector3 v3, Vector3 normal)
         {
             float d = Vector3.Dot(normal, v1);
             if (Mathf.Abs(Vector3.Dot(normal, point) - d) > 0.01f)
@@ -252,7 +264,7 @@ namespace Root
 
                     //If there is a collider between the points, not valid
                     //Check both ways
-                    if (SafeSpherecast(lPoint.position, lNearby.position) || SafeSpherecast(lNearby.position, lPoint.position))
+                    if (SafeSphereCast(lPoint.position, lNearby.position) || SafeSphereCast(lNearby.position, lPoint.position))
                         continue;
 
                     lPoint.neighbors.Add(lNearby);
@@ -272,7 +284,7 @@ namespace Root
             {
                 lPositionToTested = testedPoints[i].position - position;
 
-                if (Physics.Raycast(position, lPositionToTested, lPositionToTested.magnitude))
+                if (Physics.Raycast(position, lPositionToTested, lPositionToTested.magnitude, ValidColliders))
                     testedPoints.RemoveAt(i);
             }
         }
@@ -321,22 +333,17 @@ namespace Root
                 Vector3 lShift = lPoint.normal * shifting;
 
                 //If shifting will traverse a collider, don't shift
-                if (!SafeSpherecast(lPoint.position, lPoint.position + lShift))
+                if (!SafeSphereCast(lPoint.position, lPoint.position + lShift))
                     lPoint.position += lShift;
             }
-
-            //Update point octree
-            pointOctree = new PointOctree<GraphPoint>(size, transform.position, 1f);
-            foreach (GraphPoint lPoint in points)
-                pointOctree.Add(lPoint, lPoint.position);
         }
 
-        private bool SafeSpherecast(Vector3 origin, Vector3 target)
+        private bool SafeSphereCast(Vector3 origin, Vector3 target)
         {
             //Don't start ray at point.position for preventing starting inside a collider
-            Vector3 lRaycastOrigin = origin - (target - origin).normalized * safeRaycastOffset;
+            Vector3 lRaycastOrigin = origin - (target - origin).normalized * safeSphereCastOffset;
             Vector3 lOriginToTarget = target - lRaycastOrigin;
-            return Physics.SphereCast(new Ray(lRaycastOrigin, lOriginToTarget), sphereCastRadius, lOriginToTarget.magnitude);
+            return Physics.SphereCast(new Ray(lRaycastOrigin, lOriginToTarget), sphereCastRadius, lOriginToTarget.magnitude, ValidColliders);
         }
 
         #endregion
