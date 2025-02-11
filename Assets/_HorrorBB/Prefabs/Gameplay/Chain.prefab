@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1537908126864814137}
   - component: {fileID: 2910391741077040590}
   - component: {fileID: 5501336469869934246}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Chain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -214,6 +214,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ChainLink_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5fe29aaec8a7a374b8689ac8e79d408f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -420,6 +425,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChainLink
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5fe29aaec8a7a374b8689ac8e79d408f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -624,6 +634,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ChainLink_06
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5fe29aaec8a7a374b8689ac8e79d408f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -830,6 +845,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChainLink_10
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5fe29aaec8a7a374b8689ac8e79d408f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1034,6 +1054,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ChainLink_08
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5fe29aaec8a7a374b8689ac8e79d408f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1240,6 +1265,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChainLink_11
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5fe29aaec8a7a374b8689ac8e79d408f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1401,6 +1431,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: padlock
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ad618725e4dcf394dba92b6b765028d9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1629,6 +1664,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChainLink_02
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5fe29aaec8a7a374b8689ac8e79d408f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1833,6 +1873,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ChainLink_04
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5fe29aaec8a7a374b8689ac8e79d408f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2039,6 +2084,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChainLink_07
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5fe29aaec8a7a374b8689ac8e79d408f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2244,6 +2294,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChainLink_09
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5fe29aaec8a7a374b8689ac8e79d408f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2448,6 +2503,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ChainLink_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5fe29aaec8a7a374b8689ac8e79d408f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

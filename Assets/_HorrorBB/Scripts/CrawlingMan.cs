@@ -89,7 +89,7 @@ namespace Root
             if (lOriginPoint == null || lTargetPoint == null)
                 return null;
 
-            IEnumerable<GraphPoint> lNeighborsFunc(GraphPoint graphPoint) => graphPoint.neighbors.ToArray();
+            IEnumerable<GraphPoint> lNeighborsFunc(GraphPoint graphPoint) => graphPoint.neighbors;
             bool lIsWalkableFunc(GraphPoint graphPoint) => true;
             float lGetEuclideanDistance(GraphPoint point1, GraphPoint point2) => (point1.position - point2.position).sqrMagnitude;
             float lGetAngleCost(GraphPoint point1, GraphPoint point2)
