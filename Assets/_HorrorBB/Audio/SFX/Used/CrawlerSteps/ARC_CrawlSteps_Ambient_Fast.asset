@@ -86,14 +86,14 @@ AudioRandomContainer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ARC_CrawlSteps_Ambient
+  m_Name: ARC_CrawlSteps_Ambient_Fast
   m_Volume: -5
   m_Pitch: -100
-  m_AutomaticTriggerTime: 2
+  m_AutomaticTriggerTime: 1
   m_LoopCount: 1
   m_VolumeRandomizationRange: {x: 0, y: 0}
   m_PitchRandomizationRange: {x: -50, y: 150}
-  m_AutomaticTriggerTimeRandomizationRange: {x: -0.5, y: 4}
+  m_AutomaticTriggerTimeRandomizationRange: {x: -0.5, y: 2}
   m_LoopCountRandomizationRange: {x: 0, y: 0}
   m_Elements:
   - {fileID: -6742108996654368886}

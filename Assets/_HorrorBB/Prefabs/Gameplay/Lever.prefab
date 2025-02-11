@@ -203,6 +203,7 @@ GameObject:
   - component: {fileID: 3333139068652770192}
   - component: {fileID: 6616347687106109220}
   - component: {fileID: 469975315862809944}
+  - component: {fileID: 4767629044951639151}
   m_Layer: 0
   m_Name: Lever
   m_TagString: Untagged
@@ -259,7 +260,19 @@ MonoBehaviour:
         m_CallState: 2
   onUsedEnd:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4767629044951639151}
+        m_TargetAssemblyTypeName: GE.SendGEOnCall, Common
+        m_MethodName: Execute
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   handle: {fileID: 3029661986467516450}
   animDuration: 1
   animEndRotation: {x: 0, y: 90, z: -50}
@@ -284,6 +297,19 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4767629044951639151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2669052373824309546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3ab8281594a3b0488e2d0f384e74021, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  globalEvent: 3
 --- !u!1 &6352205305948214845
 GameObject:
   m_ObjectHideFlags: 0

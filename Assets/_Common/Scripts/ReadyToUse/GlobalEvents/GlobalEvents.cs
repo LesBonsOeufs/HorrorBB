@@ -42,8 +42,11 @@ namespace GE
 
     public enum E_GlobalEvents
     {
-        FirstKeyRetrieved,
+        BathroomKeyRetrieved,
         PlayerReturnedDownstairs,
-        PlayerApproachedMonster
+        PlayerApproachedMonster,
+        PlayerActivatedLeverForDarkRoom,
+        DarkRoomKeyRetrieved,
+        MonsterReachedStairs
     }
 }
