@@ -8,7 +8,8 @@ namespace Root
     //METHOD FOR "USED" IS QUICK AND DIRTY!!
     public class Lever : OutlinedInteractable
     {
-        [SerializeField] private UnityEvent onUsed;
+        [SerializeField] private UnityEvent onUsedStart;
+        [SerializeField] private UnityEvent onUsedEnd;
         [SerializeField] private Transform handle;
         [Foldout("Tweening"), SerializeField] private float animDuration = 1f;
         [Foldout("Tweening"), SerializeField] private Vector3 animEndRotation;
@@ -42,9 +43,10 @@ namespace Root
             {
                 used = true;
                 outline.enabled = false;
+                onUsedStart?.Invoke();
                 handle.DOLocalRotate(animEndRotation, animDuration)
                     .SetEase(Ease.InSine)
-                    .OnComplete(() => onUsed?.Invoke());
+                    .OnComplete(() => onUsedEnd?.Invoke());
             }
         }
     }
