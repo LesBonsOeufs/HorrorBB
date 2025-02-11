@@ -12,7 +12,7 @@ namespace Root
     public class SurfaceGraph : Singleton<SurfaceGraph>
     {
         [SerializeField] private float size = 15f;
-        [SerializeField] private float pointsSpacing = 1f;
+        [SerializeField] private float pointsSpacing = 0.75f;
         [SerializeField] private float pointsNormalShift = 0.4f;
 
         [Foldout("Exceptions"), SerializeField, Tag] private string addVerticesTag = "SurfaceGraph_AddVertices";
@@ -28,8 +28,8 @@ namespace Root
         [ShowIf(nameof(keepOnlyReachableFrom)), SerializeField] private Vector3 reachablePoint = Vector3.zero;
 
         [Foldout("Advanced"), Tooltip("Does not influence the final position of the points"), SerializeField] 
-        private float neighborAssignmentPurposeNormalShift = 0.01f;
-        [Foldout("Advanced"), SerializeField] private float safeSphereCastOffset = 0.11f;
+        private float neighborAssignmentPurposeNormalShift = 0.02f;
+        [Foldout("Advanced"), SerializeField] private float safeSphereCastOffset = 0.1f;
         [Foldout("Advanced"), SerializeField] private float sphereCastRadius = 0.009f;
 
 #if UNITY_EDITOR
@@ -85,6 +85,8 @@ namespace Root
             pointOctree = new PointOctree<GraphPoint>(size, transform.position, 1f);
             foreach (GraphPoint lPoint in lPoints)
                 pointOctree.Add(lPoint, lPoint.position);
+
+            LocalDataSaver<SerializedGraphData>.UnloadData();
         }
 
         [Button]

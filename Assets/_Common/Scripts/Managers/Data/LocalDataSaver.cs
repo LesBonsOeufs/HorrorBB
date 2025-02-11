@@ -82,6 +82,8 @@ public static class LocalDataSaver<T> where T : class, new()
         CurrentData = lSave;
     }
 
+    public static void UnloadData() => CurrentData = null;
+
     public static void SaveCurrentData()
     {
         if (CurrentData == null)

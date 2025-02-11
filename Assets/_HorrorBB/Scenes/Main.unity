@@ -4407,7 +4407,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 496482794543853929, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -4463,6 +4463,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -8010,7 +8015,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 8408264445584282372, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -8066,6 +8071,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor-end_07
+      objectReference: {fileID: 0}
+    - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -9385,7 +9395,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 496482794543853929, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -9441,6 +9451,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor_10
+      objectReference: {fileID: 0}
+    - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -9702,7 +9717,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 496482794543853929, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -9758,6 +9773,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor_08
+      objectReference: {fileID: 0}
+    - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -10109,7 +10129,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 8408264445584282372, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -10165,6 +10185,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor-end_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -11189,7 +11214,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 496482794543853929, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -11245,6 +11270,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor_07
+      objectReference: {fileID: 0}
+    - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -12516,6 +12546,7 @@ Transform:
   - {fileID: 1933746753}
   - {fileID: 1376108749}
   - {fileID: 1742478524}
+  - {fileID: 1598259874}
   - {fileID: 743098042}
   - {fileID: 32644331}
   - {fileID: 1295108540}
@@ -15859,7 +15890,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 8408264445584282372, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -15915,6 +15946,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor-end_05
+      objectReference: {fileID: 0}
+    - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -18195,7 +18231,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 496482794543853929, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -18251,6 +18287,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor_06
+      objectReference: {fileID: 0}
+    - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -18464,7 +18505,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 496482794543853929, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -18520,6 +18561,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -20246,7 +20292,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 496482794543853929, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -20302,6 +20348,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor_09
+      objectReference: {fileID: 0}
+    - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -20920,6 +20971,53 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1594747158}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1598259873
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1598259874}
+  m_Layer: 3
+  m_Name: Pipes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1598259874
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598259873}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1694837574}
+  - {fileID: 731062875}
+  - {fileID: 1955534848}
+  - {fileID: 541364215}
+  - {fileID: 1836550395}
+  - {fileID: 2128489410}
+  - {fileID: 355136390}
+  - {fileID: 1383075478}
+  - {fileID: 663408060}
+  - {fileID: 783410989}
+  - {fileID: 1657627676}
+  - {fileID: 1873358128}
+  - {fileID: 692653507}
+  - {fileID: 1539526282}
+  - {fileID: 1153317820}
+  - {fileID: 1430221300}
+  m_Father: {fileID: 834009277}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1602285486
 GameObject:
   m_ObjectHideFlags: 0
@@ -21602,7 +21700,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 496482794543853929, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -21658,6 +21756,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor_04
+      objectReference: {fileID: 0}
+    - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -22122,7 +22225,7 @@ PrefabInstance:
     - target: {fileID: 1918382773593476015, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.013721354
+      value: 0.02161347
       objectReference: {fileID: 0}
     - target: {fileID: 2123375930322949230, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
@@ -22219,7 +22322,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 8408264445584282372, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -22275,6 +22378,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor-end
+      objectReference: {fileID: 0}
+    - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -22608,7 +22716,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1742478524}
   m_Layer: 0
-  m_Name: WallsNPipes
+  m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22636,22 +22744,6 @@ Transform:
   - {fileID: 1157993592}
   - {fileID: 1984836108}
   - {fileID: 499975872}
-  - {fileID: 1694837574}
-  - {fileID: 731062875}
-  - {fileID: 1955534848}
-  - {fileID: 541364215}
-  - {fileID: 1836550395}
-  - {fileID: 2128489410}
-  - {fileID: 355136390}
-  - {fileID: 1383075478}
-  - {fileID: 663408060}
-  - {fileID: 783410989}
-  - {fileID: 1657627676}
-  - {fileID: 1873358128}
-  - {fileID: 692653507}
-  - {fileID: 1539526282}
-  - {fileID: 1153317820}
-  - {fileID: 1430221300}
   m_Father: {fileID: 834009277}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1745355094 stripped
@@ -22948,7 +23040,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 496482794543853929, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -23004,6 +23096,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor_05
+      objectReference: {fileID: 0}
+    - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 496482794544213321, guid: dfa49847f0445264f8465191cc23a185,
         type: 3}
@@ -23373,7 +23470,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 8408264445584282372, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -23429,6 +23526,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor-end_02
+      objectReference: {fileID: 0}
+    - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -24211,7 +24313,7 @@ PrefabInstance:
     - target: {fileID: 1918382773593476015, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.3457955
+      value: 0.39999264
       objectReference: {fileID: 0}
     - target: {fileID: 2123375930322949230, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
@@ -24564,7 +24666,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 8408264445584282372, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -24620,6 +24722,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor-end_06
+      objectReference: {fileID: 0}
+    - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -25976,7 +26083,7 @@ MonoBehaviour:
   keepOnlyReachableFrom: 1
   reachablePoint: {x: -1.04, y: 1, z: -3.3}
   neighborAssignmentPurposeNormalShift: 0.02
-  safeSphereCastOffset: 0.11
+  safeSphereCastOffset: 0.1
   sphereCastRadius: 0.009
   showBounds: 0
   showPoints: 1
@@ -26487,7 +26594,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1742478524}
+    m_TransformParent: {fileID: 1598259874}
     m_Modifications:
     - target: {fileID: 8408264445584282372, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -26543,6 +26650,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: scifi-pipe-corridor-end_04
+      objectReference: {fileID: 0}
+    - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8408264445584641828, guid: bbd584aebb6568c4f9747bd1de161c9d,
         type: 3}
@@ -27367,7 +27479,7 @@ PrefabInstance:
     - target: {fileID: 1918382773593476015, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.27414352
+      value: 0.2508917
       objectReference: {fileID: 0}
     - target: {fileID: 2123375930322949230, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
@@ -27755,7 +27867,7 @@ PrefabInstance:
     - target: {fileID: 3954176108701683049, guid: 83d9579c8b46adf44904b22e86afa46e,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.6853568
+      value: 0.85052407
       objectReference: {fileID: 0}
     - target: {fileID: 4718261184400705019, guid: 83d9579c8b46adf44904b22e86afa46e,
         type: 3}

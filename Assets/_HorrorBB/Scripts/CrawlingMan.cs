@@ -166,13 +166,13 @@ namespace Root
 
         private bool IsPathPointReached(Vector3 point, Vector3? nextPoint = null)
         {
-            //Reached if distance is less than distanceFromPathPointForNext
+            //Reached if distance is less than acceptedDistanceFromTarget
             float lDistance = Vector3.Distance(transform.position, point);
 
             if (lDistance < acceptedDistanceFromTarget)
                 return true;
 
-            // Reached if crawler is between point and next point
+            // Reached if crawler is between point and next point AND there's a clear path
             if (nextPoint != null)
             {
                 Vector3 lPointToNext = (nextPoint.Value - point).normalized;
