@@ -1793,10 +1793,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2425420053880244296, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4935035922123281083}
-    - targetCorrespondingSourceObject: {fileID: 2425420053880244296, guid: bfb088f5e041d3447bcbdd94813f3a41,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1312757026656104175}
     - targetCorrespondingSourceObject: {fileID: 2425420053880244296, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
@@ -1805,11 +1801,19 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2425420053880244296, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 4935035922123281083}
+    - targetCorrespondingSourceObject: {fileID: 2425420053880244296, guid: bfb088f5e041d3447bcbdd94813f3a41,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 2783760123719495660}
     - targetCorrespondingSourceObject: {fileID: 2425420053880244296, guid: bfb088f5e041d3447bcbdd94813f3a41,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7727072152614458698}
+    - targetCorrespondingSourceObject: {fileID: 2425420053880244296, guid: bfb088f5e041d3447bcbdd94813f3a41,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 967410602343857000}
   m_SourcePrefab: {fileID: 100100000, guid: bfb088f5e041d3447bcbdd94813f3a41, type: 3}
 --- !u!4 &4440294339578548288 stripped
 Transform:
@@ -2136,29 +2140,6 @@ MonoBehaviour:
   - {fileID: 4440294339578548300}
   - {fileID: 4440294339578548308}
   - {fileID: 4440294339578548310}
---- !u!114 &4935035922123281083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4440294339578842200}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f98350e34a9313842b8264af8ca3fa4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lookTarget: {fileID: 8151005207721888636}
-  legController: {fileID: 4678902910170901059}
-  speed: 3
-  rotationSpeed: 5
-  maxAngleCost: 1
-  targetMovementForRefresh: 0.5
-  pathfindingCooldown: 0
-  acceptedDistanceFromTarget: 0.2
-  smoothIterations: 2
-  smoothFactor: 0.5
-  smoothMethod: 2
 --- !u!135 &1312757026656104175
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2207,6 +2188,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4935035922123281083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4440294339578842200}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f98350e34a9313842b8264af8ca3fa4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lookTarget: {fileID: 8151005207721888636}
+  legController: {fileID: 4678902910170901059}
+  speed: 3
+  rotationSpeed: 5
+  maxAngleCost: 1
+  targetMovementForRefresh: 0.5
+  pathfindingCooldown: 0
+  acceptedDistanceFromTarget: 0.2
+  smoothIterations: 2
+  smoothFactor: 0.5
+  smoothMethod: 2
 --- !u!114 &2783760123719495660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2214,7 +2218,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4440294339578842200}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1edd8739a3e906b4e8f4b8f61f8f1c95, type: 3}
   m_Name: 
@@ -2229,8 +2233,38 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4440294339578842200}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 953ab84e47ff4944dbd6d1690bf1b9f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  detectionMinMax: {x: 3, y: 5}
+  onAnnoyed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 967410602343857000}
+        m_TargetAssemblyTypeName: GE.SendGEOnCall, Common
+        m_MethodName: Execute
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  repetitionsForAnnoyed: 2
+--- !u!114 &967410602343857000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4440294339578842200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3ab8281594a3b0488e2d0f384e74021, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  globalEvent: 7

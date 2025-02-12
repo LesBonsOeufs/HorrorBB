@@ -28,7 +28,24 @@ namespace Root
         [Foldout("PFSmoothing"), SerializeField] private float smoothFactor = 0.5f;
         [Foldout("PFSmoothing"), SerializeField] private PathSmoothing.E_SmoothingMethod smoothMethod = PathSmoothing.E_SmoothingMethod.COLLISION_ADAPTIVE;
 
-        private Transform target;
+        [ShowNativeProperty]
+        public Transform MoveTarget
+        {
+            get => _moveTarget;
+
+            set
+            {
+                _moveTarget = value;
+
+                if (_moveTarget != null)
+                {
+                    lastTargetPosition = _moveTarget.position;
+                    currentPath = PathFinding(_moveTarget.position);
+                }
+            }
+        }
+        private Transform _moveTarget;
+
         private Vector3 lastTargetPosition;
 
         private float initControllerMaxTipWait;
@@ -45,7 +62,7 @@ namespace Root
 
         private void Update()
         {
-            if (target ==  null) 
+            if (MoveTarget ==  null) 
                 return;
 
             UpdateDynamicLegAnimDurations();
@@ -54,27 +71,16 @@ namespace Root
             lookTarget.position = Player.Instance.transform.position;
         }
 
-        public void SetTarget(Transform target)
-        {
-            this.target = target;
-
-            if (target != null)
-            {
-                lastTargetPosition = target.position;
-                currentPath = PathFinding(target.position);
-            }
-        }
-
         #region PathFinding
 
         private IEnumerator RefreshPath()
         {
             while (true)
             {
-                if (target != null && (lastTargetPosition - target.position).magnitude > targetMovementForRefresh)
+                if (MoveTarget != null && (lastTargetPosition - MoveTarget.position).magnitude > targetMovementForRefresh)
                 {
-                    currentPath = PathFinding(target.position);
-                    lastTargetPosition = target.position;
+                    currentPath = PathFinding(MoveTarget.position);
+                    lastTargetPosition = MoveTarget.position;
                 }
 
                 yield return new WaitForSeconds(pathfindingCooldown);
@@ -133,35 +139,19 @@ namespace Root
             return lGraphPath;
         }
 
-        private Vector3? RemoveReachedPathPoints() => RemoveReachedPathPoints(out _);
-        private Vector3? RemoveReachedPathPoints(out GraphPoint lastReached)
+        private void RemoveReachedPathPoints()
         {
-            lastReached = null;
-
             if (currentPath == null)
-                return null;
+                return;
 
             while (IsPathPointReached(currentPath[0].position, currentPath.Count == 1 ? null : currentPath[1].position))
             {
-                lastReached = currentPath[0];
-
+                //Always keep final point, which should be target projected on point surface
                 if (currentPath.Count == 1)
-                {
-                    currentPath = null;
                     break;
-                }
                 else
                     currentPath.RemoveAt(0);
             }
-
-            Vector3 lTargetPosition;
-
-            if (currentPath == null)
-                lTargetPosition = transform.position;
-            else
-                lTargetPosition = currentPath[0].position;
-
-            return lTargetPosition;
         }
 
         private bool IsPathPointReached(Vector3 point, Vector3? nextPoint = null)
@@ -194,11 +184,15 @@ namespace Root
             if (lPoint == null)
                 return;
 
-            Vector3 lDirection = (lPoint.position - transform.position).normalized;
-            Vector3 lMovement = speed * Time.deltaTime * lDirection;
-            transform.position += lMovement;
+            Vector3 lToPoint = lPoint.position - transform.position;
 
-            Quaternion lTargetRotation = Quaternion.LookRotation(lDirection, lPoint.normal);
+            if (lToPoint.magnitude < speed * Time.deltaTime)
+                //Do not directly go on final position for look rotation to always have a direction
+                transform.position = lPoint.position - lToPoint.normalized * 0.001f;
+            else
+                transform.position += speed * Time.deltaTime * lToPoint.normalized;
+
+            Quaternion lTargetRotation = Quaternion.LookRotation(lToPoint, lPoint.normal);
             transform.rotation = Quaternion.Slerp(transform.rotation, lTargetRotation, rotationSpeed * Time.deltaTime);
         }
 

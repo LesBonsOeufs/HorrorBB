@@ -47,6 +47,8 @@ namespace GE
         PlayerApproachedMonster,
         PlayerActivatedLeverForDarkRoom,
         DarkRoomKeyRetrieved,
-        MonsterReachedStairs
+        MonsterReachedStairs,
+        MonsterReachedDarkRoom,
+        MonsterToPreChase
     }
 }
