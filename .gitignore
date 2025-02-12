@@ -71,3 +71,5 @@ fmod.log
 
 # IL2CPP Output for SwitchPlayerBuildProgram
 [Ll]ibrary/Bee/artifacts/SwitchPlayerBuildProgram/il2cppOutput/*
+Assets/_Common/Scripts/ReadyToUse/SurfaceGraph/Resources/BuiltGraph.txt
+Assets/_Common/Scripts/ReadyToUse/SurfaceGraph/Resources/BuiltGraph.txt.meta

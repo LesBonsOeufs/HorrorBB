@@ -16,7 +16,7 @@ namespace Root
         [InfoBox("Fill for dynamic leg anim duration & maxTipWait (each initial duration will be divided with speed)"), SerializeField]
         private LegController legController;
 
-        [Foldout("Movement"), SerializeField] private float speed = .5f;
+        [Foldout("Movement")] public float speed = 3f;
         [Foldout("Movement"), SerializeField] private float rotationSpeed = 5f;
 
         [Foldout("Pathfinding"), SerializeField] private float maxAngleCost = 1f;
