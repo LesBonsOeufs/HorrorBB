@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,6 +12,11 @@ namespace Root
     //All neighboring points must not have a collider between them, and be closer to each other than around pointsSpacing * 1.5
     public class SurfaceGraph : Singleton<SurfaceGraph>
     {
+        #region Built resource
+        private const string RESOURCE_GRAPH_DATA_PATH = "BuiltGraph";
+        [SerializeField, HideInInspector] private byte[] encryptionKey;
+        #endregion
+
         [SerializeField] private float size = 15f;
         [SerializeField] private float pointsSpacing = 0.75f;
         [SerializeField] private float pointsNormalShift = 0.4f;
@@ -75,23 +81,43 @@ namespace Root
 
         private void ApplyFromData()
         {
-            if (!LocalDataSaver<SerializedGraphData>.CheckIfSaveExists())
+            //Retrieve built data from Resources
+            TextAsset lEncryptedJson = Resources.Load<TextAsset>(RESOURCE_GRAPH_DATA_PATH);
+            SerializedGraphData lBuiltData = JsonUtility.FromJson<SerializedGraphData>(AESEncryptor.Decrypt(lEncryptedJson.text, encryptionKey));
+
+            if (lBuiltData == null)
                 return;
 
             //Load graph data
-            List<GraphPoint> lPoints = LocalDataSaver<SerializedGraphData>.CurrentData.GetPoints();
+            List<GraphPoint> lPoints = lBuiltData.GetPoints();
 
             //Update point octree
             pointOctree = new PointOctree<GraphPoint>(size, transform.position, 1f);
             foreach (GraphPoint lPoint in lPoints)
                 pointOctree.Add(lPoint, lPoint.position);
 
-            LocalDataSaver<SerializedGraphData>.UnloadData();
+            Resources.UnloadAsset(lEncryptedJson);
+        }
+
+        #region Build & Storage
+#if UNITY_EDITOR
+
+        private void SaveNewBuild(List<GraphPoint> points)
+        {
+            SerializedGraphData lData = new();
+            lData.SetPoints(points);
+            string lEncryptedJson = AESEncryptor.Encrypt(JsonUtility.ToJson(lData), encryptionKey);
+            TextAsset lSaveAsset = Resources.Load<TextAsset>(RESOURCE_GRAPH_DATA_PATH);
+            string lPath = AssetDatabase.GetAssetPath(lSaveAsset);
+            System.IO.File.WriteAllText(lPath, lEncryptedJson);
+            AssetDatabase.Refresh();
         }
 
         [Button]
         public void Build()
         {
+            encryptionKey ??= AESEncryptor.BuildKey(nameof(SurfaceGraph));
+
             Collider[] lColliders = FindObjectsByType<Collider>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             List<GraphPoint> lPoints = GeneratePointsFromColliders(lColliders);
 
@@ -111,11 +137,12 @@ namespace Root
             if (pointsNormalShift >= neighborAssignmentPurposeNormalShift)
                 NormalShift(lPoints, pointsNormalShift - neighborAssignmentPurposeNormalShift);
 
-            //Save built graph
-            LocalDataSaver<SerializedGraphData>.CurrentData.SetPoints(lPoints);
-            LocalDataSaver<SerializedGraphData>.SaveCurrentData();
+            SaveNewBuild(lPoints);
             ApplyFromData();
         }
+
+#endif
+        #endregion
 
         #region Points Generation
 

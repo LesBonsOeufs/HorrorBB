@@ -1,6 +1,4 @@
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using UnityEngine;
 
 /// <typeparam name="T">Data type</typeparam>
@@ -14,7 +12,7 @@ public static class LocalDataSaver<T> where T : class, new()
     private static string saveFullPath;
 
     //256-bit key for AES encryption
-    private static readonly byte[] encryptionKey = new byte[32];
+    private static byte[] encryptionKey;
 
     public static T CurrentData
     {
@@ -39,11 +37,7 @@ public static class LocalDataSaver<T> where T : class, new()
     public static void Init()
     {
         saveFullPath = Application.persistentDataPath + "/" + saveName + SAVE_EXTENSION;
-
-        // Generate a unique key based on the device ID and save name
-        using var sha256 = SHA256.Create();
-        byte[] lHash = sha256.ComputeHash(Encoding.UTF8.GetBytes(SystemInfo.deviceUniqueIdentifier + saveName));
-        System.Array.Copy(lHash, encryptionKey, 32);
+        encryptionKey = AESEncryptor.BuildKey(saveName);
     }
 
     /// <typeparam name="T">Data type</typeparam>
@@ -59,7 +53,7 @@ public static class LocalDataSaver<T> where T : class, new()
             try
             {
                 string lEncryptedJson = File.ReadAllText(saveFullPath);
-                string lDecryptedJson = Decrypt(lEncryptedJson);
+                string lDecryptedJson = AESEncryptor.Decrypt(lEncryptedJson, encryptionKey);
                 lSave = JsonUtility.FromJson<T>(lDecryptedJson);
 
                 if (DEBUG_ENABLED)
@@ -90,7 +84,7 @@ public static class LocalDataSaver<T> where T : class, new()
             throw new System.Exception("No save loaded!");
 
         string lJson = JsonUtility.ToJson(CurrentData);
-        string lEncryptedJson = Encrypt(lJson);
+        string lEncryptedJson = AESEncryptor.Encrypt(lJson, encryptionKey);
         File.WriteAllText(saveFullPath, lEncryptedJson);
 
         if (DEBUG_ENABLED)
@@ -113,62 +107,4 @@ public static class LocalDataSaver<T> where T : class, new()
 			LoadData();
 		}
 	}
-
-    #region Encryption
-
-    private static string Encrypt(string plainText)
-    {
-        using (Aes aesAlg = Aes.Create())
-        {
-            aesAlg.Key = encryptionKey;
-            aesAlg.GenerateIV();
-
-            ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-
-            using (MemoryStream msEncrypt = new MemoryStream())
-            {
-                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-                {
-                    swEncrypt.Write(plainText);
-                }
-
-                byte[] iv = aesAlg.IV;
-                byte[] encryptedContent = msEncrypt.ToArray();
-                byte[] result = new byte[iv.Length + encryptedContent.Length];
-                System.Buffer.BlockCopy(iv, 0, result, 0, iv.Length);
-                System.Buffer.BlockCopy(encryptedContent, 0, result, iv.Length, encryptedContent.Length);
-
-                return System.Convert.ToBase64String(result);
-            }
-        }
-    }
-
-    private static string Decrypt(string cipherText)
-    {
-        byte[] fullCipher = System.Convert.FromBase64String(cipherText);
-
-        using (Aes aesAlg = Aes.Create())
-        {
-            aesAlg.Key = encryptionKey;
-            byte[] iv = new byte[aesAlg.BlockSize / 8];
-            byte[] cipher = new byte[fullCipher.Length - iv.Length];
-
-            System.Buffer.BlockCopy(fullCipher, 0, iv, 0, iv.Length);
-            System.Buffer.BlockCopy(fullCipher, iv.Length, cipher, 0, cipher.Length);
-
-            aesAlg.IV = iv;
-
-            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-
-            using (MemoryStream msDecrypt = new MemoryStream(cipher))
-            using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-            using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-            {
-                return srDecrypt.ReadToEnd();
-            }
-        }
-    }
-
-    #endregion
 }
