@@ -207,6 +207,14 @@ namespace Root
             legController.maxTipWait = initControllerMaxTipWait / Mathf.Abs(speed);
         }
 
+        //Quick & dirty
+        private void OnCollisionEnter(Collision collision)
+        {
+            //Kill player on collision
+            if (collision.collider.CompareTag("Player"))
+                Player.Instance.Die();
+        }
+
         private void OnDrawGizmosSelected()
         {
             ColorUtility.TryParseHtmlString("#0000FF80", out Color lColor);

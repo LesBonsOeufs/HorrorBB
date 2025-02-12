@@ -1,7 +1,10 @@
+using DG.Tweening;
 using NaughtyAttributes;
+using System;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace Root
 {
@@ -18,6 +21,11 @@ namespace Root
         [Foldout("Step"), SerializeField] private HeadBobbing headbobbing;
         [Foldout("Step"), SerializeField] private AudioSource stepSource;
 
+        [Foldout("Game Over"), SerializeField] private Image blackScreen;
+        [Foldout("Game Over"), SerializeField] private float afterDeathDelay = 1f;
+        [Foldout("Game Over"), SerializeField] private float afterDeathFadeDuration = 1f;
+        [Foldout("Game Over"), SerializeField] private Transform respawnPoint;
+
         private CharacterController controller;
         private Interactor interactor;
 
@@ -28,24 +36,46 @@ namespace Root
         private Vector3 lastPosition;
         private float stepDistanceCounter = 0f;
 
+        private int deathCount = 0;
+
         public PlayerInput Input { get; private set; }
 
-        private void Start()
+        /// <summary>
+        /// Parameter is death count
+        /// </summary>
+        public event Action<int> OnDeath;
+
+        protected override void Awake()
         {
+            base.Awake();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             controller = GetComponent<CharacterController>();
             interactor = GetComponent<Interactor>();
             Input = GetComponent<PlayerInput>();
+        }
+
+        private void Start()
+        {
             lastPosition = transform.position;
+        }
+
+        private void OnEnable()
+        {
+            controller.enabled = true;
+            interactor.enabled = true;
+        }
+
+        private void OnDisable()
+        {
+            controller.enabled = false;
+            interactor.enabled = false;
         }
 
         public void SetHideMode(bool isHiding)
         {
             Input.SwitchCurrentActionMap(isHiding ? HIDE_ACTION_MAP : DEFAULT_ACTION_MAP);
             enabled = !isHiding;
-            controller.enabled = !isHiding;
-            interactor.enabled = !isHiding;
         }
 
         public void ResetCamera()
@@ -83,6 +113,25 @@ namespace Root
         {
             headbobbing.Execute();
             stepSource.Play();
+        }
+
+        [Button]
+        //Quick & dirty use of SetHideMode
+        public void Die()
+        {
+            AudioListener.volume = 0f;
+            blackScreen.color = Color.black;
+            SetHideMode(true);
+            transform.position = respawnPoint.position;
+            camera.ForceCameraPosition(camera.transform.position, respawnPoint.rotation);
+            OnDeath?.Invoke(++deathCount);
+
+            DOVirtual.DelayedCall(afterDeathDelay, () =>
+            {
+                SetHideMode(false);
+                DOVirtual.Float(0f, 1f, afterDeathFadeDuration, volume => AudioListener.volume =  volume);
+                blackScreen.DOFade(0f, afterDeathFadeDuration);
+            });
         }
 
         #region Player Input Messages
