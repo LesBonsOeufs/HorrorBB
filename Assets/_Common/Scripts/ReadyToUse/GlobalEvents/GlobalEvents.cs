@@ -49,6 +49,7 @@ namespace GE
         DarkRoomKeyRetrieved,
         MonsterReachedStairs,
         MonsterReachedDarkRoom,
-        MonsterToPreChase
+        MonsterToPreChase,
+        StartChase
     }
 }
