@@ -53,7 +53,7 @@ namespace Root
 
         private void OnDisable()
         {
-            if (crawlingMan == null || Player.Instance == null)
+            if (crawlingMan == null || Player.Instance == null || crawlingMan.MoveTarget == null)
                 return;
 
             IsChasing = false;
@@ -74,6 +74,9 @@ namespace Root
 
         private void OnDrawGizmosSelected()
         {
+            if (!enabled)
+                return;
+
             Transform lTransform = initTarget == null ? transform : initTarget;
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(lTransform.position, detectionMinMax.x);

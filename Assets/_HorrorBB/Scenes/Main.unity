@@ -235,13 +235,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7255101}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.32650736, z: -0, w: 0.9451947}
-  m_LocalPosition: {x: 27.201, y: 3.5731063, z: 40.656}
+  m_LocalRotation: {x: -0, y: 0.37134826, z: -0, w: 0.92849374}
+  m_LocalPosition: {x: 27.091, y: 3.5731063, z: 40.512}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1161322982}
-  m_LocalEulerAnglesHint: {x: 0, y: 38.114, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 43.598, z: 0}
 --- !u!65 &7255103
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -261,7 +261,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3.1766953, y: 0.7756231, z: 2.078144}
+  m_Size: {x: 3.1766953, y: 0.7756231, z: 2.45}
   m_Center: {x: -0.36608768, y: 0, z: 0.31615594}
 --- !u!1001 &8816519
 PrefabInstance:
@@ -23480,7 +23480,7 @@ PrefabInstance:
     - target: {fileID: 1918382773593476015, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.08524775
+      value: 0.028070658
       objectReference: {fileID: 0}
     - target: {fileID: 2123375930322949230, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
@@ -25637,7 +25637,7 @@ PrefabInstance:
     - target: {fileID: 1918382773593476015, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
       propertyPath: m_Intensity
-      value: 1.4887424
+      value: 0.2904008
       objectReference: {fileID: 0}
     - target: {fileID: 2123375930322949230, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
@@ -28811,7 +28811,7 @@ PrefabInstance:
     - target: {fileID: 1918382773593476015, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
       propertyPath: m_Intensity
-      value: 1.3151529
+      value: 0.22961469
       objectReference: {fileID: 0}
     - target: {fileID: 2123375930322949230, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
@@ -29199,7 +29199,7 @@ PrefabInstance:
     - target: {fileID: 3954176108701683049, guid: 83d9579c8b46adf44904b22e86afa46e,
         type: 3}
       propertyPath: m_Intensity
-      value: 4.761209
+      value: 1.309531
       objectReference: {fileID: 0}
     - target: {fileID: 4718261184400705019, guid: 83d9579c8b46adf44904b22e86afa46e,
         type: 3}
