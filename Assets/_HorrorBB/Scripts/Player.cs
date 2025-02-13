@@ -14,10 +14,9 @@ namespace Root
         private const string DEFAULT_ACTION_MAP = "Player";
         private const string HIDE_ACTION_MAP = "Hiding";
 
-        [SerializeField] private float speed = 2f;
-        [SerializeField] private new CinemachineCamera camera;
-
         [Foldout("Step"), SerializeField] private float distanceForStep = 1f;
+        [Foldout("Step"), SerializeField] private float stepVolumeCoeffPower = 2f;
+        [Foldout("Step"), SerializeField] private float headBobbingCoeffPower = 1.1f;
         [Foldout("Step"), SerializeField] private HeadBobbing headbobbing;
         [Foldout("Step"), SerializeField] private AudioSource stepSource;
 
@@ -26,19 +25,24 @@ namespace Root
         [Foldout("Game Over"), SerializeField] private float afterDeathFadeDuration = 1f;
         [Foldout("Game Over"), SerializeField] private Transform respawnPoint;
 
+        public float speed = 2f;
+
         private CharacterController controller;
         private Interactor interactor;
 
         private float gravity = -9.81f;
-        private Vector3 moveInput;
         private Vector3 additionalVelocity;
 
         private Vector3 lastPosition;
         private float stepDistanceCounter = 0f;
+        private float initStepVolume;
 
         private int deathCount = 0;
 
+        [field: SerializeField] public CinemachineCamera CinemachineCam { get; private set; }
         public PlayerInput Input { get; private set; }
+        public Vector3 MoveInput { get; private set; }
+        public float InitSpeed { get; private set; }
 
         /// <summary>
         /// Parameter is death count
@@ -48,8 +52,12 @@ namespace Root
         protected override void Awake()
         {
             base.Awake();
+            InitSpeed = speed;
+            initStepVolume = stepSource.volume;
+
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
             controller = GetComponent<CharacterController>();
             interactor = GetComponent<Interactor>();
             Input = GetComponent<PlayerInput>();
@@ -80,7 +88,7 @@ namespace Root
 
         public void ResetCamera()
         {
-            camera.ForceCameraPosition(camera.transform.position, transform.rotation);
+            CinemachineCam.ForceCameraPosition(CinemachineCam.transform.position, transform.rotation);
         }
 
         private void Update()
@@ -88,7 +96,7 @@ namespace Root
             if (controller.isGrounded && additionalVelocity.y < 0)
                 additionalVelocity.y = 0f;
 
-            Vector3 lCameraBasedMoveInput = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * moveInput;
+            Vector3 lCameraBasedMoveInput = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * MoveInput;
             controller.Move(speed * Time.deltaTime * lCameraBasedMoveInput);
             additionalVelocity.y += gravity * Time.deltaTime;
             controller.Move(additionalVelocity * Time.deltaTime);
@@ -101,7 +109,7 @@ namespace Root
 
                 if (stepDistanceCounter >= distanceForStep)
                 {
-                    Step();
+                    Step(speed / InitSpeed);
                     stepDistanceCounter = 0f;
                 }
             }
@@ -109,9 +117,10 @@ namespace Root
             lastPosition = transform.position;
         }
 
-        private void Step()
+        private void Step(float forceCoeff = 1f)
         {
-            headbobbing.Execute();
+            headbobbing.Execute(Mathf.Pow(forceCoeff, headBobbingCoeffPower));
+            stepSource.volume = initStepVolume * Mathf.Pow(forceCoeff, stepVolumeCoeffPower);
             stepSource.Play();
         }
 
@@ -123,7 +132,7 @@ namespace Root
             blackScreen.color = Color.black;
             SetHideMode(true);
             transform.position = respawnPoint.position;
-            camera.ForceCameraPosition(camera.transform.position, respawnPoint.rotation);
+            CinemachineCam.ForceCameraPosition(CinemachineCam.transform.position, respawnPoint.rotation);
             OnDeath?.Invoke(++deathCount);
 
             DOVirtual.DelayedCall(afterDeathDelay, () =>
@@ -134,12 +143,12 @@ namespace Root
             });
         }
 
-        #region Player Input Messages
+        #region Input Messages
 
         private void OnMove(InputValue inputValue)
         {
             Vector2 lInput = inputValue.Get<Vector2>();
-            moveInput = new Vector3(lInput.x, 0, lInput.y);
+            MoveInput = new Vector3(lInput.x, 0, lInput.y);
         }
 
         private void OnInteract(InputValue inputValue)

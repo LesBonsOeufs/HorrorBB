@@ -8,9 +8,17 @@ namespace Root
         [SerializeField] private CinemachineImpulseSource source;
         [SerializeField] private CinemachineImpulseListener listener;
 
-        public void Execute()
+        private float baseGain;
+
+        private void Awake()
         {
-            listener.ReactionSettings.AmplitudeGain *= -1f;
+            baseGain = listener.ReactionSettings.AmplitudeGain;
+        }
+
+        public void Execute(float forceCoeff = 1f)
+        {
+            baseGain *= -1f;
+            listener.ReactionSettings.AmplitudeGain = baseGain * forceCoeff;
             source.GenerateImpulse();
         }
     }
