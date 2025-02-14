@@ -66,6 +66,17 @@ namespace Root
             targetCameraFov = baseCamFov;
         }
 
+        private void OnDisable()
+        {
+            IsRunning = false;
+            targetBreathVolume = 0f;
+            targetCameraFov = baseCamFov;
+            breathSource.volume = 0f;
+            player.CinemachineCam.Lens.FieldOfView = baseCamFov;
+            tirednessVolume.weight = 0f;
+            stamina = 0f;
+        }
+
         private void Update()
         {
             IsRunning = runInput && player.MoveInput != Vector3.zero;

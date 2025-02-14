@@ -2418,7 +2418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1edd8739a3e906b4e8f4b8f61f8f1c95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedMinMax: {x: 3.9, y: 4.3}
+  speedMinMax: {x: 4.1, y: 4.5}
   twitchDurationMinMax: {x: 0.2, y: 0.3}
   pauseDurationMinMax: {x: 0.1, y: 0.2}
 --- !u!114 &7727072152614458698

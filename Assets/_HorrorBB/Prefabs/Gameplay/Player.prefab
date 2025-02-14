@@ -347,7 +347,7 @@ MonoBehaviour:
   afterDeathFadeDuration: 1
   respawnPoint: {fileID: 0}
   godMode: 0
-  speed: 1.5
+  speed: 2
   <CinemachineCam>k__BackingField: {fileID: 4486038256811167307}
 --- !u!114 &1587528296408964638
 MonoBehaviour:
@@ -383,7 +383,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 764988652358138022}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82e69838b3895b04791dfabcb813d284, type: 3}
   m_Name: 
