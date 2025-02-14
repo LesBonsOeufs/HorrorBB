@@ -24,6 +24,10 @@ namespace GE
             Gizmos.color = lColor;
         }
 
+        //Should instead have a serializable class containing an enum parameter, but not the time for it right now
+        public void AllowRespread(int eventIndex) => AllowRespread((E_GlobalEvents)eventIndex);
+        public void AllowRespread(E_GlobalEvents globalEvent) => pastEvents.Remove(globalEvent);
+
         public bool WasSpread(E_GlobalEvents globalEvent) => pastEvents.Contains(globalEvent);
 
         public void Spread(E_GlobalEvents globalEvent)

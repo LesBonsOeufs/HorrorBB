@@ -207,6 +207,12 @@ namespace Root
             legController.maxTipWait = initControllerMaxTipWait / Mathf.Abs(speed);
         }
 
+        public void TeleportToMoveTarget()
+        {
+            GraphPoint lTargetPoint = SurfaceGraph.Instance.GetClosestPoint(MoveTarget.position, 2.5f);
+            transform.SetPositionAndRotation(lTargetPoint.position, MoveTarget.rotation);
+        }
+
         //Quick & dirty
         private void OnCollisionEnter(Collision collision)
         {
