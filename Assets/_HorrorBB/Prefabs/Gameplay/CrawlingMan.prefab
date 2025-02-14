@@ -2340,7 +2340,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lookTarget: {fileID: 8151005207721888636}
   legController: {fileID: 4678902910170901059}
-  speed: 3
+  speed: 4
   rotationSpeed: 10
   maxAngleCost: 1
   targetMovementForRefresh: 0.5
