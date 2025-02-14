@@ -8,8 +8,8 @@ namespace Root
     public class CrawlingMan_ReactToConcealers : MonoBehaviour
     {
         [SerializeField] private float reactionDelay = 1f;
-        [SerializeField] private SerializedDictionary<Concealer, UnityEvent> enterConcealerReaction;
-        [SerializeField] private SerializedDictionary<Concealer, UnityEvent> exitConcealerReaction;
+        [SerializeField] private SerializedDictionary<E_Concealer, UnityEvent> enterConcealerReaction;
+        [SerializeField] private SerializedDictionary<E_Concealer, UnityEvent> exitConcealerReaction;
 
         private void OnEnable()
         {
@@ -23,12 +23,12 @@ namespace Root
             Player.Instance.OnExitConcealer -= Player_OnExitConcealer;
         }
 
-        private void Player_OnEnterConcealer(Concealer concealer)
+        private void Player_OnEnterConcealer(E_Concealer concealer)
         {
             DOVirtual.DelayedCall(reactionDelay, () => enterConcealerReaction[concealer]?.Invoke(), false);
         }
 
-        private void Player_OnExitConcealer(Concealer concealer)
+        private void Player_OnExitConcealer(E_Concealer concealer)
         {
             DOVirtual.DelayedCall(reactionDelay, () => exitConcealerReaction[concealer]?.Invoke(), false);
         }

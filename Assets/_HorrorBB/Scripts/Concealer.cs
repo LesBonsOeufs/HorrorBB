@@ -9,8 +9,16 @@ using DG.Tweening;
 
 namespace Root
 {
+    //Quick fix for strange dictionary bug when using class ref
+    public enum E_Concealer
+    {
+        SHOWER,
+        WARDROBE
+    }
+
     public class Concealer : OutlinedInteractable
     {
+        [SerializeField] private E_Concealer identity;
         [Foldout("Events"), SerializeField] private UnityEvent onStartEnter;
         [Foldout("Events"), SerializeField] private UnityEvent onEndEnter;
         [Foldout("Events"), SerializeField] private UnityEvent onStartLeave;
@@ -39,7 +47,7 @@ namespace Root
                 onStartEnter?.Invoke();
                 camera.enabled = true;
                 entryPosition = interactor.transform.position;
-                Player.Instance.EnterConcealer(this);
+                Player.Instance.EnterConcealer(identity);
                 StartCoroutine(OutCoroutine());
             }
         }
@@ -80,7 +88,7 @@ namespace Root
                 yield return new WaitForSeconds(lRemainingBlendTime.Value * outBlendRatio);
 
             onEndLeave?.Invoke();
-            lPlayer.ExitConcealer(this);
+            lPlayer.ExitConcealer(identity);
         }
 
         private InputAction GetInputActionFromRef(PlayerInput input, InputActionReference reference)

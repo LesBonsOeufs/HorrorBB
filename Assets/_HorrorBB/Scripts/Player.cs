@@ -52,8 +52,8 @@ namespace Root
         /// Parameter is death count
         /// </summary>
         public event Action<int> OnDeath;
-        public event Action<Concealer> OnEnterConcealer;
-        public event Action<Concealer> OnExitConcealer;
+        public event Action<E_Concealer> OnEnterConcealer;
+        public event Action<E_Concealer> OnExitConcealer;
 
         protected override void Awake()
         {
@@ -93,13 +93,13 @@ namespace Root
             interactor.enabled = false;
         }
 
-        public void EnterConcealer(Concealer concealer)
+        public void EnterConcealer(E_Concealer concealer)
         {
             SetInactiveMode(true);
             OnEnterConcealer?.Invoke(concealer);
         }
 
-        public void ExitConcealer(Concealer concealer)
+        public void ExitConcealer(E_Concealer concealer)
         {
             SetInactiveMode(false);
             OnExitConcealer?.Invoke(concealer);
