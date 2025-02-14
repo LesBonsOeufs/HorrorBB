@@ -21,7 +21,17 @@ PrefabInstance:
     - target: {fileID: 996556372442836777, guid: f60ac123bc3618e4bbd8efdc17a38ac2,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.1
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 996556372442836777, guid: f60ac123bc3618e4bbd8efdc17a38ac2,
+        type: 3}
+      propertyPath: m_Lightmapping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 996556372442836777, guid: f60ac123bc3618e4bbd8efdc17a38ac2,
+        type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 996556372442836777, guid: f60ac123bc3618e4bbd8efdc17a38ac2,
         type: 3}
