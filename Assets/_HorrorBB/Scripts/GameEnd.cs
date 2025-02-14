@@ -1,5 +1,7 @@
 using DG.Tweening;
+using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Root
@@ -9,16 +11,17 @@ namespace Root
         [SerializeField] private Image whiteScreen;
         [SerializeField] private float fadeDuration;
         [SerializeField] private float readTextDuration;
+        [SerializeField, Scene] private int sceneToLoad;
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Player"))
             {
-                //Player.Instance.SetInactiveMode(true);
-                //DOTween.Sequence(this)
-                //    .Append(whiteScreen.DOFade(1f, fadeDuration))
-                //    .AppendInterval(readTextDuration)
-                //    .Append(LOAD MAIN MENU)
+                Player.Instance.SetInactiveMode(true);
+                DOTween.Sequence(this)
+                    .Append(whiteScreen.DOFade(1f, fadeDuration))
+                    .AppendInterval(readTextDuration)
+                    .AppendCallback(() => SceneManager.LoadSceneAsync(sceneToLoad));
             }
         }
     }
