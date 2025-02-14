@@ -16,7 +16,6 @@ namespace Root
         [Foldout("Visuals"), SerializeField] private Volume tirednessVolume;
         [Foldout("Visuals"), SerializeField] private Ease volumeWeightEasing = Ease.InSine;
         [Foldout("Visuals"), SerializeField] private float volumeWeightStartTiredValue = 0.35f;
-        [Foldout("Visuals"), SerializeField] private float volumeWeightOutOfBreathValue = 0.7f;
         [Foldout("Visuals"), SerializeField] private float volumeWeightSmoothSpeed = 0.15f;
         [Foldout("Visuals"), SerializeField] private float runningCameraFov = 65f;
         [Foldout("Visuals"), SerializeField] private float cameraFovSmoothSpeed = 0.15f;

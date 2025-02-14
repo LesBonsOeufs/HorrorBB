@@ -346,7 +346,7 @@ MonoBehaviour:
   afterDeathDelay: 1
   afterDeathFadeDuration: 1
   respawnPoint: {fileID: 0}
-  godMode: 1
+  godMode: 0
   speed: 1.5
   <CinemachineCam>k__BackingField: {fileID: 4486038256811167307}
 --- !u!114 &1587528296408964638
@@ -390,13 +390,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseRunSpeed: 3
   minMaxStaminaLimit: {x: 3, y: 6}
-  staminaRecoveryRate: 3
+  staminaRecoveryRate: 4
   tirednessVolume: {fileID: 0}
   volumeWeightEasing: 9
-  volumeWeightStartTiredValue: 0.35
-  volumeWeightOutOfBreathValue: 0.7
+  volumeWeightStartTiredValue: 0
   volumeWeightSmoothSpeed: 0.15
-  runningCameraFov: 70
+  runningCameraFov: 66
   cameraFovSmoothSpeed: 0.15
   breathSource: {fileID: 1972154847285687449}
   breathVolumeSmoothSpeed: 0.15
