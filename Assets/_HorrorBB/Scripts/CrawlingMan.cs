@@ -214,10 +214,10 @@ namespace Root
         }
 
         //Quick & dirty
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerEnter(Collider other)
         {
             //Kill player on collision
-            if (collision.collider.CompareTag("Player"))
+            if (other.CompareTag("Player"))
                 Player.Instance.Die();
         }
 
