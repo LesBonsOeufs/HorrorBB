@@ -31,6 +31,10 @@ public class Leg : MonoBehaviour
     //Currently should stay at 0, for preventing passing tip through wall
     [Foldout("Advanced"), SerializeField] private float tipPassOver = 0.55f / 2.0f;
 
+    //Used for forwardRay's direction
+    private Vector3 lastPos;
+    private Vector3 lastLastPos;
+
     public Vector3 TipPos { get; private set; }
     public Vector3 TipUpDir { get; private set; }
     public Vector3 RaycastTipPos { get; private set; }
@@ -57,14 +61,9 @@ public class Leg : MonoBehaviour
         }
     }
 
-    //Used for forwardRay's direction
-    private Vector3 lastPos;
-    private Vector3 lastLastPos;
-
     private void Awake()
     {
-        ikTarget.transform.parent = null;
-        TipPos = ikTarget.transform.position;
+        TipPos = transform.TransformPoint(ikTarget.transform.localPosition);
     }
 
     private void Start()
@@ -77,6 +76,7 @@ public class Leg : MonoBehaviour
 
     private void Update()
     {
+        UpdateIKTargetTransform();
         RaycastHit?[] lHits = new RaycastHit?[] { Raycast(DownRay, maxRayDownDist) };
 
         if (useForwardRay)
@@ -153,9 +153,8 @@ public class Leg : MonoBehaviour
             TipUpDir = Vector3.Cross(lTipDirection, Vector3.Cross(bodyTransform.up, lTipDirection).normalized);
 
             TipPos = lInitTipPos + lTipToTarget * lAnimTime;
-            TipPos += TipUpDir * heightCurve.Evaluate(lAnimTime) * tipMaxHeight;
+            TipPos += heightCurve.Evaluate(lAnimTime) * tipMaxHeight * TipUpDir;
 
-            UpdateIKTargetTransform();
             lTimer += tipAnimationFrameTime;
             yield return new WaitForSeconds(tipAnimationFrameTime);
         }
@@ -165,9 +164,11 @@ public class Leg : MonoBehaviour
 
     private void UpdateIKTargetTransform()
     {
-        // Update leg ik target transform depend on tip information
-        ikTarget.transform.position = TipPos + bodyTransform.up.normalized * ikYOffset;
-        ikTarget.transform.rotation = Quaternion.LookRotation(bodyTransform.forward, bodyTransform.up);
+        // Update leg ik target transform depending on tip information
+        Vector3 lWorldIKTargetPosition = TipPos + bodyTransform.up.normalized * ikYOffset;
+        ikTarget.transform.localPosition = transform.InverseTransformPoint(lWorldIKTargetPosition);
+        Quaternion lWorldIKTargetRotation = Quaternion.LookRotation(bodyTransform.forward, bodyTransform.up);
+        ikTarget.transform.localRotation = Quaternion.Inverse(transform.rotation) * lWorldIKTargetRotation;
     }
 
     private void OnDrawGizmos()
