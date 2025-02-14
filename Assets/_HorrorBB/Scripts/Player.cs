@@ -69,6 +69,13 @@ namespace Root
             Input = GetComponent<PlayerInput>();
         }
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
         private void Start()
         {
             lastPosition = transform.position;

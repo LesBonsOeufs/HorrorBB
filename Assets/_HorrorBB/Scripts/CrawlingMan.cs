@@ -162,7 +162,7 @@ namespace Root
             if (lDistance < acceptedDistanceFromTarget)
                 return true;
 
-            // Reached if crawler is between point and next point AND there's a clear path
+            // Reached if crawler is between point and next point
             if (nextPoint != null)
             {
                 Vector3 lPointToNext = (nextPoint.Value - point).normalized;
