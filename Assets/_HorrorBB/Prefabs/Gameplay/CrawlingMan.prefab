@@ -1948,6 +1948,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 967410602343857000}
+    - targetCorrespondingSourceObject: {fileID: 2425420053880244296, guid: bfb088f5e041d3447bcbdd94813f3a41,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8479303520964485881}
   m_SourcePrefab: {fileID: 100100000, guid: bfb088f5e041d3447bcbdd94813f3a41, type: 3}
 --- !u!4 &4440294339578548288 stripped
 Transform:
@@ -2388,18 +2392,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7727072152614458698}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   repetitionsForAnnoyed: 2
 --- !u!114 &967410602343857000
 MonoBehaviour:
@@ -2414,3 +2406,79 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globalEvent: 7
+--- !u!114 &8479303520964485881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4440294339578842200}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a831d7541ce08ed47821021003381df2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enterConcealerReaction:
+    _serializedList:
+    - Key: {fileID: 0}
+      Value:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 4935035922123281083}
+            m_TargetAssemblyTypeName: Root.CrawlingMan, Assembly-CSharp
+            m_MethodName: set_MoveTarget
+            m_Mode: 2
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    - Key: {fileID: 0}
+      Value:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 4935035922123281083}
+            m_TargetAssemblyTypeName: Root.CrawlingMan, Assembly-CSharp
+            m_MethodName: set_MoveTarget
+            m_Mode: 2
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 8479303520964485881}
+            m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+            m_MethodName: set_enabled
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+  exitConcealerReaction:
+    _serializedList:
+    - Key: {fileID: 0}
+      Value:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 4935035922123281083}
+            m_TargetAssemblyTypeName: Root.CrawlingMan, Assembly-CSharp
+            m_MethodName: set_MoveTarget
+            m_Mode: 2
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2

@@ -27,6 +27,7 @@ namespace Root
 
         [SerializeField, ReadOnly] private float stamina;
 
+        private bool runInput = false;
         private Player player;
 
         private float baseCamFov;
@@ -39,14 +40,15 @@ namespace Root
 
         private float _volumeWeightVelocityForSmoothDamp;
 
-        private bool outOfBreath = false;
-
         public bool IsRunning
         {
             get => _isRunning;
 
             private set
             {
+                if (_isRunning == value)
+                    return;
+
                 _isRunning = value;
 
                 if (!_isRunning)
@@ -55,7 +57,7 @@ namespace Root
                 targetCameraFov = _isRunning ? runningCameraFov : baseCamFov;
             }
         }
-        private bool _isRunning;
+        private bool _isRunning = false;
 
         private void Awake()
         {
@@ -67,35 +69,26 @@ namespace Root
 
         private void Update()
         {
+            IsRunning = runInput && player.MoveInput != Vector3.zero;
             UpdateEffects();
-            
-            //Running
             float lTiredness = Mathf.InverseLerp(minMaxStaminaLimit.x, minMaxStaminaLimit.y, stamina);
 
-            if (IsRunning && player.MoveInput != Vector3.zero)
+            if (IsRunning)
             {
                 targetBreathVolume = stamina > minMaxStaminaLimit.x ? minMaxRunningBreathVolume.y : minMaxRunningBreathVolume.x;
-
-                if (stamina > minMaxStaminaLimit.y)
-                {
-                    outOfBreath = true;
-                    IsRunning = false;
-                    return;
-                }
-
                 player.speed = Mathf.Lerp(baseRunSpeed, player.InitSpeed, lTiredness);
                 stamina += Time.deltaTime;
+
+                if (stamina > minMaxStaminaLimit.y)
+                    stamina = minMaxStaminaLimit.y;
             }
             else
             {
-                targetBreathVolume = outOfBreath ? minMaxRunningBreathVolume.y : 0f;
+                targetBreathVolume = lTiredness;
                 stamina -= Time.deltaTime * staminaRecoveryRate;
 
                 if (stamina < 0f)
-                {
-                    outOfBreath = false;
                     stamina = 0f;
-                }
             }
         }
 
@@ -106,17 +99,10 @@ namespace Root
             breathSource.volume =
                 Mathf.SmoothDamp(breathSource.volume, targetBreathVolume, ref _breathVolumeVelocityForSmoothDamp, breathVolumeSmoothSpeed);
 
-            float lTargetVolumeWeight;
+            float lTargetVolumeWeight = DOVirtual.EasedValue(0f, 1f, Mathf.InverseLerp(minMaxStaminaLimit.x, minMaxStaminaLimit.y, stamina), volumeWeightEasing);
 
-            if (outOfBreath)
-                lTargetVolumeWeight = volumeWeightOutOfBreathValue;
-            else
-            {
-                lTargetVolumeWeight = DOVirtual.EasedValue(0f, 1f, Mathf.InverseLerp(minMaxStaminaLimit.x, minMaxStaminaLimit.y, stamina), volumeWeightEasing);
-
-                if (lTargetVolumeWeight > 0f)
-                    lTargetVolumeWeight = Mathf.Lerp(volumeWeightStartTiredValue, 1f, lTargetVolumeWeight);
-            }
+            if (lTargetVolumeWeight > 0f)
+                lTargetVolumeWeight = Mathf.Lerp(volumeWeightStartTiredValue, 1f, lTargetVolumeWeight);
 
             tirednessVolume.weight =
                 Mathf.SmoothDamp(tirednessVolume.weight, lTargetVolumeWeight, ref _volumeWeightVelocityForSmoothDamp, volumeWeightSmoothSpeed);
@@ -126,10 +112,7 @@ namespace Root
 
         private void OnRun(InputValue inputValue)
         {
-            if (outOfBreath)
-                return;
-
-            IsRunning = inputValue.isPressed;
+            runInput = inputValue.isPressed;
         }
 
         #endregion

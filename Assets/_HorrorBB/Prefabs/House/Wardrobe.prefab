@@ -830,7 +830,7 @@ GameObject:
   - component: {fileID: 2335550465942248149}
   - component: {fileID: 1234173971890904424}
   m_Layer: 0
-  m_Name: ConcealerPivot
+  m_Name: Wardrobe_Concealer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

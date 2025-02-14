@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5200529158756857659}
   - component: {fileID: 5392722199574410194}
   m_Layer: 0
-  m_Name: ConcealerHandle
+  m_Name: Shower_Concealer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

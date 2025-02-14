@@ -39,7 +39,7 @@ namespace Root
                 onStartEnter?.Invoke();
                 camera.enabled = true;
                 entryPosition = interactor.transform.position;
-                Player.Instance.SetHideMode(true);
+                Player.Instance.EnterConcealer(this);
                 StartCoroutine(OutCoroutine());
             }
         }
@@ -80,7 +80,7 @@ namespace Root
                 yield return new WaitForSeconds(lRemainingBlendTime.Value * outBlendRatio);
 
             onEndLeave?.Invoke();
-            lPlayer.SetHideMode(false);
+            lPlayer.ExitConcealer(this);
         }
 
         private InputAction GetInputActionFromRef(PlayerInput input, InputActionReference reference)

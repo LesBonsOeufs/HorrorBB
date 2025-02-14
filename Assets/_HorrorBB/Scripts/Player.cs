@@ -25,6 +25,10 @@ namespace Root
         [Foldout("Game Over"), SerializeField] private float afterDeathFadeDuration = 1f;
         [Foldout("Game Over"), SerializeField] private Transform respawnPoint;
 
+#if UNITY_EDITOR
+        [SerializeField] private bool godMode = false;
+#endif
+
         public float speed = 2f;
 
         private CharacterController controller;
@@ -48,6 +52,8 @@ namespace Root
         /// Parameter is death count
         /// </summary>
         public event Action<int> OnDeath;
+        public event Action<Concealer> OnEnterConcealer;
+        public event Action<Concealer> OnExitConcealer;
 
         protected override void Awake()
         {
@@ -80,7 +86,19 @@ namespace Root
             interactor.enabled = false;
         }
 
-        public void SetHideMode(bool isHiding)
+        public void EnterConcealer(Concealer concealer)
+        {
+            SetHideMode(true);
+            OnEnterConcealer?.Invoke(concealer);
+        }
+
+        public void ExitConcealer(Concealer concealer)
+        {
+            SetHideMode(false);
+            OnExitConcealer?.Invoke(concealer);
+        }
+
+        private void SetHideMode(bool isHiding)
         {
             Input.SwitchCurrentActionMap(isHiding ? HIDE_ACTION_MAP : DEFAULT_ACTION_MAP);
             enabled = !isHiding;
@@ -128,6 +146,10 @@ namespace Root
         //Quick & dirty use of SetHideMode
         public void Die()
         {
+#if UNITY_EDITOR
+            if (godMode)
+                return;
+#endif
             AudioListener.volume = 0f;
             blackScreen.color = Color.black;
             SetHideMode(true);
