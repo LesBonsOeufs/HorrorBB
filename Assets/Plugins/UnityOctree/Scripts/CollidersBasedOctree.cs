@@ -37,6 +37,7 @@ namespace Root
                 PointTree = null;
         }
 
+#if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
             if (useBoundsTree)
@@ -52,5 +53,6 @@ namespace Root
                 PointTree.DrawAllObjects(); // Mark object positions
             }
         }
+#endif
     }
 }
