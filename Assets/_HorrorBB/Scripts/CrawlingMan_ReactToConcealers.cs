@@ -1,4 +1,5 @@
 using AYellowpaper.SerializedCollections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,6 +7,7 @@ namespace Root
 {
     public class CrawlingMan_ReactToConcealers : MonoBehaviour
     {
+        [SerializeField] private float reactionDelay = 1f;
         [SerializeField] private SerializedDictionary<Concealer, UnityEvent> enterConcealerReaction;
         [SerializeField] private SerializedDictionary<Concealer, UnityEvent> exitConcealerReaction;
 
@@ -21,8 +23,14 @@ namespace Root
             Player.Instance.OnExitConcealer -= Player_OnExitConcealer;
         }
 
-        private void Player_OnEnterConcealer(Concealer concealer) => enterConcealerReaction[concealer]?.Invoke();
+        private void Player_OnEnterConcealer(Concealer concealer)
+        {
+            DOVirtual.DelayedCall(reactionDelay, () => enterConcealerReaction[concealer]?.Invoke(), false);
+        }
 
-        private void Player_OnExitConcealer(Concealer concealer) => exitConcealerReaction[concealer]?.Invoke();
+        private void Player_OnExitConcealer(Concealer concealer)
+        {
+            DOVirtual.DelayedCall(reactionDelay, () => exitConcealerReaction[concealer]?.Invoke(), false);
+        }
     }
 }

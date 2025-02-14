@@ -88,17 +88,17 @@ namespace Root
 
         public void EnterConcealer(Concealer concealer)
         {
-            SetHideMode(true);
+            SetInactiveMode(true);
             OnEnterConcealer?.Invoke(concealer);
         }
 
         public void ExitConcealer(Concealer concealer)
         {
-            SetHideMode(false);
+            SetInactiveMode(false);
             OnExitConcealer?.Invoke(concealer);
         }
 
-        private void SetHideMode(bool isHiding)
+        public void SetInactiveMode(bool isHiding)
         {
             Input.SwitchCurrentActionMap(isHiding ? HIDE_ACTION_MAP : DEFAULT_ACTION_MAP);
             enabled = !isHiding;
@@ -152,17 +152,17 @@ namespace Root
 #endif
             AudioListener.volume = 0f;
             blackScreen.color = Color.black;
-            SetHideMode(true);
+            SetInactiveMode(true);
             transform.position = respawnPoint.position;
             CinemachineCam.ForceCameraPosition(CinemachineCam.transform.position, respawnPoint.rotation);
             OnDeath?.Invoke(++deathCount);
 
             DOVirtual.DelayedCall(afterDeathDelay, () =>
             {
-                SetHideMode(false);
+                SetInactiveMode(false);
                 DOVirtual.Float(0f, 1f, afterDeathFadeDuration, volume => AudioListener.volume =  volume);
                 blackScreen.DOFade(0f, afterDeathFadeDuration);
-            });
+            }, false);
         }
 
         #region Input Messages
