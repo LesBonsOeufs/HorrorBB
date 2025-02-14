@@ -27,7 +27,6 @@ namespace Root
                     .Append(whiteScreen.DOFade(1f, screenFadeDuration))
                     .Append(text.DOFade(1f, textFadeDuration))
                     .AppendInterval(readDuration)
-                    .Append(text.DOFade(0f, textFadeDuration))
                     .AppendCallback(() => SceneManager.LoadSceneAsync(sceneToLoad))
                     .SetUpdate(true);
             }
