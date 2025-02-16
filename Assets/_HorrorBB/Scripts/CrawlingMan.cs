@@ -181,18 +181,24 @@ namespace Root
         {
             GraphPoint lPoint = currentPath?[0];
 
-            if (lPoint == null)
+            if (lPoint == null || speed == 0f)
                 return;
 
             Vector3 lToPoint = lPoint.position - transform.position;
+            Quaternion lTargetRotation;
 
             if (lToPoint.magnitude < speed * Time.deltaTime)
-                //Do not directly go on final position for look rotation to always have a direction
-                transform.position = lPoint.position - lToPoint.normalized * 0.001f;
+            {
+                transform.position = lPoint.position;
+                //Use target's transform rotation if reached
+                lTargetRotation = MoveTarget.rotation;
+            }
             else
+            {
                 transform.position += speed * Time.deltaTime * lToPoint.normalized;
+                lTargetRotation = Quaternion.LookRotation(lToPoint, lPoint.normal);
+            }
 
-            Quaternion lTargetRotation = Quaternion.LookRotation(lToPoint, lPoint.normal);
             transform.rotation = Quaternion.Slerp(transform.rotation, lTargetRotation, rotationSpeed * Time.deltaTime);
         }
 

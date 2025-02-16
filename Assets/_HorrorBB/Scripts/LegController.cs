@@ -31,16 +31,16 @@ public class LegController : MonoBehaviour
             stepOrder = !stepOrder;
         }
 
-        int index = stepOrder ? 0 : 1;
+        int lIndex = stepOrder ? 0 : 1;
 
         // If the opposite foot step completes, switch the order to make a new step
-        if (readySwitchOrder && !_legs[index].Animating)
+        if (readySwitchOrder && !_legs[lIndex].Animating)
         {
             stepOrder = !stepOrder;
             readySwitchOrder = false;
         }
 
-        if (!readySwitchOrder && _legs[index].Animating)
+        if (!readySwitchOrder && _legs[lIndex].Animating)
         {
             readySwitchOrder = true;
         }

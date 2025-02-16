@@ -401,7 +401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b99912e4f18ced44bd6f740df255b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTipWait: 0.2
+  maxTipWait: 0.5
   _legs:
   - {fileID: 6456868725615337727}
   - {fileID: 8769473249425202404}
