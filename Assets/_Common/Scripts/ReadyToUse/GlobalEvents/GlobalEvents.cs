@@ -54,6 +54,7 @@ namespace GE
         MonsterReachedStairs,
         MonsterReachedDarkRoom,
         MonsterToPreChase,
-        StartChase
+        StartChase,
+        MonsterAnnoyed
     }
 }
