@@ -114,7 +114,7 @@ MonoBehaviour:
   tipAnimationDuration: 0.1
   tipAnimationFrameTime: 0.016666668
   tipMaxHeight: 0.2
-  initTipPosZOffset: -0.3
+  initTipPosZOffset: 0
   ikYOffset: 0
   tipMoveDist: 0.28
   maxRayDownDist: 0.9
@@ -1755,7 +1755,7 @@ MonoBehaviour:
   tipAnimationDuration: 0.1
   tipAnimationFrameTime: 0.016666668
   tipMaxHeight: 0.2
-  initTipPosZOffset: -0.3
+  initTipPosZOffset: 0
   ikYOffset: 0
   tipMoveDist: 0.28
   maxRayDownDist: 0.9

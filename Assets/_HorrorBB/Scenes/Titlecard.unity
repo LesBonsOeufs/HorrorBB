@@ -7298,7 +7298,7 @@ GameObject:
   - component: {fileID: 1280763903}
   - component: {fileID: 1280763902}
   m_Layer: 0
-  m_Name: Credits_01
+  m_Name: VolumeCalibrationTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7321,7 +7321,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600, y: 300}
+  m_SizeDelta: {x: 1500, y: 70}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1280763902
 MonoBehaviour:
@@ -7343,7 +7343,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Raise the volume until you can clearly hear the ticking clock and the flickering
+  m_text: Raise the volume until you can clearly hear the ticking clock and flickering
     light
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 37d0851a86e7b5a41b790a631965d0af, type: 2}
@@ -11306,7 +11306,7 @@ PrefabInstance:
     - target: {fileID: 1918382773593476015, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.22799456
+      value: 0.22534482
       objectReference: {fileID: 0}
     - target: {fileID: 2123375930322949230, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}

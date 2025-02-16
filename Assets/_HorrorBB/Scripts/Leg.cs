@@ -36,9 +36,7 @@ public class Leg : MonoBehaviour
     private Vector3 lastLastPos;
 
     public Vector3 TipPos { get; private set; }
-    public Vector3 TipUpDir { get; private set; }
     public Vector3 RaycastTipPos { get; private set; }
-    public Vector3 RaycastTipNormal { get; private set; }
 
     public bool Animating { get; private set; } = false;
     public bool Movable { get; set; } = false;
@@ -70,13 +68,32 @@ public class Leg : MonoBehaviour
     {
         lastLastPos = transform.position;
         lastPos = transform.position;
-        TipPos += bodyTransform.forward * initTipPosZOffset;
         UpdateIKTargetTransform();
+        RefreshRaycastTipPos();
+        TipPos = RaycastTipPos + bodyTransform.forward * initTipPosZOffset;
     }
 
     private void Update()
     {
         UpdateIKTargetTransform();
+        RefreshRaycastTipPos();
+
+        //TipDistance = Vector3.ProjectOnPlane(RaycastTipPos - TipPos, bodyTransform.up).magnitude;
+        TipDistance = (RaycastTipPos - TipPos).magnitude;
+
+        // If the distance gets too far, animate and move the tip to new position
+        if (!Animating && TipDistance > tipMoveDist && Movable)
+            StartCoroutine(AnimateLeg());
+
+        if (lastPos != transform.position)
+        {
+            lastLastPos = lastPos;
+            lastPos = transform.position;
+        }
+    }
+
+    private void RefreshRaycastTipPos()
+    {
         RaycastHit?[] lHits = new RaycastHit?[] { Raycast(DownRay, maxRayDownDist) };
 
         if (useForwardRay)
@@ -107,23 +124,7 @@ public class Leg : MonoBehaviour
         }
 
         if (lHit != null)
-        {
             RaycastTipPos = lHit.Value.point;
-            RaycastTipNormal = lHit.Value.normal;
-        }
-
-        //TipDistance = Vector3.ProjectOnPlane(RaycastTipPos - TipPos, bodyTransform.up).magnitude;
-        TipDistance = (RaycastTipPos - TipPos).magnitude;
-
-        // If the distance gets too far, animate and move the tip to new position
-        if (!Animating && TipDistance > tipMoveDist && Movable)
-            StartCoroutine(AnimateLeg());
-
-        if (lastPos != transform.position)
-        {
-            lastLastPos = lastPos;
-            lastPos = transform.position;
-        }
     }
 
     private RaycastHit? Raycast(Ray ray, float maxDistance)
@@ -142,6 +143,7 @@ public class Leg : MonoBehaviour
         float lTimer = 0.0f;
         float lAnimTime;
         Vector3 lInitTipPos = TipPos;
+        Vector3 lTipUpDir;
 
         while (lTimer < tipAnimationDuration + tipAnimationFrameTime)
         {
@@ -150,10 +152,10 @@ public class Leg : MonoBehaviour
             Vector3 lTipToTarget = RaycastTipPos - lInitTipPos;
             Vector3 lTipDirection = lTipToTarget.normalized;
             lTipToTarget += lTipDirection * tipPassOver;
-            TipUpDir = Vector3.Cross(lTipDirection, Vector3.Cross(bodyTransform.up, lTipDirection).normalized);
+            lTipUpDir = Vector3.Cross(lTipDirection, Vector3.Cross(bodyTransform.up, lTipDirection).normalized);
 
             TipPos = lInitTipPos + lTipToTarget * lAnimTime;
-            TipPos += heightCurve.Evaluate(lAnimTime) * tipMaxHeight * TipUpDir;
+            TipPos += heightCurve.Evaluate(lAnimTime) * tipMaxHeight * lTipUpDir;
 
             lTimer += tipAnimationFrameTime;
             yield return new WaitForSeconds(tipAnimationFrameTime);
