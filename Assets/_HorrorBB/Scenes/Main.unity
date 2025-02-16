@@ -14605,7 +14605,7 @@ MonoBehaviour:
   text: {fileID: 463425489}
   screenFadeDuration: 0.75
   textFadeDuration: 1.5
-  readDuration: 1
+  readDuration: 2
   sceneToLoad: 0
 --- !u!114 &965744626
 MonoBehaviour:
@@ -23690,7 +23690,7 @@ PrefabInstance:
     - target: {fileID: 1918382773593476015, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.018965807
+      value: 0.0121168895
       objectReference: {fileID: 0}
     - target: {fileID: 2123375930322949230, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
@@ -26023,7 +26023,7 @@ PrefabInstance:
     - target: {fileID: 1918382773593476015, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.32320204
+      value: 0.2803769
       objectReference: {fileID: 0}
     - target: {fileID: 2123375930322949230, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
@@ -29558,7 +29558,7 @@ PrefabInstance:
     - target: {fileID: 1918382773593476015, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.18779434
+      value: 0.25336534
       objectReference: {fileID: 0}
     - target: {fileID: 2123375930322949230, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
@@ -30031,7 +30031,7 @@ PrefabInstance:
     - target: {fileID: 3954176108701683049, guid: 83d9579c8b46adf44904b22e86afa46e,
         type: 3}
       propertyPath: m_Intensity
-      value: 1.1883647
+      value: 1.2419245
       objectReference: {fileID: 0}
     - target: {fileID: 4025103670753576092, guid: 83d9579c8b46adf44904b22e86afa46e,
         type: 3}
