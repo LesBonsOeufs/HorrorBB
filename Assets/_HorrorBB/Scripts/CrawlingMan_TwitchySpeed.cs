@@ -24,6 +24,9 @@ namespace Root
             crawlingMan = GetComponent<CrawlingMan>();
         }
 
+        public void SetMaxSpeed(float min) => speedMinMax.x = min;
+        public void SetMinSpeed(float max) => speedMinMax.y = max;
+
         private void OnEnable()
         {
             initSpeed = crawlingMan.speed;
@@ -38,7 +41,7 @@ namespace Root
             crawlingMan.speed = initSpeed;
         }
 
-        IEnumerator TwitchySpeedControl()
+        private IEnumerator TwitchySpeedControl()
         {
             while (enabled)
             {

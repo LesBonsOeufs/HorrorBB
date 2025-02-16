@@ -60,7 +60,9 @@ namespace Root
             float? lRemainingBlendTime = GetCurrentBlendRemainingTime();
 
             if (lRemainingBlendTime != null)
-                endEnterTween = DOVirtual.DelayedCall(lRemainingBlendTime.Value * inBlendRatio, () => onEndEnter?.Invoke(), false);
+                yield return new WaitForSeconds(lRemainingBlendTime.Value * inBlendRatio);
+
+            onEndEnter?.Invoke();
 
             Player lPlayer = Player.Instance;
 

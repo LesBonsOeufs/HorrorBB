@@ -9,7 +9,8 @@ namespace Root
     [RequireComponent(typeof(Player))]
     public class Player_Run : MonoBehaviour
     {
-        [SerializeField] private float baseRunSpeed = 4f;
+        [SerializeField] private float baseRunSpeed = 3f;
+        [SerializeField] private float tiredSpeed = 1f;
         [SerializeField, MinMaxSlider(0f, 10f)] private Vector2 minMaxStaminaLimit = new(3f, 5f);
         [SerializeField] private float staminaRecoveryRate = 0.8f;
 
@@ -49,10 +50,6 @@ namespace Root
                     return;
 
                 _isRunning = value;
-
-                if (!_isRunning)
-                    player.speed = player.InitSpeed;
-
                 targetCameraFov = _isRunning ? runningCameraFov : baseCamFov;
             }
         }
@@ -69,10 +66,11 @@ namespace Root
         private void OnDisable()
         {
             IsRunning = false;
+            player.speed = player.InitSpeed;
+            player.CinemachineCam.Lens.FieldOfView = baseCamFov;
             targetBreathVolume = 0f;
             targetCameraFov = baseCamFov;
             breathSource.volume = 0f;
-            player.CinemachineCam.Lens.FieldOfView = baseCamFov;
             tirednessVolume.weight = 0f;
             stamina = 0f;
         }
@@ -85,8 +83,8 @@ namespace Root
 
             if (IsRunning)
             {
+                player.speed = Mathf.Lerp(baseRunSpeed, tiredSpeed, lTiredness);
                 targetBreathVolume = stamina > minMaxStaminaLimit.x ? minMaxRunningBreathVolume.y : minMaxRunningBreathVolume.x;
-                player.speed = Mathf.Lerp(baseRunSpeed, player.InitSpeed, lTiredness);
                 stamina += Time.deltaTime;
 
                 if (stamina > minMaxStaminaLimit.y)
@@ -94,6 +92,7 @@ namespace Root
             }
             else
             {
+                player.speed = Mathf.Lerp(player.InitSpeed, tiredSpeed, lTiredness);
                 targetBreathVolume = lTiredness;
                 stamina -= Time.deltaTime * staminaRecoveryRate;
 
