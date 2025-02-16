@@ -7343,8 +7343,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Raise the volume until you can clearly hear the ticking clock and flickering
-    light
+  m_text: Adjust the volume until you can clearly hear the ticking clock, but barely
+    hear the flickering light
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 37d0851a86e7b5a41b790a631965d0af, type: 2}
   m_sharedMaterial: {fileID: -4652447410372241545, guid: 37d0851a86e7b5a41b790a631965d0af,
@@ -7354,8 +7354,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 234881023
-  m_fontColor: {r: 1, g: 1, b: 1, a: 0.050980393}
+    rgba: 452984831
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.101960786}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -11306,7 +11306,7 @@ PrefabInstance:
     - target: {fileID: 1918382773593476015, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.22534482
+      value: 0.26361138
       objectReference: {fileID: 0}
     - target: {fileID: 2123375930322949230, guid: 68cf4d73b14246f4e88bd99377428519,
         type: 3}
