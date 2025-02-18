@@ -101,8 +101,8 @@ namespace Root
 
         public void ExitConcealer(E_Concealer concealer)
         {
-            SetInactiveMode(false);
             OnExitConcealer?.Invoke(concealer);
+            SetInactiveMode(false);
         }
 
         public void SetInactiveMode(bool isHiding)

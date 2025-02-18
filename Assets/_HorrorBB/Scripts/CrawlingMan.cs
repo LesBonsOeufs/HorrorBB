@@ -217,6 +217,7 @@ namespace Root
         {
             GraphPoint lTargetPoint = SurfaceGraph.Instance.GetClosestPoint(MoveTarget.position, 2.5f);
             transform.SetPositionAndRotation(lTargetPoint.position, MoveTarget.rotation);
+            currentPath = PathFinding(MoveTarget.position);
         }
 
         //Quick & dirty

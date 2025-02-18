@@ -15,22 +15,29 @@ namespace Root
         {
             Player.Instance.OnEnterConcealer += Player_OnEnterConcealer;
             Player.Instance.OnExitConcealer += Player_OnExitConcealer;
+            Player.Instance.OnDeath += Player_OnDeath;
         }
 
         private void OnDisable()
         {
             Player.Instance.OnEnterConcealer -= Player_OnEnterConcealer;
             Player.Instance.OnExitConcealer -= Player_OnExitConcealer;
+            Player.Instance.OnDeath -= Player_OnDeath;
         }
 
         private void Player_OnEnterConcealer(E_Concealer concealer)
         {
-            DOVirtual.DelayedCall(reactionDelay, () => enterConcealerReaction[concealer]?.Invoke(), false);
+            DOVirtual.DelayedCall(reactionDelay, () => enterConcealerReaction[concealer]?.Invoke(), false).SetTarget(this);
         }
 
         private void Player_OnExitConcealer(E_Concealer concealer)
         {
-            DOVirtual.DelayedCall(reactionDelay, () => exitConcealerReaction[concealer]?.Invoke(), false);
+            DOVirtual.DelayedCall(reactionDelay, () => exitConcealerReaction[concealer]?.Invoke(), false).SetTarget(this);
+        }
+
+        private void Player_OnDeath(int nDeaths)
+        {
+            DOTween.Kill(this);
         }
     }
 }
