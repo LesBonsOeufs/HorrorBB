@@ -11,7 +11,9 @@ namespace Root
         public void FadeIn()
         {
             gameObject.SetActive(true);
-            GetComponent<CanvasGroup>().DOFade(1f, fadeDuration);
+            CanvasGroup lCanvasGroup = GetComponent<CanvasGroup>();
+            lCanvasGroup.alpha = 0f;
+            lCanvasGroup.DOFade(1f, fadeDuration);
         }
 
         public void FadeOut()

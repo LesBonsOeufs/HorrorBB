@@ -390,7 +390,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseRunSpeed: 3
   tiredSpeed: 0.5
-  minMaxStaminaLimit: {x: 3, y: 6}
+  minMaxStaminaLimit: {x: 4, y: 6}
   staminaRecoveryRate: 4
   tirednessVolume: {fileID: 0}
   volumeWeightEasing: 9
@@ -400,7 +400,7 @@ MonoBehaviour:
   cameraFovSmoothSpeed: 0.15
   breathSource: {fileID: 1972154847285687449}
   breathVolumeSmoothSpeed: 0.15
-  minMaxRunningBreathVolume: {x: 0.1, y: 0.35}
+  minMaxRunningBreathVolume: {x: 0.05, y: 0.45}
   stamina: 0
 --- !u!1 &935912936629716144
 GameObject:

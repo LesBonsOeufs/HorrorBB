@@ -7,7 +7,7 @@ using UnityEngine.Rendering;
 namespace Root
 {
     [RequireComponent(typeof(Player))]
-    public class Player_Run : MonoBehaviour
+    public class Player_Run : Singleton<Player_Run>
     {
         [SerializeField] private float baseRunSpeed = 3f;
         [SerializeField] private float tiredSpeed = 1f;
@@ -55,8 +55,12 @@ namespace Root
         }
         private bool _isRunning = false;
 
-        private void Awake()
+        public float PreTiredness => Mathf.InverseLerp(0f, minMaxStaminaLimit.x, stamina);
+        public float Tiredness => Mathf.InverseLerp(minMaxStaminaLimit.x, minMaxStaminaLimit.y, stamina);
+
+        protected override void Awake()
         {
+            base.Awake();
             stamina = 0f;
             player = GetComponent<Player>();
             baseCamFov = player.CinemachineCam.Lens.FieldOfView;
@@ -79,11 +83,11 @@ namespace Root
         {
             IsRunning = runInput && player.MoveInput != Vector3.zero;
             UpdateEffects();
-            float lTiredness = Mathf.InverseLerp(minMaxStaminaLimit.x, minMaxStaminaLimit.y, stamina);
+            float lTiredness = Tiredness;
 
             if (IsRunning)
             {
-                player.speed = Mathf.Lerp(baseRunSpeed, tiredSpeed, lTiredness);
+                player.speed = DOVirtual.EasedValue(baseRunSpeed, tiredSpeed, lTiredness, Ease.OutCubic);
                 targetBreathVolume = stamina > minMaxStaminaLimit.x ? minMaxRunningBreathVolume.y : minMaxRunningBreathVolume.x;
                 stamina += Time.deltaTime;
 
@@ -92,7 +96,7 @@ namespace Root
             }
             else
             {
-                player.speed = Mathf.Lerp(player.InitSpeed, tiredSpeed, lTiredness);
+                player.speed = DOVirtual.EasedValue(player.InitSpeed, tiredSpeed, lTiredness, Ease.OutCubic);
                 targetBreathVolume = lTiredness;
                 stamina -= Time.deltaTime * staminaRecoveryRate;
 
@@ -108,7 +112,7 @@ namespace Root
             breathSource.volume =
                 Mathf.SmoothDamp(breathSource.volume, targetBreathVolume, ref _breathVolumeVelocityForSmoothDamp, breathVolumeSmoothSpeed);
 
-            float lTargetVolumeWeight = DOVirtual.EasedValue(0f, 1f, Mathf.InverseLerp(minMaxStaminaLimit.x, minMaxStaminaLimit.y, stamina), volumeWeightEasing);
+            float lTargetVolumeWeight = DOVirtual.EasedValue(0f, 1f, Tiredness, volumeWeightEasing);
 
             if (lTargetVolumeWeight > 0f)
                 lTargetVolumeWeight = Mathf.Lerp(volumeWeightStartTiredValue, 1f, lTargetVolumeWeight);

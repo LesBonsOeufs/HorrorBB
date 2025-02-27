@@ -7,10 +7,23 @@ namespace Root
     {
         [SerializeField] private Behaviour source;
         [SerializeField] private Behaviour bound;
+        [SerializeField] private bool isOpposite = false;
+
+        private bool initEnabled;
+
+        private void OnEnable()
+        {
+            initEnabled = bound.enabled;
+        }
+
+        private void OnDisable()
+        {
+            bound.enabled = initEnabled;
+        }
 
         private void Update()
         {
-            bound.enabled = source.enabled;
+            bound.enabled = isOpposite ? !source.enabled : source.enabled;
         }
     }
 }
